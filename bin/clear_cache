@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ -d var/cache/prod ]
+then
+    echo "Clearing var/cache/prod..."
+    rm -rf var/cache/prod
+fi
+
+if [ -d var/cache/dev ]
+then
+    echo "Clearing var/cache/dev..."
+    rm -rf var/cache/dev
+fi

@@ -1,0 +1,19 @@
+hwi_oauth:
+    # list of names of the firewalls in which this bundle is active, this setting MUST be set
+    firewall_names: [ 'main' ]
+
+    # https://github.com/hwi/HWIOAuthBundle/blob/master/Resources/doc/2-configuring_resource_owners.md
+    resource_owners:
+        vkontakte:
+            type:                vkontakte
+            client_id:           '%env(OAUTH_VK_CLIENT_ID)%'
+            client_secret:       '%env(OAUTH_VK_CLIENT_SECRET)%'
+            options:
+                csrf: true
+                use_authorization_to_get_token: false
+            scope: 'email,notify,offline'
+#        github:
+#            type:                github
+#            client_id:           '%env(OAUTH_GITHUB_CLIENT_ID)%'
+#            client_secret:       '%env(OAUTH_GITHUB_CLIENT_SECRET)%'
+#            scope:               'user:email'
