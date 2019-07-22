@@ -96,8 +96,6 @@ class OAuthProvider implements UserProviderInterface, OAuthAwareUserProviderInte
      */
     public function loadUserByUsername($username)
     {
-        //dump($username);
-
         // TODO: Implement loadUserByUsername() method.
     }
 

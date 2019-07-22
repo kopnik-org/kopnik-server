@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Smart\CoreBundle\Doctrine\ColumnTrait;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -19,19 +20,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
+    use ColumnTrait\Id;
+    use ColumnTrait\CreatedAt;
 
     /**
      * Старшина
      *
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="children", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="subordinates_users", cascade={"persist"})
      */
     protected $foreman;
 
@@ -68,13 +65,6 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="UserOauth", mappedBy="user", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     protected $oauths;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    protected $created_at;
 
     /**
      * @var \DateTime|null
@@ -139,6 +129,20 @@ class User implements UserInterface
     protected $birth_year;
 
     /**
+     * @var float|null
+     *
+     * @ORM\Column(type="decimal", precision=10, scale=8, nullable=true)
+     */
+    protected $latitude;
+
+    /**
+     * @var float|null
+     *
+     * @ORM\Column(type="decimal", precision=11, scale=8, nullable=true)
+     */
+    protected $longitude;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -155,22 +159,6 @@ class User implements UserInterface
     public function __toString(): string
     {
         return $this->getFirstName().' '.$this->getLastName();
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->created_at;
     }
 
     /**
@@ -486,6 +474,46 @@ class User implements UserInterface
     public function setLastLoginAt($last_login_at): self
     {
         $this->last_login_at = $last_login_at;
+
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getLatitude(): ?float
+    {
+        return $this->latitude ? (float) $this->latitude : null;
+    }
+
+    /**
+     * @param float|null $latitude
+     *
+     * @return $this
+     */
+    public function setLatitude(?float $latitude): self
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getLongitude(): ?float
+    {
+        return $this->longitude ? (float) $this->longitude : null;
+    }
+
+    /**
+     * @param float|null $longitude
+     *
+     * @return $this
+     */
+    public function setLongitude(?float $longitude): self
+    {
+        $this->longitude = $longitude;
 
         return $this;
     }

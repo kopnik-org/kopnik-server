@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>Статистика</h1>
+
+    <dl class="row">
+        <dt class="col-sm-3">Всего пользователей</dt>
+        <dd class="col-sm-9">{{ total }}</dd>
+
+        <dt class="col-sm-3">Заверенные</dt>
+        <dd class="col-sm-9">{{ confirmed }}</dd>
+
+        <dt class="col-sm-3">С заданными старшинами</dt>
+        <dd class="col-sm-9">{{ has_foreman }}</dd>
+
+        <dt class="col-sm-3">Без гео координат</dt>
+        <dd class="col-sm-9">{{ wo_geo }}</dd>
+    </dl>
+{% endblock %}

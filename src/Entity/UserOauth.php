@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Smart\CoreBundle\Doctrine\ColumnTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -21,19 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class UserOauth
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    protected $created_at;
+    use ColumnTrait\Id;
+    use ColumnTrait\CreatedAt;
 
     /**
      * @var string|null
@@ -85,22 +75,6 @@ class UserOauth
     {
         $this->created_at   = new \DateTime();
         $this->provider     = 'vkontakte';
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->created_at;
     }
 
     /**

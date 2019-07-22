@@ -18,17 +18,17 @@ security:
             anonymous: ~
             logout:
                 path: /logout
-#            guard:
-#                authenticators:
-#                    - App\Security\Authenticator\VkAuthenticator
+            guard:
+                authenticators:
+                    - App\Security\UserAuthenticator
             oauth:
                 resource_owners:
-                    vkontakte: /login/check-vk
+                    vkontakte:  /login/check-vk
                     #github: /login/check-github
-                failure_path:      /login/
-                login_path:        /login/
-                use_forward:       false
-                remember_me:  true
+                failure_path:   /login/
+                login_path:     /login/
+                use_forward:    false
+                remember_me:    true
                 oauth_user_provider:
                     service: app.oauth_aware.user_provider.service
 
@@ -43,7 +43,5 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/connect/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/welcome/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, role: ROLE_USER }
-        # - { path: ^/profile, roles: ROLE_USER }

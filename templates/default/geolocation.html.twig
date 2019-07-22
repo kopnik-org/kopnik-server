@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title -%}
+    Моё местоположение / {{ parent() }}
+{%- endblock title %}
+
+{% block css %}
+    {{ parent() }}
+    <style type="text/css">
+        #geocoding_form {
+            margin: 10px auto 10px;
+        }
+        .find-me.btn:focus {
+            border-color: transparent;
+            outline: 0;
+        }
+        .no-browser-support {
+            font-size: 18px;
+            opacity: 0;
+            display: none;
+        }
+        .coordinates b:first-child {
+            margin-right: 15px;
+        }
+        .visible {
+            display: block;
+            opacity: 1;
+        }
+        #mapdiv {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+{% endblock css %}
+
+{% block content %}
+    <form method="post" id="geocoding_form" class="form-horizontal">
+        <div class="form-group form-row">
+            <div class="col">
+                <button type="button" class="find-me btn btn-sm btn-outline-secondary">Find My Location</button>
+            </div>
+            <div class="col">
+                <input type="text" id="form_latitude" value="{{ latitude }}" name="latitude" class="form-control">
+            </div>
+            <div class="col">
+                <input type="text" id="form_longitude" value="{{ longitude }}" name="longitude" class="form-control">
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </div>
+    </form>
+
+    <p class="no-browser-support">Sorry, the Geolocation API isn't supported in Your browser.</p>
+
+    <div id="mapdiv"></div>
+{% endblock %}
+
+{% block footer '' %}
+
+{% block js %}
+    {{ parent() }}
+    <script src="{{ asset('js/ol.js') }}"></script>
+    <script src="{{ asset('js/kopnik.js') }}"></script>
+    <script>
+      renderDragableMap({{ longitude ? longitude : 82.911540 }}, {{ latitude ? latitude : 55.059946}});
+
+      var findMeButton = $('.find-me');
+
+      // Check if the browser has support for the Geolocation API
+      if (!navigator.geolocation) {
+        findMeButton.addClass("disabled");
+        $('.no-browser-support').addClass("visible");
+      } else {
+        findMeButton.on('click', function(e) {
+          e.preventDefault();
+          navigator.geolocation.getCurrentPosition(function(position) {
+            // Get the coordinates of the current possition.
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+
+            $('#form_latitude').attr('value', lat.toFixed(10));
+            $('#form_longitude').attr('value', lon.toFixed(10));
+
+            $('#mapdiv').empty()
+
+            renderDragableMap(position.coords.longitude, position.coords.latitude)
+
+          });
+        });
+      }
+    </script>
+{% endblock js %}
