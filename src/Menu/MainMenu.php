@@ -44,15 +44,36 @@ class MainMenu // implements ContainerAwareInterface
             ->setLinkAttribute('class', 'nav-link py-0')
         ;
 
-        $menu->addChild('My geolocation', ['route' => 'geolocation'])
-            ->setAttribute('class', 'nav-item')
-            ->setLinkAttribute('class', 'nav-link py-0')
-        ;
-
         $menu->addChild('Stats', ['route' => 'stats'])
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link py-0')
         ;
+
+        $menu->addChild('My profile', ['route' => 'profile'])
+            ->setAttribute('class', 'nav-item')
+            ->setLinkAttribute('class', 'nav-link py-0')
+        ;
+
+        return $menu;
+    }
+
+    /**
+     * Профиль пользователя
+     *
+     * @param array $options
+     *
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function profile(array $options)
+    {
+        $menu = $this->factory->createItem('root', [
+            'childrenAttributes'    => [
+                'class' => 'nav _flex-column nav-pills',
+            ],
+        ]);
+
+        $menu->addChild('My profile', ['route' => 'profile']);
+        $menu->addChild('My geolocation', ['route' => 'profile_geolocation']);
 
         return $menu;
     }

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Smart\CoreBundle\Doctrine\ColumnTrait;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -86,6 +87,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string", length=32)
+     * @Assert\NotNull(message="This value is not valid.")
      */
     protected $first_name;
 
@@ -95,6 +97,7 @@ class User implements UserInterface
      * @var string|null
      *
      * @ORM\Column(type="string", length=32, nullable=true)
+     * @Assert\NotNull(message="This value is not valid.")
      */
     protected $last_name;
 
@@ -104,6 +107,7 @@ class User implements UserInterface
      * @var string|null
      *
      * @ORM\Column(type="string", length=32, nullable=true)
+     * @Assert\NotNull(message="This value is not valid.")
      */
     protected $patronymic;
 
@@ -111,6 +115,9 @@ class User implements UserInterface
      * @var int|null
      *
      * @ORM\Column(type="integer", length=4, nullable=true)
+     * @Assert\Length(min = 4, minMessage = "Code length must be at least {{ limit }} characters long")
+     * @Assert\Length(max = 4, minMessage = "Code length must be at least {{ limit }} characters long")
+     * @Assert\NotNull(message="This value is not valid.")
      */
     protected $passport_code;
 
@@ -125,6 +132,7 @@ class User implements UserInterface
      * @var int|null
      *
      * @ORM\Column(type="integer", length=4, nullable=true)
+     * @Assert\NotNull(message="This value is not valid.")
      */
     protected $birth_year;
 
@@ -158,7 +166,7 @@ class User implements UserInterface
      */
     public function __toString(): string
     {
-        return $this->getFirstName().' '.$this->getLastName();
+        return (string) $this->getFirstName().' '. (string) $this->getLastName();
     }
 
     /**
@@ -364,7 +372,7 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->first_name;
     }

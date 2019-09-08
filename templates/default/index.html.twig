@@ -3,7 +3,7 @@
 {% block content %}
     {% if not app.user.latitude or not app.user.latitude %}
         <div class="alert alert-danger" role="alert">
-            Задайте ваше <a href="{{ path('geolocation') }}">местоположения</a>.
+            Задайте ваше <a href="{{ path('profile_geolocation') }}">местоположения</a>.
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>

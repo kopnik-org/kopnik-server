@@ -30,39 +30,6 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @param Request                $request
-     * @param EntityManagerInterface $em
-     *
-     * @return Response|RedirectResponse
-     *
-     * @Route("/geolocation/", name="geolocation")
-     */
-    public function geolocation(Request $request, EntityManagerInterface $em): Response
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        if ($request->isMethod('POST')) {
-            $user
-                ->setLatitude((float) $request->request->get('latitude'))
-                ->setLongitude((float) $request->request->get('longitude'))
-            ;
-
-            $em->persist($user);
-            $em->flush();
-
-            $this->addFlash('success', 'Координаты сохранены.');
-
-            return $this->redirectToRoute('geolocation');
-        }
-
-        return $this->render('default/geolocation.html.twig', [
-            'latitude'  => $user->getLatitude(),
-            'longitude' => $user->getLongitude(),
-        ]);
-    }
-
-    /**
      * @param UserRepository $ur
      *
      * @return Response

@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Мой профиль{% endblock %}
+
+{% block content %}
+
+    <br>
+
+    {{ knp_menu_render('profile') }}
+
+    <div class="row">
+        <div class="col">
+            {% block profile_content %}
+
+            {% endblock profile_content %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends 'profile/_layout.html.twig' %}
+
+{% block profile_content %}
+    {% if form is defined %}
+        {{ form(form) }}
+    {% endif %}
+{% endblock profile_content %}

@@ -1,14 +1,14 @@
-{% extends 'base.html.twig' %}
+{% extends 'profile/_layout.html.twig' %}
 
 {% block title -%}
-    Моё местоположение / {{ parent() }}
+    Моё местоположение
 {%- endblock title %}
 
 {% block css %}
     {{ parent() }}
     <style type="text/css">
         #geocoding_form {
-            margin: 10px auto 10px;
+            margin: 0px auto 10px;
         }
         .find-me.btn:focus {
             border-color: transparent;
@@ -33,11 +33,11 @@
     </style>
 {% endblock css %}
 
-{% block content %}
+{% block profile_content %}
     <form method="post" id="geocoding_form" class="form-horizontal">
         <div class="form-group form-row">
             <div class="col">
-                <button type="button" class="find-me btn btn-sm btn-outline-secondary">Find My Location</button>
+                <button type="button" class="find-me btn btn-sm btn-outline-info">Определить автоматически</button>
             </div>
             <div class="col">
                 <input type="text" id="form_latitude" value="{{ latitude }}" name="latitude" class="form-control">

@@ -1,0 +1,33 @@
+{% use 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{# ошибки над виджетом #}
+{#
+{%- block form_widget -%}
+    {{- form_errors(form) -}}
+    {{ parent() }}
+{%- endblock form_widget -%}
+#}
+{%- block form_widget_simple -%}
+    {{- form_errors(form) -}}
+    {{ parent() }}
+{%- endblock form_widget_simple -%}
+
+{#
+{%- block form_widget_compound -%}
+    {{- form_errors(form) -}}
+    {{ parent() }}
+{%- endblock form_widget_compound -%}
+#}
+
+{%- block choice_widget_collapsed -%}
+    {{- form_errors(form) -}}
+    {{ parent() }}
+{%- endblock choice_widget_collapsed -%}
+
+{% block form_label_class -%}
+    col-sm-3
+{%- endblock form_label_class %}
+
+{% block form_group_class -%}
+    col-sm-9
+{%- endblock form_group_class %}

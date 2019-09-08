@@ -22,6 +22,51 @@
                 color: black;
                 background-color: lightgray;
             }
+            @media (min-width: 576px) {
+                .form-group label {
+                    text-align: left;
+                }
+            }
+            @media (min-width: 768px) {
+                .form-group label {
+                    text-align: right;
+                }
+            }
+            .clear {
+                clear: both;
+            }
+            .form-group label.col-form-label {
+                font-weight: bold;
+            }
+            .form-group label.col-form-label .invalid-feedback {
+                display: none !important;
+            }
+            .form-group label.required:after {
+                content: ' *';
+                color: red;
+            }
+            .form-control option[selected=selected] {
+                color: blue;
+                font-weight: bold;
+            }
+            .custom-file-input{
+                padding: 4px;
+                opacity: 1;
+                background-color: white;
+            }
+            .custom-file-label {
+                display: none;
+            }
+            .nav .nav-item .nav-link:hover {
+                /*background-color: #e8e9ea;*/
+            }
+            .myform {
+                background-color: #e8e9ea;
+                padding: 15px 15px 1px 10px;
+            }
+            .card-text {
+                margin-bottom: 7px;
+            }
         </style>
     {% endblock %}
 </head>
@@ -47,7 +92,7 @@
                             {{ app.user }}
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Мой профиль</a>
+                            <a class="dropdown-item" href="{{ path('profile') }}">Мой профиль</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ path('security_logout') }}">Выход</a>
                         </div>
@@ -79,6 +124,26 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script src="{{ asset('pnotify/pnotify.custom.min.js') }}"></script>
+        <script>
+          $('li.active a').addClass('active');
+          $('li.current a').addClass('active');
+          $('ul.nav li').addClass('nav-item');
+          $('ul.nav li a').addClass('nav-link');
+          $('.container form').addClass('myform');
+          $('.container-fluid form').addClass('myform');
+          $('.nav .nav-item .nav-link').hover(
+            function () {
+              if (!$(this).hasClass('active')){
+                $(this).css('background-color', '#e8e9ea');
+              }
+            },
+            function () {
+              if (!$(this).hasClass('active')) {
+                $(this).css('background-color', 'transparent');
+              }
+            }
+          );
+        </script>
     {% endblock %}
 </body>
 </html>
