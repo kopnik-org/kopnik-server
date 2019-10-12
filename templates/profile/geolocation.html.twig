@@ -120,8 +120,6 @@
             $('#form_latitude').attr('value', lat.toFixed(12));
             $('#form_longitude').attr('value', lon.toFixed(12));
 
-            $('#mapdiv').empty()
-
             mymap.setView([lat.toFixed(12), lon.toFixed(12)], 16);
             // renderDragableMap(position.coords.longitude, position.coords.latitude)
 
