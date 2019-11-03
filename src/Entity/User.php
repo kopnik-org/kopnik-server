@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      indexes={
  *          @ORM\Index(columns={"created_at"}),
  *          @ORM\Index(columns={"is_confirmed"}),
+ *          @ORM\Index(columns={"is_witness"}),
  *      },
  * )
  */
@@ -129,6 +130,15 @@ class User implements UserInterface
     protected $is_confirmed;
 
     /**
+     * Является заверителем?
+     *
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", options={"default":0})
+     */
+    protected $is_witness;
+
+    /**
      * @var int|null
      *
      * @ORM\Column(type="integer", length=4, nullable=true)
@@ -159,6 +169,7 @@ class User implements UserInterface
         $this->subordinates_users = new ArrayCollection();
         $this->created_at         = new \DateTime();
         $this->is_confirmed       = false;
+        $this->is_witness         = false;
     }
 
     /**
@@ -522,6 +533,26 @@ class User implements UserInterface
     public function setLongitude(?float $longitude): self
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIsWitness(): bool
+    {
+        return $this->is_witness;
+    }
+
+    /**
+     * @param bool $is_witness
+     *
+     * @return $this
+     */
+    public function setIsWitness(bool $is_witness): self
+    {
+        $this->is_witness = $is_witness;
 
         return $this;
     }
