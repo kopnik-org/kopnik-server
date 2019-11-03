@@ -41,6 +41,7 @@ class DefaultController extends AbstractController
         return $this->render('default/stats.html.twig', [
             'total' => $ur->countBy([]),
             'confirmed' => $ur->countBy(['is_confirmed' => true]),
+            'witnesses' => $ur->countBy(['is_witness' => true]),
             'has_foreman' => $ur->countBy(['foreman' => 'not null']),
             'wo_geo' => $ur->countBy(['latitude' => 'null', 'longitude' => 'null']),
         ]);
