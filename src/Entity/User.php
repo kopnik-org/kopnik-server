@@ -281,6 +281,22 @@ class User implements UserInterface
     }
 
     /**
+     * @param string $provider
+     *
+     * @return UserOauth|null
+     */
+    public function getOauthByProvider(string $provider): ?UserOauth
+    {
+        foreach ($this->oauths as $oauth) {
+            if ($oauth->getProvider() == $provider) {
+                return $oauth;
+            }
+        }
+
+        return null;
+    }
+    
+    /**
      * @return \DateTime
      */
     public function getConfirmedAt(): ?\DateTime
