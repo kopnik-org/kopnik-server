@@ -38,7 +38,7 @@ class UserRepository extends ServiceEntityRepository
     public function findNear($user): array
     {
         $q = $this->getFindByQuery([
-            'is_confirmed' => true,
+//            'is_confirmed' => true,
             'latitude' => 'not null',
             'longitude' => 'not null',
         ]);

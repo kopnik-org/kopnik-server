@@ -1,15 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    {% if not app.user.latitude or not app.user.latitude %}
-        <div class="alert alert-danger" role="alert">
-            Задайте ваше <a href="{{ path('profile_geolocation') }}">местоположения</a>.
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    {% endif %}
-
+{#
     {% if not app.user.isConfirmed %}
         <div class="alert alert-danger" role="alert">
             Нужно подтвердить аккаунт, для этого выберите на карте ближашего заверителя и отправьте <a href="#">заявку</a>.
@@ -18,74 +10,39 @@
             </button>
         </div>
     {% endif %}
+#}
+{#    <p>Всего участников на карте: {{ users|length }}</p>#}
 
-    <p>Всего участников на карте: {{ users|length }}</p>
+    <style type="text/css">
+        #mapdiv {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+
+{#    {{ dump(users) }}#}
 
     <div id="mapdiv"></div>
+
 {% endblock %}
 
 {% block js %}
     {{ parent() }}
-    <script src="{{ asset('js/ol.js') }}"></script>
-    <script src="{{ asset('js/kopnik.js') }}"></script>
 
     <script>
-      {% set markers = '' %}
+      var mymap = L.map('mapdiv', { attributionControl:false }).setView([{{ app.user.latitude }}, {{ app.user.longitude }}], 4);
 
-      {% for u in users %}
-          var marker{{ u.id }} = new ol.Feature({
-            geometry: new ol.geom.Point(ol.proj.fromLonLat([{{ u.longitude }}, {{ u.latitude }}])),
-            name: '{{ u }}',
-          });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // __dummy
+      }).addTo(mymap);
 
-          // specific style for that one point
-          marker{{ u.id }}.setStyle(new ol.style.Style({
-            image: new ol.style.Icon({
-              anchor: [0.5, 46],
-              anchorXUnits: 'fraction',
-              anchorYUnits: 'pixels',
-              src: 'https://openlayers.org/en/v5.3.0/examples/data/icon.png'
-            })
-          }));
+      {% for user in users %}
+        var marker{{ user.id }} = L.marker([{{ user.latitude }}, {{ user.longitude }}]).addTo(mymap);
 
-          {% if markers is empty %}
-            {% set markers = 'marker' ~ u.id %}
-          {% else %}
-            {% set markers = markers ~ ', marker' ~ u.id %}
-          {% endif %}
+        //marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+        marker{{ user.id }}.bindPopup("<b>{{ user }}</b>")
       {% endfor %}
 
-      const iconLayerSource = new ol.source.Vector({
-        features: [{{ markers }}],
-        projection: 'EPSG:4326'
-      });
-
-      const iconLayer = new ol.layer.Vector({
-        source: iconLayerSource,
-        // style for all elements on a layer
-        style: new ol.style.Style({
-          image: new ol.style.Icon({
-            anchor: [0.5, 46],
-            anchorXUnits: 'fraction',
-            anchorYUnits: 'pixels',
-            src: 'https://openlayers.org/en/v5.3.0/examples/data/icon.png'
-          })
-        }),
-      });
-
-      var map = new ol.Map({
-        target: 'mapdiv',
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
-          }),
-          iconLayer
-        ],
-        view: new ol.View({
-          center: ol.proj.fromLonLat([{{ app.user.longitude ? app.user.longitude : 82.911540 }}, {{ app.user.latitude ? app.user.latitude : 55.059946}}]),
-          zoom: 14
-        })
-      });
-
     </script>
+
 {% endblock js %}

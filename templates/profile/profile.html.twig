@@ -65,14 +65,7 @@
     {% set latitude = form.vars.data.latitude %}
     {% set longitude = form.vars.data.longitude %}
 
-    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
-            integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
-            crossorigin=""></script>
-
-    {#    <script src="{{ asset('js/ol.js') }}"></script>#}
-    {#    <script src="{{ asset('js/kopnik.js') }}"></script>#}
     <script>
-        {# renderDragableMap({{ longitude ? longitude : 82.911540 }}, {{ latitude ? latitude : 55.059946}});#}
         var mymap = L.map('mapdiv', { attributionControl:false }).setView([{{ latitude ? latitude : 55.03023587}}, {{ longitude ? longitude : 82.92034149 }}], 16);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
