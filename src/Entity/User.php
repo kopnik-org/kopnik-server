@@ -139,9 +139,31 @@ class User implements UserInterface
     protected $is_witness;
 
     /**
+     * Разрешен приём сообщений от сообщества в VK
+     *
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", options={"default":0})
+     */
+    protected $is_allow_messages_from_community;
+
+    /**
+     * Дата до которой установлена защита от флуда.
+     *
+     * @link https://vk.com/faq11583
+     *
+     * @var \Datetime|null
+     *
+     * ORM\Column(type="datetime", length=4, nullable=true)
+     */
+    protected $flood_protect_datetime; // @todo
+
+    /**
      * @var int|null
      *
      * @ORM\Column(type="integer", length=4, nullable=true)
+     * @Assert\Length(min = 4, minMessage = "Code length must be at least {{ limit }} characters long")
+     * @Assert\Length(max = 4, minMessage = "Code length must be at least {{ limit }} characters long")
      * @Assert\NotNull(message="This value is not valid.")
      */
     protected $birth_year;
@@ -170,6 +192,7 @@ class User implements UserInterface
         $this->created_at         = new \DateTime();
         $this->is_confirmed       = false;
         $this->is_witness         = false;
+        $this->is_allow_messages_from_community = false;
     }
 
     /**
@@ -293,7 +316,15 @@ class User implements UserInterface
             }
         }
 
-        return null;
+        throw new \Exception("Провайдер $provider не найден");
+    }
+
+    /**
+     * @return int
+     */
+    public function getVkIdentifier(): int
+    {
+        return (int) $this->getOauthByProvider('vkontakte')->getIdentifier();
     }
     
     /**
@@ -352,6 +383,34 @@ class User implements UserInterface
     public function setIsConfirmed($is_confirmed): self
     {
         $this->is_confirmed = $is_confirmed;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsAllowMessagesFromCommunity(): bool
+    {
+        return $this->is_allow_messages_from_community;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAllowMessagesFromCommunity(): bool
+    {
+        return $this->is_allow_messages_from_community;
+    }
+
+    /**
+     * @param bool $is_allow_messages_from_community
+     *
+     * @return $this
+     */
+    public function setIsAllowMessagesFromCommunity(bool $is_allow_messages_from_community): self
+    {
+        $this->is_allow_messages_from_community = $is_allow_messages_from_community;
 
         return $this;
     }

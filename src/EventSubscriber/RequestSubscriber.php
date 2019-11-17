@@ -57,7 +57,12 @@ class RequestSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (empty($user->getPatronymic()) or empty($user->getBirthYear()) or empty($user->getPassportCode()) ) {
+        if (empty($user->getPatronymic())
+            or empty($user->getBirthYear())
+            or empty($user->getPassportCode())
+            or empty($user->getLatitude())
+            or empty($user->getLongitude())
+        ) {
             $route = 'profile';
 
             if ($route === $event->getRequest()->get('_route')) {
@@ -68,17 +73,17 @@ class RequestSubscriber implements EventSubscriberInterface
 
             $response = new RedirectResponse($this->router->generate($route));
             $event->setResponse($response);
-        } /* elseif (empty($user->getLatitude()) or empty($user->getLongitude())) {
-            $route = 'profile_geolocation';
+        } elseif (!$user->isAllowMessagesFromCommunity()) {
+            $route = 'profile_allow_messages_from_community';
 
             if ($route === $event->getRequest()->get('_route')) {
                 return;
             }
 
-            $event->getRequest()->getSession()->getFlashBag()->add('warning', 'Укажите ваше местоположение.');
+            $event->getRequest()->getSession()->getFlashBag()->add('warning', 'Необходимо разрешить получение уведомлений от сообщества в VK');
 
             $response = new RedirectResponse($this->router->generate($route));
             $event->setResponse($response);
-        } */
+        }
     }
 }

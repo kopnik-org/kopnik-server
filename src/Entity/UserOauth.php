@@ -162,7 +162,7 @@ class UserOauth
      */
     public function getIdentifier(): int
     {
-        return $this->identifier;
+        return (int) $this->identifier;
     }
 
     /**
@@ -170,7 +170,7 @@ class UserOauth
      *
      * @return $this
      */
-    public function setIdentifier($identifier): self
+    public function setIdentifier(int $identifier): self
     {
         $this->identifier = $identifier;
 

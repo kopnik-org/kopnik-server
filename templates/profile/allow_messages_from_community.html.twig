@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% if app.user.isAllowMessagesFromCommunity %}
+        ok
+    {% else %}
+        <h1>Разрешить приём сообщений от сообщества <a href="https://vk.com/kopnik_org" target="_blank"> kopnik.org: первая сеть копного права</a></h1>
+
+        <script type="text/javascript" src="https://vk.com/js/api/openapi.js?162"></script>
+
+        <!-- VK Widget -->
+        <div id="vk_allow_messages_from_community" style="padding: 30px 0 50px;"></div>
+
+        <script type="text/javascript">
+          VK.Widgets.AllowMessagesFromCommunity("vk_allow_messages_from_community", {}, {{ vk_community_id }});
+        </script>
+
+        <a href="{{ path('profile_allow_messages_from_community') }}" class="btn btn-success">Подтвердить</a>
+    {% endif %}
+{% endblock %}
