@@ -19,11 +19,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProfileController extends AbstractController
 {
     /**
-     * @param Request                $request
-     * @param EntityManagerInterface $em
-     *
-     * @return RedirectResponse|Response
-     *
      * @Route("/", name="profile")
      */
     public function profile(Request $request, EntityManagerInterface $em): Response
@@ -37,7 +32,7 @@ class ProfileController extends AbstractController
                 $em->persist($this->getUser());
                 $em->flush();
 
-                $this->addFlash('success', 'Основные данные обновлены');
+                $this->addFlash('success', 'Профиль обновлён');
 
                 return $this->redirectToRoute('profile');
             }
@@ -45,39 +40,6 @@ class ProfileController extends AbstractController
 
         return $this->render('profile/profile.html.twig', [
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @param Request                $request
-     * @param EntityManagerInterface $em
-     *
-     * @return Response|RedirectResponse
-     *
-     * @Route("/geolocation/", name="profile_geolocation")
-     */
-    public function geolocation(Request $request, EntityManagerInterface $em): Response
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        if ($request->isMethod('POST')) {
-            $user
-                ->setLatitude((float) $request->request->get('latitude'))
-                ->setLongitude((float) $request->request->get('longitude'))
-            ;
-
-            $em->persist($user);
-            $em->flush();
-
-            $this->addFlash('success', 'Координаты сохранены.');
-
-            return $this->redirectToRoute('profile_geolocation');
-        }
-
-        return $this->render('profile/geolocation.html.twig', [
-            'latitude'  => $user->getLatitude(),
-            'longitude' => $user->getLongitude(),
         ]);
     }
 }

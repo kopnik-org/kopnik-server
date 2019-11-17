@@ -149,14 +149,14 @@ class User implements UserInterface
     /**
      * @var float|null
      *
-     * @ORM\Column(type="decimal", precision=10, scale=8, nullable=true)
+     * @ORM\Column(type="decimal", precision=14, scale=12, nullable=true)
      */
     protected $latitude;
 
     /**
      * @var float|null
      *
-     * @ORM\Column(type="decimal", precision=11, scale=8, nullable=true)
+     * @ORM\Column(type="decimal", precision=14, scale=12, nullable=true)
      */
     protected $longitude;
 

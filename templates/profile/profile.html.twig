@@ -1,7 +1,134 @@
-{% extends 'profile/_layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block profile_content %}
-    {% if form is defined %}
-        {{ form(form) }}
-    {% endif %}
-{% endblock profile_content %}
+{% block css %}
+    {{ parent() }}
+    <style type="text/css">
+        #geocoding_form {
+            margin: 0px auto 10px;
+        }
+        .find-me.btn:focus {
+            border-color: transparent;
+            outline: 0;
+        }
+        .no-browser-support {
+            font-size: 18px;
+            opacity: 0;
+            display: none;
+        }
+        .coordinates b:first-child {
+            margin-right: 15px;
+        }
+        .visible {
+            display: block;
+            opacity: 1;
+        }
+        #mapdiv {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+{% endblock css %}
+
+{% block content %}
+    <div class="row">
+        <div class="col">
+
+        {{ form_start(form) }}
+        {{ form_row(form.firstname) }}
+        {{ form_row(form.patronymic) }}
+        {{ form_row(form.lastname) }}
+        {{ form_row(form.birth_year) }}
+        {{ form_row(form.passport_code) }}
+
+        <div class="form-group row">
+            <label class="col-form-label col-sm-3 required" for="mapdiv">Местоположение</label>
+            <div class="col-sm-9">
+                <table>
+                    <tr>
+                        <td><button type="button" id="find-me" class="btn btn-sm btn-outline-info">Определить автоматически</button></td>
+                        <td>{{ form_widget(form.latitude) }}</td>
+                        <td>{{ form_widget(form.longitude) }}</td>
+                    </tr>
+                </table>
+
+                <div id="mapdiv"></div>
+            </div>
+        </div>
+        {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    {{ parent() }}
+
+    {% set latitude = form.vars.data.latitude %}
+    {% set longitude = form.vars.data.longitude %}
+
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+            integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+            crossorigin=""></script>
+
+    {#    <script src="{{ asset('js/ol.js') }}"></script>#}
+    {#    <script src="{{ asset('js/kopnik.js') }}"></script>#}
+    <script>
+        {# renderDragableMap({{ longitude ? longitude : 82.911540 }}, {{ latitude ? latitude : 55.059946}});#}
+        var mymap = L.map('mapdiv', { attributionControl:false }).setView([{{ latitude ? latitude : 55.03023587}}, {{ longitude ? longitude : 82.92034149 }}], 16);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          // __dummy
+        }).addTo(mymap);
+
+        var marker = L.marker([{{ latitude ? latitude : 55.03023587}}, {{ longitude ? longitude : 82.92034149 }}]).addTo(mymap);
+
+        mymap.on('move', function () {
+          marker.setLatLng(mymap.getCenter());
+
+          var position = marker.getLatLng();
+          lat = Number(position['lat']).toFixed(12);
+          lng = Number(position['lng']).toFixed(12);
+
+          $('#user_latitude').attr('value', lat);
+          $('#user_longitude').attr('value', lng);
+
+          //console.log(mymap.getCenter());
+        });
+
+        mymap.on('zoomanim', function () {
+          marker.setLatLng(mymap.getCenter());
+
+          var position = marker.getLatLng();
+          lat = Number(position['lat']).toFixed(12);
+          lng = Number(position['lng']).toFixed(12);
+
+          $('#user_latitude').attr('value', lat);
+          $('#user_longitude').attr('value', lng);
+
+          //console.log(mymap.getCenter());
+        });
+
+        var findMeButton = $('#find-me');
+
+        // Check if the browser has support for the Geolocation API
+        if (!navigator.geolocation) {
+          findMeButton.addClass("disabled");
+          $('.no-browser-support').addClass("visible");
+        } else {
+          findMeButton.on('click', function(e) {
+            e.preventDefault();
+            navigator.geolocation.getCurrentPosition(function(position) {
+              // Get the coordinates of the current possition.
+              var lat = position.coords.latitude;
+              var lon = position.coords.longitude;
+
+              $('#user_latitude').attr('value', lat.toFixed(12));
+              $('#user_longitude').attr('value', lon.toFixed(12));
+
+              mymap.setView([lat.toFixed(12), lon.toFixed(12)], 16);
+              // renderDragableMap(position.coords.longitude, position.coords.latitude)
+
+            });
+          });
+        }
+    </script>
+{% endblock js %}

@@ -68,7 +68,7 @@ class RequestSubscriber implements EventSubscriberInterface
 
             $response = new RedirectResponse($this->router->generate($route));
             $event->setResponse($response);
-        } elseif (empty($user->getLatitude()) or empty($user->getLongitude())) {
+        } /* elseif (empty($user->getLatitude()) or empty($user->getLongitude())) {
             $route = 'profile_geolocation';
 
             if ($route === $event->getRequest()->get('_route')) {
@@ -79,6 +79,6 @@ class RequestSubscriber implements EventSubscriberInterface
 
             $response = new RedirectResponse($this->router->generate($route));
             $event->setResponse($response);
-        }
+        } */
     }
 }

@@ -56,25 +56,4 @@ class MainMenu // implements ContainerAwareInterface
 
         return $menu;
     }
-
-    /**
-     * Профиль пользователя
-     *
-     * @param array $options
-     *
-     * @return \Knp\Menu\ItemInterface
-     */
-    public function profile(array $options)
-    {
-        $menu = $this->factory->createItem('root', [
-            'childrenAttributes'    => [
-                'class' => 'nav _flex-column nav-pills',
-            ],
-        ]);
-
-        $menu->addChild('My profile', ['route' => 'profile']);
-        $menu->addChild('My geolocation', ['route' => 'profile_geolocation']);
-
-        return $menu;
-    }
 }

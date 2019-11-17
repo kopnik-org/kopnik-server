@@ -7,6 +7,7 @@ namespace App\Form\Type;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,6 +21,8 @@ class UserFormType extends AbstractType
             ->add('lastname', null, ['required' => true])
             ->add('birth_year')
             ->add('passport_code')
+            ->add('latitude', TextType::class, ['attr' => ['placeholder' => 'Широта']])
+            ->add('longitude', TextType::class, ['attr' => ['placeholder' => 'Долгота']])
             ->add('update', SubmitType::class, ['attr' => ['class' => 'btn-success']])
         ;
     }
