@@ -80,7 +80,16 @@ class RequestSubscriber implements EventSubscriberInterface
                 return;
             }
 
-            $event->getRequest()->getSession()->getFlashBag()->add('warning', 'Необходимо разрешить получение уведомлений от сообщества в VK');
+            //$event->getRequest()->getSession()->getFlashBag()->add('warning', 'Необходимо разрешить получение уведомлений от сообщества в VK');
+
+            $response = new RedirectResponse($this->router->generate($route));
+            $event->setResponse($response);
+        } elseif ($user->getStatus() != User::STATUS_CONFIRMED) {
+            $route = 'assurance';
+
+            if ($route === $event->getRequest()->get('_route')) {
+                return;
+            }
 
             $response = new RedirectResponse($this->router->generate($route));
             $event->setResponse($response);

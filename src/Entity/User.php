@@ -15,8 +15,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table("users",
  *      indexes={
  *          @ORM\Index(columns={"created_at"}),
- *          @ORM\Index(columns={"is_confirmed"}),
  *          @ORM\Index(columns={"is_witness"}),
+ *          @ORM\Index(columns={"status"}),
  *      },
  * )
  */
@@ -24,6 +24,15 @@ class User implements UserInterface
 {
     use ColumnTrait\Id;
     use ColumnTrait\CreatedAt;
+
+    const STATUS_PENDING   = 0;
+    const STATUS_CONFIRMED = 1;
+    const STATUS_DECLINE   = 2;
+    static protected $status_values = [
+        self::STATUS_PENDING    => 'Ожидает заверения',
+        self::STATUS_CONFIRMED  => 'Подтверждён',
+        self::STATUS_DECLINE    => 'Отклонён',
+    ];
 
     /**
      * Старшина
@@ -53,7 +62,7 @@ class User implements UserInterface
     protected $witness;
 
     /**
-     * Вписок всеx заверенных юзеров.
+     * Cписок всеx заверенных юзеров.
      *
      * @var User[]|ArrayCollection
      *
@@ -123,11 +132,11 @@ class User implements UserInterface
     protected $passport_code;
 
     /**
-     * @var bool
+     * @var int
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="smallint", nullable=false, options={"unsigned"=true, "default":0})
      */
-    protected $is_confirmed;
+    private $status;
 
     /**
      * Является заверителем?
@@ -190,9 +199,9 @@ class User implements UserInterface
         $this->approved_users     = new ArrayCollection();
         $this->subordinates_users = new ArrayCollection();
         $this->created_at         = new \DateTime();
-        $this->is_confirmed       = false;
         $this->is_witness         = false;
         $this->is_allow_messages_from_community = false;
+        $this->status             = self::STATUS_PENDING;
     }
 
     /**
@@ -363,26 +372,6 @@ class User implements UserInterface
     public function setPatronymic($patronymic): self
     {
         $this->patronymic = $patronymic;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isIsConfirmed(): bool
-    {
-        return $this->is_confirmed;
-    }
-
-    /**
-     * @param bool $is_confirmed
-     *
-     * @return $this
-     */
-    public function setIsConfirmed($is_confirmed): self
-    {
-        $this->is_confirmed = $is_confirmed;
 
         return $this;
     }
@@ -615,7 +604,15 @@ class User implements UserInterface
     /**
      * @return bool
      */
-    public function isIsWitness(): bool
+    public function getIsWitness(): bool
+    {
+        return $this->is_witness;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWitness(): bool
     {
         return $this->is_witness;
     }
@@ -628,6 +625,66 @@ class User implements UserInterface
     public function setIsWitness(bool $is_witness): self
     {
         $this->is_witness = $is_witness;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    static public function getStatusFormChoices(): array
+    {
+        return array_flip(self::$status_values);
+    }
+
+    /**
+     * @return array
+     */
+    static public function getStatusValues(): array
+    {
+        return self::$status_values;
+    }
+
+    /**
+     * @return bool
+     */
+    static public function isStatusExist($status): bool
+    {
+        if (isset(self::$status_values[$status])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusAsText(): string
+    {
+        if (isset(self::$status_values[$this->status])) {
+            return self::$status_values[$this->status];
+        }
+
+        return 'N/A';
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     *
+     * @return $this
+     */
+    public function setStatus($status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

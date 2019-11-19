@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>Управление пользователями</h1>
+
+    <ul class="nav nav-pills">
+        <li {% if status == 0 %} class="active" {% endif %}><a href="?status=0">Ожидающие заверения</a></li>
+        <li {% if status == 1 %} class="active" {% endif %}><a href="?status=1">Заверенные</a></li>
+        <li {% if status == 2 %} class="active" {% endif %}><a href="?status=2">Отклонённые</a></li>
+    </ul>
+
+    <table class="table table-bordered table-hover ">
+        <thead><tr>
+            <th>Пользователь</th>
+            <th>Год рождения</th>
+            <th>Последние 4 цифры паспорта</th>
+            <th>Дата регистрации</th>
+            {% if status == 0 %}
+                <th>Действие</th>
+            {% endif %}
+        </tr></thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td><a href="https://vk.com/id{{ user.vkIdentifier }}" target="_blank">{{ user }}</a></td>
+                <td>{{ user.birthYear }}</td>
+                <td>{{ user.passportCode }}</td>
+                <td>{{ user.createdAt|date('Y-m-d H:i:s') }}</td>
+                {% if status == 0 %}
+                    <td>
+                        <a href="?user={{ user.id }}&action=confirm" class="btn btn-success" onclick="return confirm('Вы уверены, что хотите заверить пользователя {{ user }}?')">Заверить</a>
+                        <a href="?user={{ user.id }}&action=decline" class="btn btn-danger" onclick="return confirm('Вы уверены, что хотите ОТКЛОНИТЬ пользователя {{ user }}?')">Отклонить</a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

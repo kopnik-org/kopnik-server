@@ -110,6 +110,7 @@
         </nav>
     </header>
     {% endblock header %}
+
     <content>
         <div class="container">
             {% block content '' %}
@@ -118,7 +119,7 @@
 
     {% block footer %}
     <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">&copy; 2019 Kopnik.org</p>
+        <p class="mb-1">&copy; {{ 'now'|date('Y') }} Kopnik.org</p>
         <ul class="list-inline">
             <li class="list-inline-item"><a href="#">Информация</a></li>
             <li class="list-inline-item"><a href="#">Поддержка</a></li>

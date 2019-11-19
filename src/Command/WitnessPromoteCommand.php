@@ -80,7 +80,10 @@ class WitnessPromoteCommand extends Command
             return;
         }
 
-        $user->setIsWitness(true);
+        $user
+            ->setIsWitness(true)
+            ->setStatus(User::STATUS_CONFIRMED)
+        ;
         $this->em->flush();
 
         $this->io->success($user->getFirstName().' '.$user->getLastName().' - назначен заверителем');

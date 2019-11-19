@@ -16,10 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     /**
-     * @param UserRepository $ur
-     *
-     * @return Response
-     *
      * @Route("/", name="homepage")
      */
     public function index(UserRepository $ur): Response
@@ -30,20 +26,82 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @param UserRepository $ur
-     *
-     * @return Response
-     *
      * @Route("/stats/", name="stats")
      */
     public function stats(UserRepository $ur): Response
     {
         return $this->render('default/stats.html.twig', [
             'total' => $ur->countBy([]),
-            'confirmed' => $ur->countBy(['is_confirmed' => true]),
+            'confirmed' => $ur->countBy(['status' => User::STATUS_CONFIRMED]),
             'witnesses' => $ur->countBy(['is_witness' => true]),
             'has_foreman' => $ur->countBy(['foreman' => 'not null']),
-            'wo_geo' => $ur->countBy(['latitude' => 'null', 'longitude' => 'null']),
+        ]);
+    }
+
+    /**
+     * @Route("/assurance/", name="assurance")
+     */
+    public function assurance(UserRepository $ur): Response
+    {
+        if ($this->getUser()->getStatus() == User::STATUS_CONFIRMED) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('default/assurance.html.twig', [
+            'witnesses' => $ur->findBy(['is_witness' => true]),
+        ]);
+    }
+
+    /**
+     * @Route("/admin/", name="admin")
+     */
+    public function admin(Request $request, UserRepository $ur, EntityManagerInterface $em): Response
+    {
+        if (!$this->getUser()->isWitness()) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        $action = $request->query->get('action');
+
+
+        if ($action) {
+            $user = $ur->find($request->query->get('user', 0));
+            if (empty($user)) {
+                $this->addFlash('error', 'Пользователь не найден');
+
+                return $this->redirectToRoute('admin');
+            }
+        }
+
+        if ($action == 'confirm') {
+            $user
+                ->setStatus(User::STATUS_CONFIRMED)
+                ->setConfirmedAt(new \DateTime())
+                ->setWitness($this->getUser())
+            ;
+            $em->flush();
+
+            $this->addFlash('success', "Пользователь <b>{$user->__toString()}</b> заверен!");
+
+            return $this->redirectToRoute('admin');
+        } elseif ($action == 'decline') {
+            $user
+                ->setStatus(User::STATUS_CONFIRMED)
+                ->setConfirmedAt(new \DateTime())
+                ->setWitness($this->getUser())
+            ;
+            $em->flush();
+
+            $this->addFlash('notice', "Пользователь <b>{$user->__toString()}</b> отклонён!");
+
+            return $this->redirectToRoute('admin');
+        }
+
+        $status = $request->query->get('status', 0);
+
+        return $this->render('default/admin.html.twig', [
+            'status' => $status,
+            'users'  => $ur->findBy(['status' => $status, 'is_allow_messages_from_community' => true], ['created_at' => 'DESC']),
         ]);
     }
 }
