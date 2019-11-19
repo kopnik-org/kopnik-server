@@ -74,7 +74,7 @@ class WitnessDemoteCommand extends Command
         /** @var User $user */
         $user = $userOauth->getUser();
 
-        if ($user->isIsWitness()) {
+        if ($user->isWitness()) {
             $user->setIsWitness(false);
             $this->em->flush();
 
