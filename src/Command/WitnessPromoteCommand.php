@@ -74,7 +74,7 @@ class WitnessPromoteCommand extends Command
         /** @var User $user */
         $user = $userOauth->getUser();
 
-        if ($user->isIsWitness()) {
+        if ($user->isWitness()) {
             $this->io->note($user->getFirstName().' '.$user->getLastName().' - уже является заверителем');
 
             return;
