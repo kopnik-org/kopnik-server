@@ -84,7 +84,7 @@ class RequestSubscriber implements EventSubscriberInterface
 
             $response = new RedirectResponse($this->router->generate($route));
             $event->setResponse($response);
-        } elseif ($user->getStatus() != User::STATUS_CONFIRMED) {
+        } elseif ($user->getStatus() == User::STATUS_NEW or $user->getStatus() == User::STATUS_PENDING) {
             $route = 'assurance';
 
             if ($route === $event->getRequest()->get('_route')) {

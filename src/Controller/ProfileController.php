@@ -67,7 +67,10 @@ class ProfileController extends AbstractController
                 'random_id' => random_int(100, 999999999),
             ]);
 
-            $user->setIsAllowMessagesFromCommunity(true);
+            $user
+                ->setIsAllowMessagesFromCommunity(true)
+                ->setStatus(User::STATUS_PENDING)
+            ;
             $em->flush();
 
             return $this->redirectToRoute('homepage');

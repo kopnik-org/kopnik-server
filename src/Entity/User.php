@@ -25,11 +25,13 @@ class User implements UserInterface
     use ColumnTrait\Id;
     use ColumnTrait\CreatedAt;
 
-    const STATUS_PENDING   = 0;
-    const STATUS_CONFIRMED = 1;
-    const STATUS_DECLINE   = 2;
+    const STATUS_NEW       = 0;
+    const STATUS_PENDING   = 1;
+    const STATUS_CONFIRMED = 2;
+    const STATUS_DECLINE   = 3;
     static protected $status_values = [
-        self::STATUS_PENDING    => 'Ожидает заверения',
+        self::STATUS_NEW        => 'Новый',
+        self::STATUS_PENDING    => 'Ожидает заверения', // Выставляется после заполнение профиля и разрешения приёма сообщений в вк
         self::STATUS_CONFIRMED  => 'Подтверждён',
         self::STATUS_DECLINE    => 'Отклонён',
     ];
@@ -201,7 +203,7 @@ class User implements UserInterface
         $this->created_at         = new \DateTime();
         $this->is_witness         = false;
         $this->is_allow_messages_from_community = false;
-        $this->status             = self::STATUS_PENDING;
+        $this->status             = self::STATUS_NEW;
     }
 
     /**

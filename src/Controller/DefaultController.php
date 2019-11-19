@@ -74,14 +74,18 @@ class DefaultController extends AbstractController
         }
 
         if ($action == 'confirm') {
-            $user
-                ->setStatus(User::STATUS_CONFIRMED)
-                ->setConfirmedAt(new \DateTime())
-                ->setWitness($this->getUser())
-            ;
-            $em->flush();
+            if ($user->getStatus() == User::STATUS_PENDING) {
+                $user
+                    ->setStatus(User::STATUS_CONFIRMED)
+                    ->setConfirmedAt(new \DateTime())
+                    ->setWitness($this->getUser())
+                ;
+                $em->flush();
 
-            $this->addFlash('success', "Пользователь <b>{$user->__toString()}</b> заверен!");
+                $this->addFlash('success', "Пользователь <b>{$user->__toString()}</b> заверен!");
+            } else {
+                $this->addFlash('error', "У пользователя <b>{$user->__toString()}</b> не статус 'в ожидании'. ");
+            }
 
             return $this->redirectToRoute('admin');
         } elseif ($action == 'decline') {
@@ -97,7 +101,7 @@ class DefaultController extends AbstractController
             return $this->redirectToRoute('admin');
         }
 
-        $status = $request->query->get('status', 0);
+        $status = $request->query->get('status', User::STATUS_PENDING);
 
         return $this->render('default/admin.html.twig', [
             'status' => $status,
