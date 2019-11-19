@@ -90,7 +90,7 @@ class DefaultController extends AbstractController
             return $this->redirectToRoute('admin');
         } elseif ($action == 'decline') {
             $user
-                ->setStatus(User::STATUS_CONFIRMED)
+                ->setStatus(User::STATUS_DECLINE)
                 ->setConfirmedAt(new \DateTime())
                 ->setWitness($this->getUser())
             ;
