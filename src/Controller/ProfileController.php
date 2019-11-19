@@ -32,6 +32,10 @@ class ProfileController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->get('update')->isClicked() and $form->isValid()) {
+                if ($this->getUser()->getStatus() == User::STATUS_DECLINE) {
+                    $this->getUser()->setStatus(User::STATUS_PENDING);
+                }
+
                 $em->persist($this->getUser());
                 $em->flush();
 

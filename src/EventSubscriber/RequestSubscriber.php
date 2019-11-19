@@ -62,6 +62,7 @@ class RequestSubscriber implements EventSubscriberInterface
             or empty($user->getPassportCode())
             or empty($user->getLatitude())
             or empty($user->getLongitude())
+            or $user->getStatus() == User::STATUS_DECLINE
         ) {
             $route = 'profile';
 
@@ -69,7 +70,11 @@ class RequestSubscriber implements EventSubscriberInterface
                 return;
             }
 
-            $event->getRequest()->getSession()->getFlashBag()->add('warning', 'Первым делом нужно заполнить профиль.');
+            if ($user->getStatus() == User::STATUS_DECLINE) {
+                $event->getRequest()->getSession()->getFlashBag()->add('warning', 'Ваша заявка была отклонена. Вы должны поправить ошибку в профиле и опять отправить на заверение.');
+            } else {
+                $event->getRequest()->getSession()->getFlashBag()->add('warning', 'Первым делом нужно заполнить профиль.');
+            }
 
             $response = new RedirectResponse($this->router->generate($route));
             $event->setResponse($response);
