@@ -124,6 +124,22 @@ class ProfileController extends AbstractController
                         'message' => "Зарегистрировался новый пользователь {$user} ссылка на чат $invite_chat_link",
                         'random_id' => random_int(100, 999999999),
                     ]);
+                } else {
+                    // 3) Написать ссылку-приглашение в чат новобранцу
+                    $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                        'user_id' => $user->getVkIdentifier(),
+                        // 'domain' => 'some_user_name',
+                        'message' => "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритель о заверении аккаунта.",
+                        'random_id' => random_int(100, 999999999),
+                    ]);
+
+                    // 4) Написать ссылку-приглашение в чат заверителю
+                    $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                        'user_id' => $witness->getVkIdentifier(),
+                        // 'domain' => 'some_user_name',
+                        'message' => "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link",
+                        'random_id' => random_int(100, 999999999),
+                    ]);
                 }
 
                 $user
