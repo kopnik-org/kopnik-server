@@ -99,28 +99,32 @@ class ProfileController extends AbstractController
                     //'v' => '5.103'
                 ]);
 
-                // 2) Получить ссылку приглашения в чат
-                $invite_chat_link = $vk->messages()->getInviteLink($vkCallbackApiAccessToken, [
-                    'peer_id' => 2000000000 + $chat_id,
-                    'group_id' => $vkCommunityId,
-                    'reset' => 0,
-                ])['link'];
+                $invite_chat_link = $user->getAssuranceChatInviteLink();
 
-                // 3) Написать ссылку-приглашение в чат новобранцу
-                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
-                    'user_id' => $user->getVkIdentifier(),
-                    // 'domain' => 'some_user_name',
-                    'message' => "Добро пожаловать в kopnik-org! Для заверения, пожалуйста, перейдите в чат по ссылке $invite_chat_link и договоритель о заверении аккаунта.",
-                    'random_id' => random_int(100, 999999999),
-                ]);
+                if (empty($invite_chat_link)) {
+                    // 2) Получить ссылку приглашения в чат
+                    $invite_chat_link = $vk->messages()->getInviteLink($vkCallbackApiAccessToken, [
+                        'peer_id' => 2000000000 + $chat_id,
+                        'group_id' => $vkCommunityId,
+                        'reset' => 0,
+                    ])['link'];
 
-                // 4) Написать ссылку-приглашение в чат заверителю
-                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
-                    'user_id' => $witness->getVkIdentifier(),
-                    // 'domain' => 'some_user_name',
-                    'message' => "Зарегистрировался новый пользователь {$user} ссылка на чат $invite_chat_link",
-                    'random_id' => random_int(100, 999999999),
-                ]);
+                    // 3) Написать ссылку-приглашение в чат новобранцу
+                    $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                        'user_id' => $user->getVkIdentifier(),
+                        // 'domain' => 'some_user_name',
+                        'message' => "Добро пожаловать в kopnik-org! Для заверения, пожалуйста, перейдите в чат по ссылке $invite_chat_link и договоритель о заверении аккаунта.",
+                        'random_id' => random_int(100, 999999999),
+                    ]);
+
+                    // 4) Написать ссылку-приглашение в чат заверителю
+                    $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                        'user_id' => $witness->getVkIdentifier(),
+                        // 'domain' => 'some_user_name',
+                        'message' => "Зарегистрировался новый пользователь {$user} ссылка на чат $invite_chat_link",
+                        'random_id' => random_int(100, 999999999),
+                    ]);
+                }
 
                 $user
                     ->setAssuranceChatInviteLink($invite_chat_link) // 5) Сохранить ссылку-приглашение в профиле юзера
