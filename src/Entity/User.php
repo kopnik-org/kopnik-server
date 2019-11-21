@@ -37,6 +37,15 @@ class User implements UserInterface
     ];
 
     /**
+     * Ссылка-приглашение на чат с заверителем
+     *
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=64, nullable=true)
+     */
+    protected $assurance_chat_invite_link;
+
+    /**
      * Старшина
      *
      * @var User
@@ -53,15 +62,6 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="User", mappedBy="foreman", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     protected $subordinates_users;
-
-    /**
-     * Заверитель
-     *
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="approved_users", cascade={"persist"})
-     */
-    protected $witness;
 
     /**
      * Cписок всеx заверенных юзеров.
@@ -134,6 +134,20 @@ class User implements UserInterface
     protected $passport_code;
 
     /**
+     * @var float|null
+     *
+     * @ORM\Column(type="decimal", precision=14, scale=12, nullable=true)
+     */
+    protected $latitude;
+
+    /**
+     * @var float|null
+     *
+     * @ORM\Column(type="decimal", precision=14, scale=12, nullable=true)
+     */
+    protected $longitude;
+
+    /**
      * @var int
      *
      * @ORM\Column(type="smallint", nullable=false, options={"unsigned"=true, "default":0})
@@ -180,18 +194,13 @@ class User implements UserInterface
     protected $birth_year;
 
     /**
-     * @var float|null
+     * Заверитель
      *
-     * @ORM\Column(type="decimal", precision=14, scale=12, nullable=true)
-     */
-    protected $latitude;
-
-    /**
-     * @var float|null
+     * @var User
      *
-     * @ORM\Column(type="decimal", precision=14, scale=12, nullable=true)
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="approved_users", cascade={"persist"})
      */
-    protected $longitude;
+    protected $witness;
 
     /**
      * User constructor.
@@ -212,6 +221,26 @@ class User implements UserInterface
     public function __toString(): string
     {
         return (string) $this->getFirstName().' '. (string) $this->getLastName();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAssuranceChatInviteLink(): ?string
+    {
+        return $this->assurance_chat_invite_link;
+    }
+
+    /**
+     * @param string|null $assurance_chat_invite_link
+     *
+     * @return $this
+     */
+    public function setAssuranceChatInviteLink(?string $assurance_chat_invite_link): self
+    {
+        $this->assurance_chat_invite_link = $assurance_chat_invite_link;
+
+        return $this;
     }
 
     /**

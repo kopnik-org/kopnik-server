@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use VK\Client\VKApiClient;
+use VK\Exceptions\Api\VKApiFloodException;
+use VK\Exceptions\VKApiException;
 
 class DefaultController extends AbstractController
 {
@@ -28,7 +31,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/stats/", name="stats")
      */
-    public function stats(UserRepository $ur): Response
+    public function stats(UserRepository $ur, $vkCommunityId, $vkCallbackApiAccessToken): Response
     {
         return $this->render('default/stats.html.twig', [
             'total' => $ur->countBy([]),
@@ -48,7 +51,7 @@ class DefaultController extends AbstractController
         }
 
         return $this->render('default/assurance.html.twig', [
-            'witnesses' => $ur->findBy(['is_witness' => true]),
+            'witness' => $ur->findOneBy(['is_witness' => true], ['created_at' => 'ASC']),
         ]);
     }
 

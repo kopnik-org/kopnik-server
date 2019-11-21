@@ -62,19 +62,72 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
+        // @todo Пока так находит первого и единственного заверителя
+        $witness = $em->getRepository(User::class)->findOneBy(['is_witness' => true], ['created_at' => 'ASC']);
+
+        if (empty($witness)) {
+            return $this->render('profile/_witness_not_found.html.twig');
+        }
+
         try {
             $vk = new VKApiClient();
-            $result = $vk->messages()->send($vkCallbackApiAccessToken, [
-                'user_id' => $user->getVkIdentifier(),
-                // 'domain' => 'some_user_name',
-                'message' => 'Добро пожаловать в kopnik.org!',
-                'random_id' => random_int(100, 999999999),
-            ]);
 
-            $user
-                ->setIsAllowMessagesFromCommunity(true)
-                ->setStatus(User::STATUS_PENDING)
-            ;
+            /**
+             * 1) Создать групповой чат с заверителем и новобранцем
+             * 2) Получить ссылку приглашения в чат
+             * 3) Написать ссылку-приглашение в чат новобранцу
+             * 4) Написать ссылку-приглашение в чат заверителю
+             * 5) Сохранить ссылку-приглашение в профиле юзера
+             * 6) Отобразить ссылку-приглашение на странице assurance
+             */
+
+            if ($user->isWitness()) {
+                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                    'user_id' => $user->getVkIdentifier(),
+                    // 'domain' => 'some_user_name',
+                    'message' => "Добро пожаловать в kopnik-org! Вы уже являетесь заверителем.",
+                    'random_id' => random_int(100, 999999999),
+                ]);
+
+                $user->setIsAllowMessagesFromCommunity(true);
+            } else {
+                // 1) Создать групповой чат с заверителем и новобранцем
+                $chat_id = $vk->messages()->createChat($vkCallbackApiAccessToken, [
+                    'user_ids' => "{$user->getVkIdentifier()},{$witness->getVkIdentifier()}",
+                    'title' => "Заверение пользователя {$user} в Копнике",
+                    'group_id' => $vkCommunityId,
+                    //'v' => '5.103'
+                ]);
+
+                // 2) Получить ссылку приглашения в чат
+                $invite_chat_link = $vk->messages()->getInviteLink($vkCallbackApiAccessToken, [
+                    'peer_id' => 2000000000 + $chat_id,
+                    'group_id' => $vkCommunityId,
+                    'reset' => 0,
+                ])['link'];
+
+                // 3) Написать ссылку-приглашение в чат новобранцу
+                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                    'user_id' => $user->getVkIdentifier(),
+                    // 'domain' => 'some_user_name',
+                    'message' => "Добро пожаловать в kopnik-org! Для заверения, пожалуйста, перейдите в чат по ссылке $invite_chat_link и договоритель о заверении аккаунта.",
+                    'random_id' => random_int(100, 999999999),
+                ]);
+
+                // 4) Написать ссылку-приглашение в чат заверителю
+                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                    'user_id' => $witness->getVkIdentifier(),
+                    // 'domain' => 'some_user_name',
+                    'message' => "Зарегистрировался новый пользователь {$user} ссылка на чат $invite_chat_link",
+                    'random_id' => random_int(100, 999999999),
+                ]);
+
+                $user
+                    ->setAssuranceChatInviteLink($invite_chat_link) // 5) Сохранить ссылку-приглашение в профиле юзера
+                    ->setIsAllowMessagesFromCommunity(true)
+                    ->setStatus(User::STATUS_PENDING)
+                ;
+            }
             $em->flush();
 
             return $this->redirectToRoute('homepage');

@@ -69,12 +69,13 @@ class UserListCommand extends Command
                 $user->getId(),
                 $user->__toString(),
                 $user->getVkIdentifier(),
-                $user->getOauthByProvider('vkontakte')->getAccessToken(),
+//                $user->getOauthByProvider('vkontakte')->getAccessToken(),
                 $user->getStatusAsText(),
                 $user->getCreatedAt()->format('Y-m-d H:i'),
             ];
         }
 
-        $this->io->table(['id', 'ФИО', 'VK ID', 'VK Access Token', 'Статус', 'Дата регистрации'], $rows);
+        //$this->io->table(['id', 'ФИО', 'VK ID', 'VK Access Token', 'Статус', 'Дата регистрации'], $rows);
+        $this->io->table(['id', 'ФИО', 'VK ID', 'Статус', 'Дата регистрации'], $rows);
     }
 }

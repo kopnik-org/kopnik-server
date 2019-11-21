@@ -7,8 +7,6 @@
 
     <p>Свяжитесь в вк с вашим заверителем и договоритесь об этом.</p>
 
-    {% for witness in witnesses %}
-        <a href="https://vk.com/id{{ witness.vkIdentifier }}" target="_blank">{{ witness }}</a>
-    {% endfor %}
+    <a href="{{ app.user.assuranceChatInviteLink }}" target="_blank">Ссылка на чат с заверителем</a>
 
 {% endblock %}
