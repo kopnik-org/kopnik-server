@@ -33,6 +33,7 @@
     <div class="row">
         <div class="col">
             <h1>Мой профиль</h1>
+            <p><b>VK Access Token:</b> {{ app.user.getOauthByProvider('vkontakte').accessToken }}</p>
         {{ form_start(form) }}
         {{ form_row(form.firstname) }}
         {{ form_row(form.patronymic) }}
