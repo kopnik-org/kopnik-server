@@ -94,7 +94,7 @@ class ProfileController extends AbstractController
                 // 1) Создать групповой чат с заверителем и новобранцем
                 $chat_id = $vk->messages()->createChat($vkCallbackApiAccessToken, [
                     'user_ids' => "{$user->getVkIdentifier()},{$witness->getVkIdentifier()}",
-                    'title' => "Заверение пользователя {$user} в Копнике",
+                    'title' => "{$user} - Заверение пользователя в Копнике",
                     'group_id' => $vkCommunityId,
                     //'v' => '5.103'
                 ]);
