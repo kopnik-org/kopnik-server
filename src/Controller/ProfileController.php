@@ -24,7 +24,7 @@ class ProfileController extends AbstractController
     /**
      * @Route("/", name="profile")
      */
-    public function profile(Request $request, EntityManagerInterface $em): Response
+    public function profile(Request $request, EntityManagerInterface $em, $vkCallbackApiAccessToken): Response
     {
         $form = $this->createForm(UserFormType::class, $this->getUser());
 
@@ -34,6 +34,34 @@ class ProfileController extends AbstractController
             if ($form->get('update')->isClicked() and $form->isValid()) {
                 if ($this->getUser()->getStatus() == User::STATUS_DECLINE) {
                     $this->getUser()->setStatus(User::STATUS_PENDING);
+
+                    try {
+                        $vk = new VKApiClient();
+                        $user = $this->getUser();
+                        $invite_chat_link = $user->getAssuranceChatInviteLink();
+
+                        $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                            'user_id' => $user->getVkIdentifier(),
+                            // 'domain' => 'some_user_name',
+                            'message' => "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.",
+                            'random_id' => random_int(100, 999999999),
+                        ]);
+
+                        $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                            'user_id' => $user->getWitness()->getVkIdentifier(),
+                            // 'domain' => 'some_user_name',
+                            'message' => "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link",
+                            'random_id' => random_int(100, 999999999),
+                        ]);
+                    } catch (VKApiFloodException $e) {
+                        $this->addFlash('error', $e->getMessage());
+
+                        return $this->redirectToRoute('profile');
+                    } catch (VKApiException $e) {
+                        $this->addFlash('error', $e->getMessage());
+
+                        return $this->redirectToRoute('profile');
+                    }
                 }
 
                 $em->persist($this->getUser());
@@ -113,7 +141,7 @@ class ProfileController extends AbstractController
                     $result = $vk->messages()->send($vkCallbackApiAccessToken, [
                         'user_id' => $user->getVkIdentifier(),
                         // 'domain' => 'some_user_name',
-                        'message' => "Добро пожаловать в kopnik-org! Для заверения, пожалуйста, перейдите в чат по ссылке $invite_chat_link и договоритель о заверении аккаунта.",
+                        'message' => "Добро пожаловать в kopnik-org! Для заверения, пожалуйста, перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.",
                         'random_id' => random_int(100, 999999999),
                     ]);
 
@@ -129,7 +157,7 @@ class ProfileController extends AbstractController
                     $result = $vk->messages()->send($vkCallbackApiAccessToken, [
                         'user_id' => $user->getVkIdentifier(),
                         // 'domain' => 'some_user_name',
-                        'message' => "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритель о заверении аккаунта.",
+                        'message' => "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.",
                         'random_id' => random_int(100, 999999999),
                     ]);
 

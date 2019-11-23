@@ -14,6 +14,9 @@
             <th>Пользователь</th>
             <th>Год рождения</th>
             <th>Последние 4 цифры паспорта</th>
+            {% if status == 2 %}
+                <th>Дата заверения</th>
+            {% endif %}
             <th>Дата регистрации</th>
             {% if status == 1 %}
                 <th>Действие</th>
@@ -25,6 +28,9 @@
                 <td><a href="https://vk.com/id{{ user.vkIdentifier }}" target="_blank">{{ user }}</a></td>
                 <td>{{ user.birthYear }}</td>
                 <td>{{ user.passportCode }}</td>
+                {% if status == 2 %}
+                    <td>{{ user.confirmedAt|date('Y-m-d H:i:s') }}</td>
+                {% endif %}
                 <td>{{ user.createdAt|date('Y-m-d H:i:s') }}</td>
                 {% if status == 1 %}
                     <td>

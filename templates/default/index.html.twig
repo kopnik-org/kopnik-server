@@ -36,13 +36,13 @@
         // __dummy
       }).addTo(mymap);
 
+      {% if users is defined %}
       {% for user in users %}
         var marker{{ user.id }} = L.marker([{{ user.latitude }}, {{ user.longitude }}]).addTo(mymap);
 
         //marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
         marker{{ user.id }}.bindPopup("<b>{{ user }}</b>")
       {% endfor %}
-
+      {% endif %}
     </script>
-
 {% endblock js %}

@@ -21,9 +21,9 @@ class UserFormType extends AbstractType
             ->add('lastname', null, ['required' => true])
             ->add('birth_year')
             ->add('passport_code')
-            ->add('latitude', TextType::class, ['attr' => ['placeholder' => 'Широта']])
-            ->add('longitude', TextType::class, ['attr' => ['placeholder' => 'Долгота']])
-            ->add('update', SubmitType::class, ['attr' => ['class' => 'btn-success']])
+            ->add('latitude', TextType::class,  ['attr' => ['placeholder' => 'Latitude']])
+            ->add('longitude', TextType::class, ['attr' => ['placeholder' => 'Longitude']])
+            ->add('update', SubmitType::class,  ['attr' => ['class' => 'btn-success']])
         ;
     }
 

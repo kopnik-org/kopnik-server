@@ -33,29 +33,38 @@
     <div class="row">
         <div class="col">
             <h1>Мой профиль</h1>
+
+            {% if app.user.status == 3 %} {# User::STATUS_DECLINE #}
+                <div class="flash-message flash-message-error alert alert-error alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    Ваша заявка отклонена, Пожалуйста, исправьте анкетные данные и повторите запрос.
+                </div>
+            {% endif %}
+            
 {#            <p><b>VK Access Token:</b> {{ app.user.getOauthByProvider('vkontakte').accessToken }}</p>#}
-        {{ form_start(form) }}
-        {{ form_row(form.firstname) }}
-        {{ form_row(form.patronymic) }}
-        {{ form_row(form.lastname) }}
-        {{ form_row(form.birth_year) }}
-        {{ form_row(form.passport_code) }}
 
-        <div class="form-group row">
-            <label class="col-form-label col-sm-3 required" for="mapdiv">Местоположение</label>
-            <div class="col-sm-9">
-                <table>
-                    <tr>
-                        <td><button type="button" id="find-me" class="btn btn-sm btn-outline-info">Определить автоматически</button></td>
-                        <td>{{ form_widget(form.latitude) }}</td>
-                        <td>{{ form_widget(form.longitude) }}</td>
-                    </tr>
-                </table>
+            {{ form_start(form) }}
+            {{ form_row(form.firstname) }}
+            {{ form_row(form.patronymic) }}
+            {{ form_row(form.lastname) }}
+            {{ form_row(form.birth_year) }}
+            {{ form_row(form.passport_code) }}
 
-                <div id="mapdiv"></div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-3 required" for="mapdiv">Местоположение</label>
+                <div class="col-sm-9">
+                    <table>
+                        <tr>
+                            <td><button type="button" id="find-me" class="btn btn-sm btn-outline-info">Определить автоматически</button></td>
+                            <td>{{ form_widget(form.latitude) }}</td>
+                            <td>{{ form_widget(form.longitude) }}</td>
+                        </tr>
+                    </table>
+
+                    <div id="mapdiv"></div>
+                </div>
             </div>
-        </div>
-        {{ form_end(form) }}
+            {{ form_end(form) }}
         </div>
     </div>
 {% endblock content %}
@@ -67,6 +76,10 @@
     {% set longitude = form.vars.data.longitude %}
 
     <script>
+        {% if app.user.status == 3 %} {# User::STATUS_DECLINE #}
+            $('#user_update').text('Отправить заявку повторно');
+        {% endif %}
+
         var mymap = L.map('mapdiv', { attributionControl:false }).setView([{{ latitude ? latitude : 55.03023587}}, {{ longitude ? longitude : 82.92034149 }}], 16);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

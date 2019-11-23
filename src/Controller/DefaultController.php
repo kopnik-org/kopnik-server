@@ -58,7 +58,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/admin/", name="admin")
      */
-    public function admin(Request $request, UserRepository $ur, EntityManagerInterface $em): Response
+    public function admin(Request $request, UserRepository $ur, EntityManagerInterface $em, $vkCallbackApiAccessToken): Response
     {
         if (!$this->getUser()->isWitness()) {
             return $this->redirectToRoute('homepage');
@@ -85,6 +85,24 @@ class DefaultController extends AbstractController
                 ;
                 $em->flush();
 
+                try {
+                    $vk = new VKApiClient();
+
+                    $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                        'user_id' => $user->getVkIdentifier(),
+                        'message' => "Заверение пройдено успешно!",
+                        'random_id' => random_int(100, 999999999),
+                    ]);
+                } catch (VKApiFloodException $e) {
+                    $this->addFlash('error', $e->getMessage());
+
+                    return $this->redirectToRoute('admin');
+                } catch (VKApiException $e) {
+                    $this->addFlash('error', $e->getMessage());
+
+                    return $this->redirectToRoute('admin');
+                }
+
                 $this->addFlash('success', "Пользователь <b>{$user->__toString()}</b> заверен!");
             } else {
                 $this->addFlash('error', "У пользователя <b>{$user->__toString()}</b> не статус 'в ожидании'. ");
@@ -98,6 +116,24 @@ class DefaultController extends AbstractController
                 ->setWitness($this->getUser())
             ;
             $em->flush();
+
+            try {
+                $vk = new VKApiClient();
+
+                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                    'user_id' => $user->getVkIdentifier(),
+                    'message' => "Заявка на заверение отклонена. Пожалуйста, исправьте ваши анкетные данные и повторите запрос.",
+                    'random_id' => random_int(100, 999999999),
+                ]);
+            } catch (VKApiFloodException $e) {
+                $this->addFlash('error', $e->getMessage());
+
+                return $this->redirectToRoute('admin');
+            } catch (VKApiException $e) {
+                $this->addFlash('error', $e->getMessage());
+
+                return $this->redirectToRoute('admin');
+            }
 
             $this->addFlash('notice', "Пользователь <b>{$user->__toString()}</b> отклонён!");
 
