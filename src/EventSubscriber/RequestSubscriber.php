@@ -110,13 +110,13 @@ class RequestSubscriber implements EventSubscriberInterface
     {
         $origin = $event->getRequest()->headers->get('origin', '*');
 
-        if (
-            $event->getRequest()->getPathInfo() === '/api/users/'
-            || $event->getRequest()->getPathInfo() === '/api/user/*' // @todo
-        ) {
+//        if (
+//            $event->getRequest()->getPathInfo() === '/api/users/'
+//            || $event->getRequest()->getPathInfo() === '/api/user/*' // @todo
+//        ) {
             $event->getResponse()->headers->set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             $event->getResponse()->headers->set('Access-Control-Allow-Methods', 'POST');
             $event->getResponse()->headers->set('Access-Control-Allow-Origin', $origin);
-        }
+//        }
     }
 }
