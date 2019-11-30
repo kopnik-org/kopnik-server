@@ -17,9 +17,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiController extends AbstractController
 {
     /**
-     * @Route("/users/", name="api_users")
+     * @Route("/user/list", name="api_user_list")
      */
-    public function users(Request $request, UserRepository $ur): JsonResponse
+    public function usersList(Request $request, UserRepository $ur): JsonResponse
     {
         $users = [];
 
