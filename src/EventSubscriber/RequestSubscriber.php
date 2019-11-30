@@ -8,6 +8,7 @@ use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -38,7 +39,8 @@ class RequestSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST => 'onKernelRequest',
+            KernelEvents::REQUEST  => 'onKernelRequest',
+            KernelEvents::RESPONSE => 'onKernelResponse',
         ];
     }
 
@@ -98,6 +100,23 @@ class RequestSubscriber implements EventSubscriberInterface
 
             $response = new RedirectResponse($this->router->generate($route));
             $event->setResponse($response);
+        }
+    }
+
+    /**
+     * @param ResponseEvent $event
+     */
+    public function onKernelResponse(ResponseEvent $event)
+    {
+        $origin = $event->getRequest()->headers->get('origin', '*');
+
+        if (
+            $event->getRequest()->getPathInfo() === '/api/users/'
+            || $event->getRequest()->getPathInfo() === '/api/user/*' // @todo
+        ) {
+            $event->getResponse()->headers->set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+            $event->getResponse()->headers->set('Access-Control-Allow-Methods', 'POST');
+            $event->getResponse()->headers->set('Access-Control-Allow-Origin', $origin);
         }
     }
 }
