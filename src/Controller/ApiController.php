@@ -24,7 +24,7 @@ class ApiController extends AbstractController
         $users = [];
 
         foreach ($ur->findNear($this->getUser()) as $user) {
-            $users[] = $this->serializeUser($user);
+            $users[$user->getId()] = $this->serializeUser($user);
         }
 
         $data = [
