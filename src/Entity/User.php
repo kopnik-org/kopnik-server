@@ -48,7 +48,7 @@ class User implements UserInterface
     /**
      * Старшина
      *
-     * @var User
+     * @var User|null
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="subordinates_users", cascade={"persist"})
      */
@@ -196,7 +196,7 @@ class User implements UserInterface
     /**
      * Заверитель
      *
-     * @var User
+     * @var User|null
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="approved_users", cascade={"persist"})
      */
@@ -244,19 +244,19 @@ class User implements UserInterface
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getForeman(): User
+    public function getForeman(): ?User
     {
         return $this->foreman;
     }
 
     /**
-     * @param User $foreman
+     * @param User|null $foreman
      *
      * @return $this
      */
-    public function setForeman($foreman): self
+    public function setForeman(?User $foreman): self
     {
         $this->foreman = $foreman;
 
@@ -284,19 +284,19 @@ class User implements UserInterface
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getWitness(): User
+    public function getWitness(): ?User
     {
         return $this->witness;
     }
 
     /**
-     * @param User $witness
+     * @param User|null $witness
      *
      * @return $this
      */
-    public function setWitness($witness): self
+    public function setWitness(?User $witness): self
     {
         $this->witness = $witness;
 
