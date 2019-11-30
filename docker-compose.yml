@@ -1,0 +1,48 @@
+version: '3.1'
+
+services:
+
+    php-fpm:
+        build: ./.docker/php
+        container_name: ${PROJECT_NAME}_php-fpm
+        image: monolith-php:7.3-fpm
+        volumes:
+            - ${APP_HOST_PATH}:${APP_CONTAINER_PATH}
+        working_dir: ${APP_CONTAINER_PATH}
+
+    nginx:
+        image: nginx:1.15
+        container_name: ${PROJECT_NAME}_nginx
+        working_dir: ${APP_CONTAINER_PATH}
+        ports:
+            - 80:80
+        volumes:
+            - ${APP_HOST_PATH}:${APP_CONTAINER_PATH}
+            - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./.docker/nginx/errors.log:/var/log/nginx/error.log
+            - ./.docker/nginx/access.log:/var/log/nginx/access.log
+
+    database:
+        image: mariadb
+        restart: always
+        container_name: ${PROJECT_NAME}_db
+        environment:
+            MYSQL_ROOT_PASSWORD: 1234
+            MYSQL_DATABASE: ${PROJECT_NAME}
+            MYSQL_USER: ${PROJECT_NAME}       
+            MYSQL_PASSWORD: 1234
+        # Елси нужен доступ
+        # ports:
+        #     - 3306:3306
+        volumes:
+            - ${DB_HOST_PATH}:/var/lib/mysql
+
+    pma:
+        image: phpmyadmin/phpmyadmin
+        container_name: ${PROJECT_NAME}_pma
+        ports:
+            - 9000:80
+        environment:
+            PMA_HOST: database
+            PMA_USER: ${PROJECT_NAME}
+            PMA_PASSWORD: 1234
