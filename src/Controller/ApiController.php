@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,23 +24,56 @@ class ApiController extends AbstractController
         $users = [];
 
         foreach ($ur->findNear($this->getUser()) as $user) {
-            $users[] = [
-                'id' => $user->getId(),
-                'firstname' => $user->getFirstName(),
-                'patronymic' => $user->getPatronymic(),
-                'lastname' => $user->getLastName(),
-                'foreman' => $user->getForeman(),
-                'witness' => $user->getWitness(),
-                'latitude' => $user->getLatitude(),
-                'longtitude' => $user->getLongitude(),
-//                '' => $user->get(),
-            ];
+            $users[] = $this->serializeUser($user);
         }
 
         $data = [
+            'status' => 'success',
             'users' => $users,
         ];
 
         return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/user/{id}", name="api_user")
+     */
+    public function user($id, UserRepository $ur): JsonResponse
+    {
+        $user = $ur->find($id);
+
+        if ($user) {
+            $data = [
+                'status' => 'success',
+                'user' => $this->serializeUser($user),
+            ];
+        } else {
+            $data = [
+                'status' => 'error',
+                'message' => 'User not found',
+            ];
+        }
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return array
+     */
+    protected function serializeUser(User $user): array
+    {
+        return [
+            'id' => $user->getId(),
+            'firstname' => $user->getFirstName(),
+            'patronymic' => $user->getPatronymic(),
+            'lastname' => $user->getLastName(),
+            'foreman' => $user->getForeman() ? $user->getForeman()->getId() : null,
+            'witness' => $user->getWitness() ? $user->getWitness()->getId() : null,
+            'latitude' => $user->getLatitude(),
+            'longtitude' => $user->getLongitude(),
+            // '' => $user->get(),
+        ];
     }
 }
