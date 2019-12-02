@@ -17,6 +17,46 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiController extends AbstractController
 {
     /**
+     * @Route("/users/get", methods={"GET"}, name="api_users_get")
+     */
+    public function usersGet(Request $request, UserRepository $ur): JsonResponse
+    {
+        $ids = $request->query->get('ids');
+
+        if (empty($ids)) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 1,
+                    'error_msg'  => 'Invalid user ids',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        $ids = explode(',', $ids);
+
+        $response = [];
+
+        foreach ($ids as $id) {
+            $user = $ur->find($id);
+
+            if (empty($user)) {
+                return new JsonResponse([
+                    'error' => [
+                        'error_code' => 1,
+                        'error_msg'  => 'Invalid user ids',
+                        'request_params' => '@todo ',
+                    ]
+                ]);
+            }
+
+            $response[] = $this->serializeUser($user);
+        }
+
+        return new JsonResponse(['response' => $response]);
+    }
+    
+    /**
      * @Route("/user/list", name="api_user_list")
      */
     public function usersList(Request $request, UserRepository $ur): JsonResponse
@@ -69,10 +109,10 @@ class ApiController extends AbstractController
             'firstname' => $user->getFirstName(),
             'patronymic' => $user->getPatronymic(),
             'lastname' => $user->getLastName(),
-            'foreman' => $user->getForeman() ? $user->getForeman()->getId() : null,
-            'witness' => $user->getWitness() ? $user->getWitness()->getId() : null,
-            'latitude' => $user->getLatitude(),
-            'longtitude' => $user->getLongitude(),
+            'foreman_id' => $user->getForeman() ? $user->getForeman()->getId() : null,
+            'witness_id' => $user->getWitness() ? $user->getWitness()->getId() : null,
+            'birthday' => $user->getBirthYear(),
+            'location' => [$user->getLatitude(), $user->getLongitude()],
             // '' => $user->get(),
         ];
     }
