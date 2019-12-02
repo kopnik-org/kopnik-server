@@ -111,7 +111,7 @@ class ApiController extends AbstractController
             'lastname' => $user->getLastName(),
             'foreman_id' => $user->getForeman() ? $user->getForeman()->getId() : null,
             'witness_id' => $user->getWitness() ? $user->getWitness()->getId() : null,
-            'birthday' => $user->getBirthYear(),
+            'birthyear' => $user->getBirthYear(),
             'location' => [$user->getLatitude(), $user->getLongitude()],
             // '' => $user->get(),
         ];
