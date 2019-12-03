@@ -17,6 +17,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiController extends AbstractController
 {
     /**
+     * @Route("/users/witness_request", methods={"POST"}, name="api_users_witness_request")
+     */
+    public function usersWitnessRequest(Request $request): JsonResponse
+    {
+        return new JsonResponse([
+            'get' => $request->query->all(),
+            'post' => $request->request->all(),
+        ]);
+    }
+
+    /**
      * @Route("/users/get", methods={"GET"}, name="api_users_get")
      */
     public function usersGet(Request $request, UserRepository $ur): JsonResponse
