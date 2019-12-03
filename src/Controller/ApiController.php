@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,9 +20,12 @@ class ApiController extends AbstractController
     /**
      * @Route("/users/witness_request", methods={"POST"}, name="api_users_witness_request")
      */
-    public function usersWitnessRequest(Request $request): JsonResponse
+    public function usersWitnessRequest(Request $request, LoggerInterface $logger): JsonResponse
     {
+        $logger->alert($request, ['TEST1']);
+
         return new JsonResponse([
+            'CONTENT' => $request->getContent(),
             'GET' => $request->query->all(),
             'POST' => $request->request->all(),
         ]);
