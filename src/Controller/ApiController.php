@@ -22,8 +22,8 @@ class ApiController extends AbstractController
     public function usersWitnessRequest(Request $request): JsonResponse
     {
         return new JsonResponse([
-            'get' => $request->query->all(),
-            'post' => $request->request->all(),
+            'GET' => $request->query->all(),
+            'POST' => $request->request->all(),
         ]);
     }
 
