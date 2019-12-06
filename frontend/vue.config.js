@@ -8,11 +8,11 @@ module.exports = {
   filenameHashing: false,
   productionSourceMap: false,
   pages: {
-    vue_create_nodes: {
+    vue_my_app: {
       inject: false,
       entry: 'src/main.js',
-      template: 'public/vue_create_nodes.html.twig',
-      filename: '../../views/frontend/vue_create_nodes.html.twig',
+      template: 'public/my_app.html.twig',
+      filename: '../../templates/frontend/my_app.html.twig',
       chunks: ['vue_create_nodes', 'chunk-vendors', 'chunk-common', 'index']
     },
   },

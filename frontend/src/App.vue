@@ -8,7 +8,7 @@
 
 <script>
 import HelloWorld from './components/HelloWorld'
-import NetMap from './components/NetMap'
+// import NetMap from './components/NetMap'
 
 export default {
   name: 'App',
