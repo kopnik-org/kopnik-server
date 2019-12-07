@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\UserOauth;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -73,6 +75,8 @@ class ApiController extends AbstractController
     
     /**
      * @Route("/user/list", name="api_user_list")
+     *
+     * @deprecated
      */
     public function usersList(Request $request, UserRepository $ur): JsonResponse
     {
@@ -92,6 +96,8 @@ class ApiController extends AbstractController
 
     /**
      * @Route("/user/{id}", name="api_user")
+     *
+     * @deprecated
      */
     public function user($id, UserRepository $ur): JsonResponse
     {
@@ -113,6 +119,30 @@ class ApiController extends AbstractController
     }
 
     /**
+     * @Route("/users/getByUid", name="api_users_get_by_uid", methods={"GET"})
+     */
+    public function usersGetByUid(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $userOauth = $em->getRepository(UserOauth::class)->findOneBy(['identifier' => $request->query->get('uid')]);
+
+        if ($userOauth) {
+            $data = [
+                'response' => $this->serializeUser($userOauth->getUser()),
+            ];
+        } else {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 2,
+                    'error_msg'  => 'User not found',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        return new JsonResponse($data);
+    }
+
+    /**
      * @param User $user
      *
      * @return array
@@ -121,13 +151,14 @@ class ApiController extends AbstractController
     {
         return [
             'id' => $user->getId(),
-            'firstname' => $user->getFirstName(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
             'patronymic' => $user->getPatronymic(),
-            'lastname' => $user->getLastName(),
             'foreman_id' => $user->getForeman() ? $user->getForeman()->getId() : null,
             'witness_id' => $user->getWitness() ? $user->getWitness()->getId() : null,
             'birthyear' => $user->getBirthYear(),
             'location' => [$user->getLatitude(), $user->getLongitude()],
+            'status' => $user->getStatus(),
             // '' => $user->get(),
         ];
     }
