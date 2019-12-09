@@ -1,0 +1,15 @@
+
+{#<link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons' rel="stylesheet">#}
+<link href='https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css' rel="stylesheet">
+
+<div id="app"></div>
+
+<% for (var css in htmlWebpackPlugin.files.css) { %>
+    <% var slug = htmlWebpackPlugin.files.css[css].split('/') %>
+    <link href="{{ asset('bundles/app/frontend/css/<%= slug[slug.length-1] %>') }}" rel="stylesheet">
+<% } %>
+
+<% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+    <% var slug = htmlWebpackPlugin.files.chunks[chunk].entry.split('/') %>
+    <script src="{{ asset('bundles/app/frontend/js/<%= slug[slug.length-1] %>') }}"></script>
+<% } %>
