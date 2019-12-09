@@ -9,6 +9,7 @@
         "ext-json": "*",
         "hwi/oauth-bundle": "dev-master",
         "knplabs/knp-menu-bundle": "*",
+        "nelmio/cors-bundle": "^2.0",
         "php-http/guzzle6-adapter": "*",
         "php-http/httplug-bundle": "*",
         "smart-core/core-bundle": "dev-master",
