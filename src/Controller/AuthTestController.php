@@ -38,4 +38,16 @@ class AuthTestController extends AbstractController
             'set_value_from_session' => $request->query->get('val'),
         ]);
     }
+
+    /**
+     * @Route("/logout", name="authtest_logout")
+     */
+    public function logout(Request $request): JsonResponse
+    {
+        $request->getSession()->remove('val');
+
+        return new JsonResponse([
+            'value_from_session_deleted' => true,
+        ]);
+    }
 }
