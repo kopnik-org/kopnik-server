@@ -17,7 +17,7 @@ framework:
     session:
         handler_id: ~
         cookie_secure: auto
-        cookie_samesite: lax
+#        cookie_samesite: lax
 
     validation:
         enable_annotations: true
