@@ -19,8 +19,10 @@ class AuthTestController extends AbstractController
      */
     public function anyMethod(): JsonResponse
     {
+        $user = $this->getUser();
+
         return new JsonResponse([
-            'status' => 'ok'
+            'user' => $user ? $user->getUsername() : null,
         ]);
     }
 }
