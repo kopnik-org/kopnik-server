@@ -40,7 +40,7 @@ class RequestSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST  => 'onKernelRequest',
-            KernelEvents::RESPONSE => 'onKernelResponse',
+//            KernelEvents::RESPONSE => 'onKernelResponse',
         ];
     }
 
