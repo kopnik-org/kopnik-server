@@ -19,6 +19,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApiController extends AbstractController
 {
+    /** @var User */
+    protected $user;
+
     /**
      * @Route("/users/witness_request", methods={"POST"}, name="api_users_witness_request")
      */
@@ -39,46 +42,39 @@ class ApiController extends AbstractController
     public function usersGet(Request $request, UserRepository $ur): JsonResponse
     {
         $ids = $request->query->get('ids');
-
-        if (empty($ids)) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => 1,
-                    'error_msg'  => 'Invalid user ids',
-                    'request_params' => '@todo ',
-                ]
-            ]);
-        }
-
-        $ids = explode(',', $ids);
-
         $response = [];
 
-        foreach ($ids as $id) {
-            $user = $ur->find($id);
+        if (empty($ids)) {
+            $this->user = $this->getUser();
 
-            if (empty($user)) {
-                return new JsonResponse([
-                    'error' => [
-                        'error_code' => 1,
-                        'error_msg'  => 'Invalid user ids',
-                        'request_params' => '@todo ',
-                    ]
-                ]);
+            $response[] = $this->serializeUser($this->user);
+        } else {
+            foreach (explode(',', $ids) as $id) {
+                $user = $ur->find($id);
+
+                if (empty($user)) {
+                    return new JsonResponse([
+                        'error' => [
+                            'error_code' => 1,
+                            'error_msg'  => 'Invalid user ids',
+                            'request_params' => '@todo ',
+                        ]
+                    ]);
+                }
+
+                $response[] = $this->serializeUser($user);
             }
-
-            $response[] = $this->serializeUser($user);
         }
 
         return new JsonResponse(['response' => $response]);
     }
     
     /**
-     * @Route("/user/list", name="api_user_list")
+     * Route("/user/list", name="api_user_list")
      *
      * @deprecated
      */
-    public function usersList(Request $request, UserRepository $ur): JsonResponse
+    public function _usersList(Request $request, UserRepository $ur): JsonResponse
     {
         $users = [];
 
@@ -90,30 +86,6 @@ class ApiController extends AbstractController
             'status' => 'success',
             'users' => $users,
         ];
-
-        return new JsonResponse($data);
-    }
-
-    /**
-     * @Route("/user/{id}", name="api_user")
-     *
-     * @deprecated
-     */
-    public function user($id, UserRepository $ur): JsonResponse
-    {
-        $user = $ur->find($id);
-
-        if ($user) {
-            $data = [
-                'status' => 'success',
-                'user' => $this->serializeUser($user),
-            ];
-        } else {
-            $data = [
-                'status' => 'error',
-                'message' => 'User not found',
-            ];
-        }
 
         return new JsonResponse($data);
     }
@@ -159,7 +131,7 @@ class ApiController extends AbstractController
             'birthyear' => $user->getBirthYear(),
             'location' => [$user->getLatitude(), $user->getLongitude()],
             'status' => $user->getStatus(),
-            // '' => $user->get(),
+            'passport_code' => $this->user->getId() == $user->getId() ? $user->getPassportCode() : null,
         ];
     }
 }
