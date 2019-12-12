@@ -131,7 +131,9 @@ class ApiController extends AbstractController
             'birthyear' => $user->getBirthYear(),
             'location' => [$user->getLatitude(), $user->getLongitude()],
             'status' => $user->getStatus(),
-            'passport_code' => $this->user->getId() == $user->getId() ? $user->getPassportCode() : null,
+            'passport' => $this->user->getId() == $user->getId() ? $user->getPassportCode() : null,
+            'photo' => '@todo',
+            'smallPhoto' => '@todo',
         ];
     }
 }
