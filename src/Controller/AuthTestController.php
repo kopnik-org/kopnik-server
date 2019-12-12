@@ -20,10 +20,11 @@ class AuthTestController extends AbstractController
      */
     public function anyMethod(Request $request): JsonResponse
     {
-        //$user = $this->getUser();
+        $user = $this->getUser();
 
         return new JsonResponse([
             'get_value_from_session' => $request->getSession()->get('val'),
+            'user' => $user ? (string) $this->getUser() : $user,
         ]);
     }
 
@@ -33,9 +34,11 @@ class AuthTestController extends AbstractController
     public function login(Request $request): JsonResponse
     {
         $request->getSession()->set('val', $request->query->get('val'));
+        $user = $this->getUser();
 
         return new JsonResponse([
             'set_value_from_session' => $request->query->get('val'),
+            'user' => $user ? (string) $this->getUser() : $user,
         ]);
     }
 
