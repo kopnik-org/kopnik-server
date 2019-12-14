@@ -41,12 +41,22 @@ class ApiController extends AbstractController
      */
     public function usersGet(Request $request, UserRepository $ur): JsonResponse
     {
+        $this->user = $this->getUser();
+
+        if (empty($this->user)) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 1,
+                    'error_msg'  => 'No authentication',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
         $ids = $request->query->get('ids');
         $response = [];
 
         if (empty($ids)) {
-            $this->user = $this->getUser();
-
             $response[] = $this->serializeUser($this->user);
         } else {
             foreach (explode(',', $ids) as $id) {
@@ -68,33 +78,24 @@ class ApiController extends AbstractController
 
         return new JsonResponse(['response' => $response]);
     }
-    
-    /**
-     * Route("/user/list", name="api_user_list")
-     *
-     * @deprecated
-     */
-    public function _usersList(Request $request, UserRepository $ur): JsonResponse
-    {
-        $users = [];
-
-        foreach ($ur->findNear($this->getUser()) as $user) {
-            $users[$user->getId()] = $this->serializeUser($user);
-        }
-
-        $data = [
-            'status' => 'success',
-            'users' => $users,
-        ];
-
-        return new JsonResponse($data);
-    }
 
     /**
      * @Route("/users/getByUid", name="api_users_get_by_uid", methods={"GET"})
      */
     public function usersGetByUid(Request $request, EntityManagerInterface $em): JsonResponse
     {
+        $this->user = $this->getUser();
+
+        if (empty($this->user)) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 1,
+                    'error_msg'  => 'No authentication',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
         $userOauth = $em->getRepository(UserOauth::class)->findOneBy(['identifier' => $request->query->get('uid')]);
 
         if ($userOauth) {
@@ -131,7 +132,7 @@ class ApiController extends AbstractController
             'birthyear' => $user->getBirthYear(),
             'location' => [$user->getLatitude(), $user->getLongitude()],
             'status' => $user->getStatus(),
-            'passport' => $this->user->getId() == $user->getId() ? $user->getPassportCode() : null,
+            'passport' => $this->user->getId() == $user->getId() ? $user->getPassportCode() : null, // только свой
             'photo' => '@todo',
             'smallPhoto' => '@todo',
         ];
