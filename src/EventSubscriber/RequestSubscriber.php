@@ -68,7 +68,9 @@ class RequestSubscriber implements EventSubscriberInterface
         ) {
             $route = 'profile';
 
-            if ($route === $event->getRequest()->get('_route')) {
+            if ($route === $event->getRequest()->get('_route')
+                or strpos($event->getRequest()->get('_route'), 'api_') === 0
+            ) {
                 return;
             }
 
