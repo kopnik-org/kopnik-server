@@ -124,6 +124,20 @@ class User implements UserInterface
     protected $patronymic;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=192, nullable=true)
+     */
+    protected $photo;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=192, nullable=true)
+     */
+    protected $small_photo;
+
+    /**
      * @var int|null
      *
      * @ORM\Column(type="integer", length=4, nullable=true)
@@ -716,6 +730,46 @@ class User implements UserInterface
     public function setStatus($status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @param string|null $photo
+     *
+     * @return $this
+     */
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSmallPhoto(): ?string
+    {
+        return $this->small_photo;
+    }
+
+    /**
+     * @param string|null $small_photo
+     *
+     * @return $this
+     */
+    public function setSmallPhoto(?string $small_photo): self
+    {
+        $this->small_photo = $small_photo;
 
         return $this;
     }
