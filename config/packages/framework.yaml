@@ -17,6 +17,7 @@ framework:
     session:
         handler_id: ~
         cookie_secure: auto
+        cookie_lifetime: 604800 # 1 неделя
 #        cookie_samesite: lax
 
     validation:
