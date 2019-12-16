@@ -126,14 +126,14 @@ class User implements UserInterface
     /**
      * @var string|null
      *
-     * ORM\Column(type="string", length=192, nullable=true)
+     * @ORM\Column(type="string", length=192, nullable=true)
      */
     protected $photo;
 
     /**
      * @var string|null
      *
-     * ORM\Column(type="string", length=192, nullable=true)
+     * @ORM\Column(type="string", length=192, nullable=true)
      */
     protected $small_photo;
 
