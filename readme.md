@@ -40,6 +40,27 @@ grant all privileges on database kopnik to kopnik;
 systemctl reboot -i
 ```
 
+Запуск в Docker
+---------------
+
+В режиме разработки
+
+```
+docker-compose up --build
+```
+
+В продакшен режиме
+
+```
+@todo 
+```
+
+В режиме тестирования
+
+```
+@todo 
+```
+
 TODO
 ----
 

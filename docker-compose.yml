@@ -1,24 +1,24 @@
 version: '3.7'
 services:
-    kopnik-nginx:
+    nginx:
         build:
             context: ./.docker/development
             dockerfile: nginx.docker
         volumes:
             - ./:/app
         depends_on:
-            - kopnik-php-fpm
+            - php-fpm
         ports:
             - "8080:80"
-    kopnik-php-fpm:
+    php-fpm:
         build:
             context: ./.docker/development
             dockerfile: php-fpm.docker
         volumes:
             - ./:/app
         depends_on:
-            - kopnik-postgres
-    kopnik-php-cli:
+            - db
+    php-cli:
         build:
             context: ./.docker/development
             dockerfile: php-cli.docker
@@ -26,11 +26,11 @@ services:
             - ./:/app
             - composer:/root/.composer/cache
         depends_on:
-            - kopnik-postgres
-    kopnik-postgres:
+            - db
+    db:
         image: postgres:12.1-alpine
         volumes:
-            - kopnik-postgres:/var/lib/postgresql/data
+            - db:/var/lib/postgresql/data
         environment:
             POSTGRES_USER: app
             POSTGRES_PASSWORD: secret
@@ -38,5 +38,5 @@ services:
         ports:
             - "54321:5432"
 volumes:
-    kopnik-postgres:
+    db:
     composer:
