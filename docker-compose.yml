@@ -36,14 +36,16 @@ services:
         build:
             context: ./.docker/development
             dockerfile: postgres.docker
-#        restart: always
-        volumes:
-            - ./var/db:/var/lib/postgresql/data
+        restart: unless-stopped # always
         environment:
             POSTGRES_USER: kopnik
             POSTGRES_PASSWORD: 1234
             POSTGRES_DB: kopnik
+        volumes:
+#            - ./var/db:/var/lib/postgresql/data
+            - kopnik-db:/var/lib/postgresql/data
         ports:
             - "5432:5432"
 volumes:
     composer:
+    kopnik-db:
