@@ -16,6 +16,9 @@ services:
             dockerfile: php-fpm.docker
         volumes:
             - ./:/app
+        environment:
+            APP_ENV: dev
+            DATABASE_URL: 'pgsql://kopnik:1234@db:5432/kopnik'
         depends_on:
             - db
     php-cli:
@@ -25,18 +28,22 @@ services:
         volumes:
             - ./:/app
             - composer:/root/.composer/cache
+        environment:
+            DATABASE_URL: 'pgsql://kopnik:1234@db:5432/kopnik'
         depends_on:
             - db
     db:
-        image: postgres:12.1-alpine
+        build:
+            context: ./.docker/development
+            dockerfile: postgres.docker
+#        restart: always
         volumes:
-            - db:/var/lib/postgresql/data
+            - ./var/db:/var/lib/postgresql/data
         environment:
             POSTGRES_USER: kopnik
-            POSTGRES_PASSWORD: secret
+            POSTGRES_PASSWORD: 1234
             POSTGRES_DB: kopnik
         ports:
-            - "54321:5432"
+            - "5432:5432"
 volumes:
-    db:
     composer:

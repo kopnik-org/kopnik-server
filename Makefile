@@ -1,7 +1,10 @@
 up: docker-up
 down: docker-down
+build: docker-build
 restart: docker-down docker-up
-init: docker-down-clear clear docker-pull docker-build docker-up manager-init
+init: docker-down-clear clear docker-pull docker-build docker-up kopnik-init
+kopnik-init: composer-install wait-db
+	# migrations fixtures ready
 
 docker-up:
 	docker-compose up -d
@@ -18,13 +21,14 @@ docker-pull:
 docker-build:
 	docker-compose build
 
-kopnik-init: composer-install wait-db migrations fixtures ready
-
 clear:
 	docker run --rm -v ${PWD}:/app --workdir=/app alpine rm -f .ready
 
+cli:
+	docker-compose run php-cli bin/console ${ARGS}
+
 composer-install:
-	docker-compose run --rm php-cli composer install
+	docker-compose run php-cli composer install
 
 wait-db:
 	until docker-compose exec -T db pg_isready --timeout=0 --dbname=kopnik ; do sleep 1 ; done
