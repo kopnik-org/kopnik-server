@@ -56,6 +56,13 @@ docker-compose up --build -d
 docker-compose down
 ```
 
+или более короткий формат запуска через make
+
+```
+make up
+make down
+```
+
 В продакшен режиме
 
 ```
