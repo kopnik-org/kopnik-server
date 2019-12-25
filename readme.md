@@ -43,10 +43,17 @@ systemctl reboot -i
 Запуск в Docker
 ---------------
 
-В режиме разработки
+В режиме разработки (выход Ctrl+C)
 
 ```
 docker-compose up --build
+```
+
+Также можно запустить в фоновом режиме и затем остановиить
+
+```
+docker-compose up --build -d
+docker-compose down
 ```
 
 В продакшен режиме

@@ -32,9 +32,9 @@ services:
         volumes:
             - db:/var/lib/postgresql/data
         environment:
-            POSTGRES_USER: app
+            POSTGRES_USER: kopnik
             POSTGRES_PASSWORD: secret
-            POSTGRES_DB: app
+            POSTGRES_DB: kopnik
         ports:
             - "54321:5432"
 volumes:
