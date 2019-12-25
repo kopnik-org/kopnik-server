@@ -1,0 +1,21 @@
+FROM php:7.3-fpm
+
+ARG APCU_VERSION=5.1.17
+
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    libpng-dev \
+    libzip-dev \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install gd pdo_pgsql opcache
+
+#INSTALL APCU
+RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
+RUN echo "extension=apcu.so" > /usr/local/etc/php/php.ini
+RUN echo "apc.enable_cli=1" > /usr/local/etc/php/php.ini
+RUN echo "apc.enable=1" > /usr/local/etc/php/php.ini
+#APCU
+
+COPY ./php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
+WORKDIR /app

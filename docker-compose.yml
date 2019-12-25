@@ -1,48 +1,42 @@
-version: '3.1'
-
+version: '3.7'
 services:
-
-    php-fpm:
-        build: ./.docker/php
-        container_name: ${PROJECT_NAME}_php-fpm
-        image: monolith-php:7.3-fpm
+    kopnik-nginx:
+        build:
+            context: ./.docker/development
+            dockerfile: nginx.docker
         volumes:
-            - ${APP_HOST_PATH}:${APP_CONTAINER_PATH}
-        working_dir: ${APP_CONTAINER_PATH}
-
-    nginx:
-        image: nginx:1.15
-        container_name: ${PROJECT_NAME}_nginx
-        working_dir: ${APP_CONTAINER_PATH}
+            - ./:/app
+        depends_on:
+            - kopnik-php-fpm
         ports:
-            - 80:80
+            - "8080:80"
+    kopnik-php-fpm:
+        build:
+            context: ./.docker/development
+            dockerfile: php-fpm.docker
         volumes:
-            - ${APP_HOST_PATH}:${APP_CONTAINER_PATH}
-            - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-            - ./.docker/nginx/errors.log:/var/log/nginx/error.log
-            - ./.docker/nginx/access.log:/var/log/nginx/access.log
-
-    database:
-        image: mariadb
-        restart: always
-        container_name: ${PROJECT_NAME}_db
+            - ./:/app
+        depends_on:
+            - kopnik-postgres
+    kopnik-php-cli:
+        build:
+            context: ./.docker/development
+            dockerfile: php-cli.docker
+        volumes:
+            - ./:/app
+            - composer:/root/.composer/cache
+        depends_on:
+            - kopnik-postgres
+    kopnik-postgres:
+        image: postgres:12.1-alpine
+        volumes:
+            - kopnik-postgres:/var/lib/postgresql/data
         environment:
-            MYSQL_ROOT_PASSWORD: 1234
-            MYSQL_DATABASE: ${PROJECT_NAME}
-            MYSQL_USER: ${PROJECT_NAME}       
-            MYSQL_PASSWORD: 1234
-        # Елси нужен доступ
-        # ports:
-        #     - 3306:3306
-        volumes:
-            - ${DB_HOST_PATH}:/var/lib/mysql
-
-    pma:
-        image: phpmyadmin/phpmyadmin
-        container_name: ${PROJECT_NAME}_pma
+            POSTGRES_USER: app
+            POSTGRES_PASSWORD: secret
+            POSTGRES_DB: app
         ports:
-            - 9000:80
-        environment:
-            PMA_HOST: database
-            PMA_USER: ${PROJECT_NAME}
-            PMA_PASSWORD: 1234
+            - "54321:5432"
+volumes:
+    kopnik-postgres:
+    composer:
