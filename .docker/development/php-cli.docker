@@ -2,28 +2,37 @@ FROM php:7.3.13-cli
 
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
+    libjpeg-dev \
     libjpeg62-turbo-dev \
+    libbz2-dev \
+    libgmp-dev \
     libicu-dev \
+    libmemcached-dev \
     libpq-dev \
     libpng-dev \
     libzip-dev \
     libxpm-dev \
     libxml2-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install -j$(nproc) bcmath \
+    && docker-php-ext-install -j$(nproc) bz2 \
     && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install -j$(nproc) gmp \
     && docker-php-ext-install -j$(nproc) intl \
     && docker-php-ext-install -j$(nproc) zip \
     && docker-php-ext-install -j$(nproc) pgsql \
     && docker-php-ext-install -j$(nproc) pdo_pgsql \
     && docker-php-ext-install -j$(nproc) exif \
-    && docker-php-ext-install -j$(nproc) xml \
-    && docker-php-ext-install -j$(nproc) zip \
     && docker-php-ext-configure gd \
+        --with-gd \
         --with-freetype-dir=/usr/include/ \
         --with-jpeg-dir=/usr/include/ \
         --with-xpm-dir=/usr/lib/x86_64-linux-gnu/ \
+    && docker-php-ext-install opcache \
+    && pecl install memcached \
     && pecl install xdebug \
-    && docker-php-ext-enable xdebug
+    && docker-php-ext-enable xdebug \
+    && docker-php-ext-enable memcached
 
 COPY ./php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
