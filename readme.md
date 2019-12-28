@@ -3,8 +3,13 @@ Kopnik.org
 
 Docker
 ===============
-В вк зарегать приложение и получить OAUTH_VK_CLIENT_ID и OAUTH_VK_CLIENT_SECRET https://vk.com/apps?act=manage
+В вк зарегать приложение и получить OAUTH_VK_CLIENT_ID и OAUTH_VK_CLIENT_SECRET и указать Доверенный redirect URI для OAuth. Ссылка https://vk.com/apps?act=manage
 
+```
+# https://vk.com/apps?act=manage раздел Настройки поле Доверенный redirect URI
+# номер порта произвольный. по умолчанию 8081
+http://localhost:8081/login/check-vk
+```
 
 Склонировать репозиторий:
 ```
