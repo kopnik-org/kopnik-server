@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libxpm-dev \
     libxml2-dev \
+    unzip \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install -j$(nproc) bcmath \
     && docker-php-ext-install -j$(nproc) bz2 \
