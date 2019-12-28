@@ -1,7 +1,9 @@
 up: docker-up
+upb: docker-build docker-up
 down: docker-down
 build: docker-build
 restart: docker-down docker-up
+restart-build: docker-down docker-build docker-up
 init: docker-down-clear clear docker-pull docker-build docker-up kopnik-init
 kopnik-init: composer-install wait-db
 	# migrations fixtures ready
