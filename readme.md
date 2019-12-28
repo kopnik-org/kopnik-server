@@ -25,8 +25,8 @@ APP_SECRET=~ # любая произвольная строка
 OAUTH_VK_CLIENT_ID=~
 OAUTH_VK_CLIENT_SECRET=~
 
-VK_COMMUNITY_ID=~ # это группа - настройки - работа с АПИ - колбэк АПИ -  поле group_id
-VK_CALLBACK_API_ACCESS_TOKEN=~
+VK_COMMUNITY_ID=~ # группа - настройки - работа с АПИ - колбэк АПИ -  поле group_id
+VK_CALLBACK_API_ACCESS_TOKEN=~ # группа - настройки - работа с АПИ - Ключи доступа
 ```
 
 Запуск докера и инициализация приолжения:
