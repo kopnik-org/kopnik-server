@@ -1,16 +1,98 @@
 Kopnik.org
 ==========
 
-Установка
----------
+Запуск в Docker
+===============
 
-Создать БД
+В вк зарегать приложение и получить OAUTH_VK_CLIENT_ID и OAUTH_VK_CLIENT_SECRET
 
-В ве зарегать приложение и получить OAUTH_VK_CLIENT_ID и OAUTH_VK_CLIENT_SECRET
+Склонировать репозиторий.
+
+Скопировать и отредактировать конфиг:
+```bash
+cp .env .env.local
+```
+
+В .env.local нужно задать следующие значения:
+```
+APP_SECRET=~
+
+OAUTH_VK_CLIENT_ID=~
+OAUTH_VK_CLIENT_SECRET=~
+
+VK_COMMUNITY_ID=~
+VK_CALLBACK_API_ACCESS_TOKEN=~
+```
+
+Запуск докера и инициализация приолжения:
+
+```
+make init
+```
+
+По умолчанию веб порт задан 8081, открывать проект по адресу:
+
+```
+http://localhost:8081/
+``` 
+
+Если нужно изменить порт, тогда запускать проект так:
+```
+WEB_PORT=80 make up
+
+```
+в этом случае, проект будет доступен на 80 порту:
+```
+http://localhost/
+``` 
+
+
+Дополнительные команды докера
+----------------------------- 
+
+Дальше можно работать с докером в обычном режиме.
+В режиме разработки (выход Ctrl+C)
+
+```
+docker-compose up --build
+```
+
+Также можно запустить в фоновом режиме и затем остановиить
+
+```
+docker-compose up --build -d
+docker-compose down
+```
+
+Или более короткий формат запуска через make
+
+```
+make up
+make down
+```
+
+
+Локальная установка 
+===================
+
+Создать БД postgres.
+
+В вк зарегать приложение и получить OAUTH_VK_CLIENT_ID и OAUTH_VK_CLIENT_SECRET
 
 Скопировать и отредактировать конфиг
 ```bash
 cp .env .env.local
+```
+
+В .env.local нужно задать следующие значения:
+```
+APP_SECRET=~
+
+OAUTH_VK_CLIENT_ID=~
+OAUTH_VK_CLIENT_SECRET=~
+
+VK_COMMUNITY_ID=~
+VK_CALLBACK_API_ACCESS_TOKEN=~
 ```
 
 Установка зависимостей
@@ -39,35 +121,6 @@ grant all privileges on database kopnik to kopnik;
 
 systemctl reboot -i
 ```
-
-Запуск в Docker
-===============
-
-В режиме разработки (выход Ctrl+C)
-
-```
-docker-compose up --build
-```
-
-Также можно запустить в фоновом режиме и затем остановиить
-
-```
-docker-compose up --build -d
-docker-compose down
-```
-
-или более короткий формат запуска через make
-
-```
-make up
-make down
-```
-
-По умолчанию веб порт задан 8081, открывать проект по адресу:
-
-```
-http://localhost:8081/
-``` 
 
 В продакшен режиме
 ------------------

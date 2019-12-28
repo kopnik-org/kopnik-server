@@ -18,6 +18,7 @@ services:
             - ./:/app
         environment:
             APP_ENV: dev
+            APP_DEBUG: 1
             DATABASE_URL: 'pgsql://kopnik:1234@db:5432/kopnik'
         depends_on:
             - db
@@ -29,9 +30,11 @@ services:
             - ./:/app
             - composer:/root/.composer/cache
         environment:
+            APP_ENV: dev
+            APP_DEBUG: 1
             DATABASE_URL: 'pgsql://kopnik:1234@db:5432/kopnik'
-        depends_on:
-            - db
+#        depends_on:
+#            - db
     db:
         build:
             context: ./.docker/development
