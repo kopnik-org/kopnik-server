@@ -21,7 +21,7 @@ cp .env .env.local
 ```ini
 APP_SECRET=~ # любая произвольная строка 
 
-# эти данные брать тут https://vk.com/apps?act=manage
+# эти данные брать тут https://vk.com/apps?act=manage в рзделе "Настройки"
 OAUTH_VK_CLIENT_ID=~
 OAUTH_VK_CLIENT_SECRET=~
 
