@@ -6,7 +6,11 @@ Kopnik.org
 
 В вк зарегать приложение и получить OAUTH_VK_CLIENT_ID и OAUTH_VK_CLIENT_SECRET
 
-Склонировать репозиторий.
+Склонировать репозиторий:
+```
+git clone https://github.com/kopnik-org/kopnik-server
+cd kopnik-server
+```
 
 Скопировать и отредактировать конфиг:
 ```bash
