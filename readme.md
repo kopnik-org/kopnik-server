@@ -4,7 +4,7 @@ Kopnik.org
 Запуск в Docker
 ===============
 
-В вк зарегать приложение и получить OAUTH_VK_CLIENT_ID и OAUTH_VK_CLIENT_SECRET
+В вк https://vk.com/apps?act=manage зарегать приложение и получить OAUTH_VK_CLIENT_ID и OAUTH_VK_CLIENT_SECRET
 
 Склонировать репозиторий:
 ```
@@ -18,9 +18,10 @@ cp .env .env.local
 ```
 
 В .env.local нужно задать следующие значения:
-```
-APP_SECRET=~
+```ini
+APP_SECRET=~ # любая произвольная строка 
 
+# эти данные брать тут https://vk.com/apps?act=manage
 OAUTH_VK_CLIENT_ID=~
 OAUTH_VK_CLIENT_SECRET=~
 
