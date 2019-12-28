@@ -4,9 +4,9 @@ down: docker-down
 build: docker-build
 restart: docker-down docker-up
 restart-build: docker-down docker-build docker-up
-init: docker-down-clear clear docker-pull docker-build docker-up kopnik-init
-kopnik-init: composer-install wait-db
-	# migrations fixtures ready
+init: docker-down-clear  docker-pull docker-build docker-up db-schema-drop kopnik-init
+kopnik-init: composer-install wait-db db-schema-update
+	# clear migrations fixtures ready
 
 docker-up:
 	docker-compose up -d
@@ -31,6 +31,12 @@ cli:
 
 composer-install:
 	docker-compose run php-cli composer install
+
+db-schema-drop:
+	docker-compose run php-cli bin/console doctrine:schema:drop --force
+
+db-schema-update:
+	docker-compose run php-cli bin/console doctrine:schema:update --force
 
 wait-db:
 	until docker-compose exec -T db pg_isready --timeout=0 --dbname=kopnik ; do sleep 1 ; done
