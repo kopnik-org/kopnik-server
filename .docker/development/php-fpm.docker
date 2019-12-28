@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libzip-dev \
     libxpm-dev \
+    libxml2-dev \
     unzip \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install -j$(nproc) bcmath \
@@ -36,8 +37,12 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-enable apcu \
     && docker-php-ext-enable memcached
 
-COPY ./php/apcu.ini /usr/local/etc/php/conf.d/apcu.ini
+#COPY ./php/apcu.ini /usr/local/etc/php/conf.d/apcu.ini
 COPY ./php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY ./php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet
+
+ENV COMPOSER_ALLOW_SUPERUSER 1
 
 WORKDIR /app

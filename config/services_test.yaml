@@ -1,0 +1,2 @@
+imports:
+    - { resource: "_local.test.yaml", ignore_errors: true }

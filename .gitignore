@@ -1,3 +1,4 @@
+/config/_local.*
 
 ###> symfony/framework-bundle ###
 /.env.local

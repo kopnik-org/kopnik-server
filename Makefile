@@ -27,22 +27,22 @@ clear:
 	docker run --rm -v ${PWD}:/app --workdir=/app alpine rm -f .ready
 
 cli:
-	docker-compose run php-cli bin/console ${ARGS}
+	docker-compose run php bin/console ${ARGS}
 
 composer-install:
-	docker-compose run php-cli composer install
+	docker-compose run php composer install
 
 db-schema-drop:
-	docker-compose run php-cli bin/console doctrine:schema:drop --force --full-database
+	docker-compose run php bin/console doctrine:schema:drop --force --full-database
 
 wait-db:
 	until docker-compose exec -T db pg_isready --timeout=0 --dbname=kopnik ; do sleep 1 ; done
 
 migrations:
-	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate --no-interaction
+	docker-compose run --rm php php bin/console doctrine:migrations:migrate --no-interaction
 
 fixtures:
-	docker-compose run --rm php-cli php bin/console doctrine:fixtures:load --no-interaction
+	docker-compose run --rm php php bin/console doctrine:fixtures:load --no-interaction
 
 ready:
 	docker run --rm -v ${PWD}:/app --workdir=/app alpine touch .ready

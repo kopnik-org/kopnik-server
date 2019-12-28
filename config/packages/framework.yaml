@@ -7,7 +7,7 @@ framework:
     http_method_override: true
     esi: true
     fragments: true
-    ide: '%env(FRAMEWORK_IDE)%'
+#    ide: '%env(FRAMEWORK_IDE)%'
 
     php_errors:
         log: true

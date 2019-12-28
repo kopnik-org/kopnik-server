@@ -77,17 +77,17 @@ make down
 
 Посмотреть список всех пользователей:
 ```
-docker-compose run php-cli bin/console app:user:list
+docker-compose run php bin/console app:user:list
 ```
 
 Посмотреть список всех заверителей:
 ```
-docker-compose run php-cli bin/console app:witness:list
+docker-compose run php bin/console app:witness:list
 ```
 
 Назначить пользователя заверителем:
 ```
-docker-compose run php-cli bin/console app:witness:promote
+docker-compose run php bin/console app:witness:promote
 ```
 
 
@@ -123,6 +123,14 @@ composer install
 Обновление схемы БД
 ```bash
 bin/console migrate
+```
+
+Для открытия файлов из профайлера в phpstrom, следует создать файл /config/_local.dev.yaml со следующим содержимым:
+
+```yaml
+framework:
+    profiler: { only_exceptions: false }
+    ide: 'phpstorm://open?url=file://%%f&line=%%l'
 ```
 
 PostgreSQL
