@@ -3,8 +3,8 @@ Kopnik.org
 
 Docker
 ===============
-
 В вк зарегать приложение и получить OAUTH_VK_CLIENT_ID и OAUTH_VK_CLIENT_SECRET https://vk.com/apps?act=manage
+
 
 Склонировать репозиторий:
 ```
@@ -18,7 +18,7 @@ cp .env .env.local
 ```
 
 В .env.local нужно задать следующие значения:
-```
+``` 
 # произвольнаяя строка
 # APP_SECRET=klu9rofij239rfsd0
 APP_SECRET=~
@@ -28,6 +28,7 @@ APP_SECRET=~
 OAUTH_VK_CLIENT_ID=~
 # OAUTH_VK_CLIENT_SECRET=UHIE908J098fjFE998
 OAUTH_VK_CLIENT_SECRET=~
+
 
 # группа - настройки - работа с АПИ - колбэк АПИ -  поле group_id (жирным)
 # VK_COMMUNITY_ID=144968351
