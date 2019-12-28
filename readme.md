@@ -71,6 +71,21 @@ make up
 make down
 ```
 
+Посмотреть список всех пользователей:
+```
+docker-compose run php-cli bin/console app:user:list
+```
+
+Посмотреть список всех заверителей:
+```
+docker-compose run php-cli bin/console app:witness:list
+```
+
+Назначить пользователя заверителем:
+```
+docker-compose run php-cli bin/console app:witness:promote
+```
+
 
 Локальная установка 
 ===================
