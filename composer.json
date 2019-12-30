@@ -32,6 +32,7 @@
         "vkcom/vk-php-sdk": "^5.101"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.0"
     },
     "config": {
         "apcu-autoloader": true,
