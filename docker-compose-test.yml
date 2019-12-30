@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+    nginx:
+        build:
+            context: ./.docker/test
+            dockerfile: nginx.docker
+        volumes:
+            - ./:/app
+        depends_on:
+            - php
+        ports:
+            - "${WEB_PORT_TEST}:80"
+    php:
+        build:
+            context: ./.docker/test
+            dockerfile: php-fpm.docker
+        volumes:
+            - ./:/app
+            - composer:/root/.composer/cache
+        environment:
+            APP_ENV: test
+            APP_DEBUG: 1
+            DATABASE_URL: 'pgsql://kopnik_test:1234@db:5432/kopnik_test'
+        depends_on:
+            - db
+    db:
+        build:
+            context: ./.docker/test
+            dockerfile: postgres.docker
+        restart: unless-stopped # always
+        environment:
+            POSTGRES_USER: kopnik_test
+            POSTGRES_PASSWORD: 1234
+            POSTGRES_DB: kopnik_test
+        volumes:
+            - kopnik-db-test:/var/lib/postgresql/data
+volumes:
+    composer:
+    kopnik-db-test:
