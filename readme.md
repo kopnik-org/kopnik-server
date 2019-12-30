@@ -3,12 +3,20 @@ Kopnik.org
 
 Docker
 ===============
-В вк зарегать приложение и получить OAUTH_VK_CLIENT_ID и OAUTH_VK_CLIENT_SECRET и указать Доверенный redirect URI для OAuth. Ссылка https://vk.com/apps?act=manage
+В вк зарегать приложение и получить OAUTH_VK_CLIENT_ID и OAUTH_VK_CLIENT_SECRET. Ссылка https://vk.com/apps?act=manage
 
+В разделе Настройки указать Базовый домен и Доверенный redirect URI для OAuth 
 ```
-# https://vk.com/apps?act=manage раздел Настройки поле Доверенный redirect URI
+# базовый домен
+localhost
 # номер порта произвольный. по умолчанию 8081
 http://localhost:8081/login/check-vk
+
+# для запуска приложения через сотовый телефон по локальной сети указать локальный Базовый домен 
+# (локальный IP выводится в консоли dev сервера Vue.js
+192.168.43.9
+# и локальный Доверенный redirect URI
+http://192.168.43.9:8081/login/check-vk
 ```
 
 Склонировать репозиторий:
@@ -41,6 +49,12 @@ VK_COMMUNITY_ID=~
 # руппа - настройки - работа с АПИ - Ключи доступа
 # VK_CALLBACK_API_ACCESS_TOKEN=jkh2349df8ujcrf9d8fujclrhjuwe9f8usdfjic9f8dufjac3qcuf
 VK_CALLBACK_API_ACCESS_TOKEN=~
+```
+
+Для запуска на телефоне через внутреннюю сеть добавить доверенный хост
+```
+# CORS_ALLOW_ORIGIN=^https?://(localhost|127\.0\.0\.1|192.168.43.9)(:[0-9]+)?$
+CORS_ALLOW_ORIGIN=^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$
 ```
 
 Запуск докера и инициализация приолжения:
