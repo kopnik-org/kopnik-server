@@ -1,3 +1,4 @@
+docker-compose.override.yml
 /config/_local.*
 
 ###> symfony/framework-bundle ###
@@ -9,4 +10,7 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
-docker-compose.override.yml
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###

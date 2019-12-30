@@ -18,4 +18,6 @@ return [
     Misd\PhoneNumberBundle\MisdPhoneNumberBundle::class => ['all' => true],
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['test' => true],
+    Nelmio\Alice\Bridge\Symfony\NelmioAliceBundle::class => ['test' => true],
+    Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle::class => ['test' => true],
 ];
