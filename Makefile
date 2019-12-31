@@ -50,7 +50,7 @@ ready:
 	docker run --rm -v ${PWD}:/app --workdir=/app alpine touch .ready
 
 test-docker-up:
-    docker-compose -f docker-compose-test.yml up -d --build
+	docker-compose -f docker-compose-test.yml up -d --build
 
 test-docker-down:
 	docker-compose -f docker-compose-test.yml down --remove-orphans
@@ -58,5 +58,5 @@ test-docker-down:
 test-db-schema-drop:
 	docker-compose -f docker-compose-test.yml run php bin/console doctrine:schema:drop --force --full-database
 
-test-migrations
-    docker-compose -f docker-compose-test.yml run --rm php php bin/console doctrine:migrations:migrate --no-interaction
+test-migrations:
+	docker-compose -f docker-compose-test.yml run --rm php php bin/console doctrine:migrations:migrate --no-interaction
