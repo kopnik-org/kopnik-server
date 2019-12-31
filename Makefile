@@ -56,7 +56,7 @@ test-docker-down:
 	docker-compose -f docker-compose-test.yml down --remove-orphans
 
 test-db-schema-drop:
-	docker-compose -f docker-compose-test.yml run php bin/console doctrine:schema:drop --force --full-database
+	docker-compose -f docker-compose-test.yml run php-test bin/console doctrine:schema:drop --force --full-database
 
 test-migrations:
-	docker-compose -f docker-compose-test.yml run --rm php php bin/console doctrine:migrations:migrate --no-interaction
+	docker-compose -f docker-compose-test.yml run --rm php-test php bin/console doctrine:migrations:migrate --no-interaction

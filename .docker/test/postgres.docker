@@ -1,7 +1,1 @@
 FROM postgres:12.1-alpine
-
-# RUN mkdir -p "$PGDATA" && chmod -R 700 "$PGDATA" && chown -R postgres:postgres "$PGDATA"
-# RUN chmod -R 700 /var/lib/postgresql/data \
-#     && chown -R postgres:postgres /var/lib/postgresql/data
-
-# ADD ./postgres/ /docker-entrypoint-initdb.d

@@ -1,16 +1,16 @@
 version: '3.7'
 services:
-    nginx:
+    nginx-test:
         build:
             context: ./.docker/test
             dockerfile: nginx.docker
         volumes:
             - ./:/app
         depends_on:
-            - php
+            - php-test
         ports:
-            - "${WEB_PORT_TEST}:80"
-    php:
+            - "${WEB_PORT_TEST}:82"
+    php-test:
         build:
             context: ./.docker/test
             dockerfile: php-fpm.docker
