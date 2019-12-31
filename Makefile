@@ -53,7 +53,7 @@ test-docker-up:
 	docker-compose -f docker-compose-test.yml up -d --build
 
 test-docker-down:
-	docker-compose -f docker-compose-test.yml down --remove-orphans
+	docker-compose -f docker-compose-test.yml down
 
 test-db-schema-drop:
 	docker-compose -f docker-compose-test.yml run php-test bin/console doctrine:schema:drop --force --full-database

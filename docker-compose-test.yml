@@ -20,10 +20,10 @@ services:
         environment:
             APP_ENV: test
             APP_DEBUG: 1
-            DATABASE_URL: 'pgsql://kopnik_test:1234@db:5432/kopnik_test'
+            DATABASE_URL: 'pgsql://kopnik_test:1234@db-test:5432/kopnik_test'
         depends_on:
-            - db
-    db:
+            - db-test
+    db-test:
         build:
             context: ./.docker/test
             dockerfile: postgres.docker
