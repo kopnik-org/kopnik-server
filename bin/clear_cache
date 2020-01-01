@@ -11,3 +11,9 @@ then
     echo "Clearing var/cache/dev..."
     rm -rf var/cache/dev
 fi
+
+if [ -d var/cache/test ]
+then
+    echo "Clearing var/cache/test..."
+    rm -rf var/cache/test
+fi
