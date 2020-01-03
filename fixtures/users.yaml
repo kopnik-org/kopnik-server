@@ -1,8 +1,8 @@
 App\Entity\User:
     user_{1..10}:
-        firstName: <firstName()>
-        lastName: <lastName()>
-        patronymic: <lastName()>
+        firstName: <ru_RU:firstName()>
+        lastName: <ru_RU:lastName()>
+        patronymic: <ru_RU:lastName()>
         passportCode: <numberBetween(1111, 9999)>
         birthYear: <numberBetween(1950, 2000)>
         latitude: 0
