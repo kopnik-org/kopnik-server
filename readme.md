@@ -123,6 +123,8 @@ docker-compose run php bin/console app:witness:promote
 Тестирование 
 ============
 
+Заполнить файл .env.test.local аналогично .env.local (см. выше)
+
 Создать фикстуру локального юзера в файле fixtures/local_user.yaml пример содержимого:
 
 ```yaml
