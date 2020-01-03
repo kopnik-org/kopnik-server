@@ -61,7 +61,7 @@ class UserListCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var User[] $users */
-        $users = $this->em->getRepository(User::class)->findBy([], ['created_at' => 'DESC']);
+        $users = $this->em->getRepository(User::class)->findBy([], ['id' => 'DESC', 'created_at' => 'DESC']);
 
         $rows = [];
         foreach ($users as $user) {
