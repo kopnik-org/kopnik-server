@@ -1,6 +1,6 @@
 App\Entity\User:
     user_{1..10}:
-        firstName: <ru_RU:firstName()>
+        firstName: <ru_RU:firstNameMale()>
         lastName: <ru_RU:lastName()>
         patronymic: <ru_RU:lastName()>
         passportCode: <numberBetween(1111, 9999)>
