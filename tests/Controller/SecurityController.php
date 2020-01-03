@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/test/login/{id}", name="test_security_login")
+     * @Route("/api/test/login/{id}", name="test_security_login")
      */
     public function login(
         $id,

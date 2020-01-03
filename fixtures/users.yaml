@@ -1,5 +1,5 @@
 App\Entity\User:
-    user_{1..30}:
+    user_{1..10}:
         firstName: <firstName()>
         lastName: <lastName()>
         patronymic: <lastName()>
@@ -10,7 +10,8 @@ App\Entity\User:
         isWitness: '50%? 1 : 0'
         isAllowMessagesFromCommunity: '50%? 1 : 0'
         lastLoginAt: '50%? <date_create()>'
-        createdAt: '<dateTimeBetween("-30 days", "-1 days")>'
+        createdAt: '<dateTimeBetween("2020-01-03 12:00", "2020-01-03 12:00")>'
+#        createdAt: '<dateTime("2020-01-03")>'
 #        latitude:  '<numberBetween(40, 58)>.<numberBetween(0000000000, 9999999999)>'
 #        longitude: '<numberBetween(20, 130)>.<numberBetween(0000000000, 9999999999)>'
 
