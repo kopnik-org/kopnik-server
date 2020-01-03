@@ -72,11 +72,13 @@ class UserListCommand extends Command
 //                $user->getOauthByProvider('vkontakte')->getAccessToken(),
                 $user->getStatusAsText(),
                 $user->isAllowMessagesFromCommunity() ? 'ДА' : '-',
+                $user->getForeman(),
+                $user->getWitness(),
                 $user->getCreatedAt()->format('Y-m-d H:i'),
             ];
         }
 
         //$this->io->table(['id', 'ФИО', 'VK ID', 'VK Access Token', 'Статус', 'Дата регистрации'], $rows);
-        $this->io->table(['id', 'ФИО', 'VK ID', 'Статус', 'Разрешены сообщения ВК', 'Дата регистрации'], $rows);
+        $this->io->table(['id', 'ФИО', 'VK ID', 'Статус', 'Сообщения ВК', 'Старшина', 'Заверитель', 'Дата регистрации'], $rows);
     }
 }

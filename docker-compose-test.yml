@@ -32,6 +32,8 @@ services:
             POSTGRES_USER: kopnik_test
             POSTGRES_PASSWORD: 1234
             POSTGRES_DB: kopnik_test
+        ports:
+            - "54333:5432"
         volumes:
             - kopnik-db-test:/var/lib/postgresql/data
 volumes:
