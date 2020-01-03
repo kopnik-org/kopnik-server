@@ -34,7 +34,7 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.0",
         "theofidry/alice-data-fixtures": "^1.0",
-        "hautelook/alice-bundle": "^1.0",
+        "hautelook/alice-bundle": "^2.0",
         "phpunit/phpunit": "^8.0"
     },
     "config": {

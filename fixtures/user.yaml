@@ -1,9 +1,0 @@
-App\Entity\User:
-    user_{1..10}:
-        firstName: <name()>
-        lastName: <name()>
-        patronymic: <name()>
-        passportCode: 1234
-        birthYear: 2000
-        latitude: 0
-        longitude: 0

@@ -120,6 +120,66 @@ docker-compose run php bin/console app:witness:promote
 ```
 
 
+Тестирование 
+============
+
+Создать фикстуру локального юзера в файле fixtures/local_user.yaml пример содержимого:
+
+```yaml
+App\Entity\User:
+    user_me:
+        firstName: Test
+        lastName: Test
+        patronymic: Test
+        passportCode: 1234
+        birthYear: 1234
+        latitude: 0
+        longitude: 0
+        isWitness: 1
+        isAllowMessagesFromCommunity: 1
+        createdAt: <date_create()>
+
+App\Entity\UserOauth:
+    user_oauth_{@user_me}:
+        user: <current()>
+        access_token: <sha256()>
+        email: test@test.com
+        provider: vkontakte
+        identifier: 11111111
+        createdAt: <date_create()>
+``` 
+
+Запуск/остановка тестового окружения:
+
+```
+make test-up
+make test-down
+```
+
+Для обнуления тестовых данных достаточно выполнить:  
+
+```
+make test-up
+```
+
+Вывести список юзеров:
+
+```
+docker-compose -f docker-compose-test.yml run --rm php-test php bin/console app:user:list
+```
+
+По умолчанию веб порт для тестов задан 8082, открывать проект по адресу:
+
+```
+http://localhost:8082/
+``` 
+
+Аутентификация:
+
+```
+http://localhost:8082/test/login/{id}
+```
+
 Локальная установка 
 ===================
 

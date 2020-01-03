@@ -2,18 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Test\Controller;
+namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    public function login(AuthenticationUtils $helper): Response
+    /**
+     * @Route("/test/login/{id}", name="test_security_login")
+     */
+    public function login($id, AuthenticationUtils $helper): Response
     {
-        return $this->render('security/login.html.twig', [
 
-        ]);
+        return new Response('login ok '.$id);
     }
 }

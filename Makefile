@@ -6,8 +6,7 @@ restart: docker-down docker-up
 restart-build: docker-down docker-build docker-up
 init: docker-down-clear  docker-pull docker-build docker-up composer-install db-schema-drop kopnik-init
 kopnik-init: wait-db migrations
-	# clear  fixtures ready
-test-up: test-docker-down test-docker-up test-db-schema-drop test-migrations
+test-up: test-docker-down test-docker-up test-db-schema-drop test-migrations test-fixtures
 test-down: test-docker-down
 
 docker-up:
@@ -60,3 +59,6 @@ test-db-schema-drop:
 
 test-migrations:
 	docker-compose -f docker-compose-test.yml run --rm php-test php bin/console doctrine:migrations:migrate --no-interaction
+
+test-fixtures:
+	docker-compose -f docker-compose-test.yml run --rm php-test php bin/console hautelook:fixtures:load -q
