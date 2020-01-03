@@ -45,10 +45,13 @@ class SecurityController extends AbstractController
         $event = new InteractiveLoginEvent($request, $authenticatedToken);
         $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
 
-        return new JsonResponse([
+        $response = [
             'status' => 'success',
+            'message' => 'test login success',
             'user'   => $this->serializeUser($user),
-        ]);
+        ];
+
+        return new JsonResponse(['response' => $response]);
     }
 
     /**
