@@ -179,7 +179,7 @@ http://localhost:8082/
 Аутентификация:
 
 ```
-http://localhost:8082/test/login/{id}
+http://localhost:8082/api/test/login/{id}
 ```
 
 Локальная установка 
