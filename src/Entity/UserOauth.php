@@ -8,6 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Smart\CoreBundle\Doctrine\ColumnTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
+//*          @ORM\UniqueConstraint(columns={"email", "provider"}),
+// *          @ORM\UniqueConstraint(columns={"access_token"}),
+
+
 /**
  * @ORM\Entity()
  * @ORM\Table("users_oauths",
@@ -17,6 +21,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      },
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(columns={"identifier", "provider"}),
+ *          @ORM\UniqueConstraint(columns={"email", "provider"}),
+ *          @ORM\UniqueConstraint(columns={"access_token"}),
  *      }
  * )
  */
