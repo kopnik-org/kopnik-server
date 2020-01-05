@@ -236,8 +236,6 @@ sudo -u postgres psql
 
 alter user <username> with encrypted password '<password>';
 grant all privileges on database kopnik to kopnik;
-
-systemctl reboot -i
 ```
 
 В продакшен режиме
