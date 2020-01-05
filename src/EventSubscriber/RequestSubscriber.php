@@ -63,7 +63,7 @@ class RequestSubscriber implements EventSubscriberInterface
 
         // Для апи запросов, нужно проверять разрешение сообщений от группы вк
         if (strpos($event->getRequest()->get('_route'), 'api_') === 0
-            and $user->setIsAllowMessagesFromCommunity()
+            and $user->isAllowMessagesFromCommunity()
         ) {
             $response = new JsonResponse([
                 'error' => [
