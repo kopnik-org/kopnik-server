@@ -6,6 +6,7 @@ namespace App\EventSubscriber;
 
 use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -39,11 +40,43 @@ class RequestSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            KernelEvents::REQUEST  => 'validateUser',
 //            KernelEvents::REQUEST  => 'onKernelRequest',
 //            KernelEvents::RESPONSE => 'onKernelResponse',
         ];
     }
 
+    /**
+     * @param RequestEvent $event
+     */
+    public function validateUser(RequestEvent $event): void
+    {
+        if (null === $token = $this->token_storage->getToken()) {
+            return;
+        }
+
+        /** @var User $user */
+        if (!\is_object($user = $token->getUser())) {
+            // e.g. anonymous authentication
+            return;
+        }
+
+        // Для апи запросов, нужно проверять разрешение сообщений от группы вк
+        if (strpos($event->getRequest()->get('_route'), 'api_') === 0
+            and $user->setIsAllowMessagesFromCommunity()
+        ) {
+            $response = new JsonResponse([
+                'error' => [
+                    'error_code' => 510,
+                    'error_msg'  => 'Message From VK Group Is Not Allowed',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+
+            $event->setResponse($response);
+        }
+    }
+    
     /**
      * @param RequestEvent $event
      */
