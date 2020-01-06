@@ -64,7 +64,32 @@ App\Entity\User:
   #   foreman: '@user_1'
 
 App\Entity\UserOauth:
-  user_oauth_{@user_*}:
+  oauth_{@user_1_witness}:
+    user: <current()>
+    access_token: <sha256()>
+    email: <email()>
+    provider: vkontakte
+    identifier: 573258821
+    createdAt: <date_create()>
+
+  oauth_{@user_2_new}:
+    user: <current()>
+    access_token: <sha256()>
+    email: <email()>
+    provider: vkontakte
+    identifier: <numberBetween(11111111, 999999999)>
+    createdAt: <date_create()>
+
+  oauth_{@user_3_pending}:
+    user: <current()>
+    access_token: <sha256()>
+    email: <email()>
+    provider: vkontakte
+    identifier: <numberBetween(11111111, 999999999)>
+    createdAt: <date_create()>
+
+
+  oauth_{@user_4_declined}:
     user: <current()>
     access_token: <sha256()>
     email: <email()>
