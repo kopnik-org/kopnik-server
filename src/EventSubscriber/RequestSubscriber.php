@@ -63,6 +63,7 @@ class RequestSubscriber implements EventSubscriberInterface
 
         // Для апи запросов, нужно проверять разрешение сообщений от группы вк
         if (
+            $event->getRequest()->get('_route') and
             (
                 strpos($event->getRequest()->get('_route'), 'api_users_update') === 0
                 //or strpos($event->getRequest()->get('_route'), 'api_users_bla_bla__') === 0
