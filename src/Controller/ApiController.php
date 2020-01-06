@@ -45,20 +45,21 @@ class ApiController extends AbstractController
 
         $response = [];
 
-        /*
+
         $input = json_decode($request->getContent(), true);
         $data = [
-            'first_name'    => $input['firstName'],
-            'last_name'     => $input['lastName'],
+            'firstname'     => $input['firstName'],
             'patronymic'    => $input['patronymic'],
+            'lastname'      => $input['lastName'],
             'birth_year'    => $input['birthyear'],
             'passport_code' => $input['passport'],
             'latitude'      => $input['location'][0],
             'longitude'     => $input['location'][1],
-            'photo'         => $input['photo'],
-            'smallPhoto'    => $input['smallPhoto'],
+//            'photo'         => $input['photo'],
+//            'smallPhoto'    => $input['smallPhoto'],
+            'update'        => ''
         ];
-        */
+        /*
 
         $data = [
             'firstname'     => $request->request->get('firstName'),
@@ -72,9 +73,10 @@ class ApiController extends AbstractController
 //            'small_photo'    => $request->request->get('smallPhoto'),
             'update'        => '',
         ];
+        */
 
-        $request2form = new Request();
-        $request2form->request->set('user', $data);
+//        $request2form = new Request();
+//        $request2form->request->set('user', $data);
         $request->request->set('user', $data);
         $form = $this->createForm(UserFormType::class, $this->user, ['csrf_protection' => false]);
         $form->handleRequest($request);
