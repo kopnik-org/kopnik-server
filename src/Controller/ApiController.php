@@ -70,6 +70,7 @@ class ApiController extends AbstractController
             'longitude'     => $request->request->get('location')[1],
             'photo'         => $request->request->get('photo'),
             'smallPhoto'    => $request->request->get('smallPhoto'),
+            'update'        => $request->request->get('update'),
         ];
 
         $request2form = new Request();
