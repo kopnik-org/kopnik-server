@@ -61,30 +61,50 @@ class ApiController extends AbstractController
         */
 
         $data = [
-            'first_name'    => $request->request->get('firstName'),
-            'last_name'     => $request->request->get('lastName'),
+            'firstname'     => $request->request->get('firstName'),
             'patronymic'    => $request->request->get('patronymic'),
+            'lastname'      => $request->request->get('lastName'),
             'birth_year'    => $request->request->get('birthyear'),
             'passport_code' => $request->request->get('passport'),
             'latitude'      => $request->request->get('location')[0],
             'longitude'     => $request->request->get('location')[1],
-            'photo'         => $request->request->get('photo'),
-            'small_photo'    => $request->request->get('smallPhoto'),
-            'update'        => true,
+//            'photo'         => $request->request->get('photo'),
+//            'small_photo'    => $request->request->get('smallPhoto'),
+            'update'        => '',
         ];
 
         $request2form = new Request();
         $request2form->request->set('user', $data);
+        $request->request->set('user', $data);
         $form = $this->createForm(UserFormType::class, $this->user, ['csrf_protection' => false]);
-        $form->handleRequest($request2form);
+        $form->handleRequest($request);
+//        $form->handleRequest($request2form);
+
+        // @todo Пока так находит первого и единственного заверителя
+        $witness = $em->getRepository(User::class)->findOneBy(['is_witness' => true]);
+
+        if (empty($witness)) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 3,
+                    'error_msg'  => 'В системе отсутствуют заверители',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
 
         if ($form->isValid()) {
             $this->getUser()->setStatus(User::STATUS_PENDING);
 
             try {
                 $vk = new VKApiClient();
+                /** @var User $user */
                 $user = $this->getUser();
                 $invite_chat_link = $user->getAssuranceChatInviteLink();
+
+                if (empty($user->getWitness())) {
+                    $user->setWitness($witness); // @todo костыль...
+                }
 
                 $result = $vk->messages()->send($vkCallbackApiAccessToken, [
                     'user_id' => $user->getVkIdentifier(),
@@ -110,7 +130,7 @@ class ApiController extends AbstractController
                     'error' => [
                         'error_code' => 1000000 + $e->getErrorCode(),
                         'error_msg'  => $e->getMessage(),
-                        'request_params' => '@todo ',
+                        'request_params' => '@todo',
                     ]
                 ]);
             }
@@ -118,15 +138,12 @@ class ApiController extends AbstractController
             $em->persist($this->user);
             $em->flush();
 
-            // @todo Пока так находит первого и единственного заверителя
-            $witness = $em->getRepository(User::class)->findOneBy(['is_witness' => true]);
-
             $response[] = $this->serializeUser($witness);
         } else {
             $errors = [];
             foreach ($form->getErrors() as $error) {
                 $errors[] = [
-                    'field' => $error->getForm()->getName(),
+                    'field' => $error->getOrigin()->getName(),
                     'message' => $error->getMessage(),
                 ];
             }
