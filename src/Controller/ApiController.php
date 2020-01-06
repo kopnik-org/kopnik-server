@@ -27,9 +27,9 @@ class ApiController extends AbstractController
     protected $user;
 
     /**
-     * @Route("/users/putWitnessRequest", methods={"PUT"}, name="api_users_put_witness_request")
+     * @Route("/users/update", methods={"POST"}, name="api_users_update")
      */
-    public function usersPutWitnessRequest(Request $request, EntityManagerInterface $em, $vkCallbackApiAccessToken): JsonResponse
+    public function usersUpdate(Request $request, EntityManagerInterface $em, $vkCallbackApiAccessToken): JsonResponse
     {
         $this->user = $this->getUser();
 
@@ -45,8 +45,8 @@ class ApiController extends AbstractController
 
         $response = [];
 
+        /*
         $input = json_decode($request->getContent(), true);
-
         $data = [
             'first_name'    => $input['firstName'],
             'last_name'     => $input['lastName'],
@@ -58,6 +58,19 @@ class ApiController extends AbstractController
             'photo'         => $input['photo'],
             'smallPhoto'    => $input['smallPhoto'],
         ];
+        */
+
+        $data = [
+            'first_name'    => $request->request->get('firstName'),
+            'last_name'     => $request->request->get('lastName'),
+            'patronymic'    => $request->request->get('patronymic'),
+            'birth_year'    => $request->request->get('birthyear'),
+            'passport_code' => $request->request->get('passport'),
+            'latitude'      => $request->request->get('location')[0],
+            'longitude'     => $request->request->get('location')[1],
+            'photo'         => $request->request->get('photo'),
+            'smallPhoto'    => $request->request->get('smallPhoto'),
+        ];
 
         $request2form = new Request();
         $request2form->request->set('user', $data);
@@ -65,49 +78,47 @@ class ApiController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            if ($this->getUser()->getStatus() == User::STATUS_DECLINE) {
-                $this->getUser()->setStatus(User::STATUS_PENDING);
+            $this->getUser()->setStatus(User::STATUS_PENDING);
 
-                try {
-                    $vk = new VKApiClient();
-                    $user = $this->getUser();
-                    $invite_chat_link = $user->getAssuranceChatInviteLink();
+            try {
+                $vk = new VKApiClient();
+                $user = $this->getUser();
+                $invite_chat_link = $user->getAssuranceChatInviteLink();
 
-                    $result = $vk->messages()->send($vkCallbackApiAccessToken, [
-                        'user_id' => $user->getVkIdentifier(),
-                        'message' => "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.",
-                        'random_id' => random_int(100, 999999999),
-                    ]);
+                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                    'user_id' => $user->getVkIdentifier(),
+                    'message' => "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.",
+                    'random_id' => random_int(100, 999999999),
+                ]);
 
-                    $result = $vk->messages()->send($vkCallbackApiAccessToken, [
-                        'user_id' => $user->getWitness()->getVkIdentifier(),
-                        'message' => "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link",
-                        'random_id' => random_int(100, 999999999),
-                    ]);
-                } catch (VKApiFloodException $e) {
-                    return new JsonResponse([
-                        'error' => [
-                            'error_code' => 100,
-                            'error_msg'  => $e->getMessage(),
-                            'request_params' => '@todo ',
-                        ]
-                    ]);
-                } catch (VKApiException $e) {
-                    return new JsonResponse([
-                        'error' => [
-                            'error_code' => 100,
-                            'error_msg'  => $e->getMessage(),
-                            'request_params' => '@todo ',
-                        ]
-                    ]);
-                }
+                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                    'user_id' => $user->getWitness()->getVkIdentifier(),
+                    'message' => "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link",
+                    'random_id' => random_int(100, 999999999),
+                ]);
+            } catch (VKApiFloodException $e) {
+                return new JsonResponse([
+                    'error' => [
+                        'error_code' => 1000000 + $e->getErrorCode(),
+                        'error_msg'  => $e->getMessage(),
+                        'request_params' => '@todo ',
+                    ]
+                ]);
+            } catch (VKApiException $e) {
+                return new JsonResponse([
+                    'error' => [
+                        'error_code' => 1000000 + $e->getErrorCode(),
+                        'error_msg'  => $e->getMessage(),
+                        'request_params' => '@todo ',
+                    ]
+                ]);
             }
 
             $em->persist($this->user);
             $em->flush();
 
             // @todo Пока так находит первого и единственного заверителя
-            $witness = $em->getRepository(User::class)->findOneBy(['is_witness' => true], ['created_at' => 'ASC']);
+            $witness = $em->getRepository(User::class)->findOneBy(['is_witness' => true]);
 
             $response[] = $this->serializeUser($witness);
         } else {
