@@ -76,7 +76,7 @@ class ApiController extends AbstractController
         $request2form = new Request();
         $request2form->request->set('user', $data);
         $form = $this->createForm(UserFormType::class, $this->user, ['csrf_protection' => false]);
-        $form->handleRequest($request);
+        $form->handleRequest($request2form);
 
         if ($form->isValid()) {
             $this->getUser()->setStatus(User::STATUS_PENDING);
