@@ -6,7 +6,7 @@ App\Entity\User:
     passportCode: <numberBetween(1111, 9999)>
     birthYear: <numberBetween(1950, 1990)>
     latitude: <latitude(-90, 90)>
-    longitude: <longitude(-90, 90)>
+    longitude: <longitude(-180, 180)>
     photo: <imageUrl(200, 200)>
     smallPhoto: <imageUrl(50, 50)>
     isWitness: 1
@@ -22,7 +22,7 @@ App\Entity\User:
     passportCode: <numberBetween(1111, 9999)>
     birthYear: <numberBetween(1950, 1990)>
     latitude: <latitude(-90, 90)>
-    longitude: <longitude(-90, 90)>
+    longitude: <longitude(-180, 180)>
     photo: <imageUrl(200, 200)>
     smallPhoto: <imageUrl(50, 50)>
     isWitness: 0
@@ -38,7 +38,7 @@ App\Entity\User:
     passportCode: <numberBetween(1111, 9999)>
     birthYear: <numberBetween(1950, 1990)>
     latitude: <latitude(-90, 90)>
-    longitude: <longitude(-90, 90)>
+    longitude: <longitude(-180, 180)>
     photo: <imageUrl(200, 200)>
     smallPhoto: <imageUrl(50, 50)>
     isWitness: 0
@@ -54,7 +54,7 @@ App\Entity\User:
     passportCode: <numberBetween(1111, 9999)>
     birthYear: <numberBetween(1950, 1990)>
     latitude: <latitude(-90, 90)>
-    longitude: <longitude(-90, 90)>
+    longitude: <longitude(-180, 180)>
     photo: <imageUrl(200, 200)>
     smallPhoto: <imageUrl(50, 50)>
     isWitness: 0
