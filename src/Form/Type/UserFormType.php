@@ -16,9 +16,9 @@ class UserFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstname', null, ['attr' => ['autofocus' => true], 'required' => true])
+            ->add('first_name', null, ['attr' => ['autofocus' => true], 'required' => true])
             ->add('patronymic')
-            ->add('lastname', null, ['required' => true])
+            ->add('last_name', null, ['required' => true])
             ->add('birth_year')
             ->add('passport_code')
             ->add('latitude', TextType::class,  ['attr' => ['placeholder' => 'Latitude']])

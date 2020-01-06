@@ -13,7 +13,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Flex\Response;
 use VK\Client\VKApiClient;
 use VK\Exceptions\Api\VKApiFloodException;
 use VK\Exceptions\VKApiException;
@@ -29,7 +31,7 @@ class ApiController extends AbstractController
     /**
      * @Route("/users/update", methods={"POST"}, name="api_users_update")
      */
-    public function usersUpdate(Request $request, EntityManagerInterface $em, $vkCallbackApiAccessToken): JsonResponse
+    public function usersUpdate(Request $request, KernelInterface $kernel, EntityManagerInterface $em, $vkCallbackApiAccessToken): JsonResponse
     {
         $this->user = $this->getUser();
 
@@ -45,12 +47,11 @@ class ApiController extends AbstractController
 
         $response = [];
 
-
         $input = json_decode($request->getContent(), true);
         $data = [
-            'firstname'     => $input['firstName'],
+            'first_name'    => $input['firstName'],
             'patronymic'    => $input['patronymic'],
-            'lastname'      => $input['lastName'],
+            'last_name'     => $input['lastName'],
             'birth_year'    => $input['birthyear'],
             'passport_code' => $input['passport'],
             'latitude'      => $input['location'][0],
@@ -59,6 +60,15 @@ class ApiController extends AbstractController
 //            'smallPhoto'    => $input['smallPhoto'],
             'update'        => ''
         ];
+
+        if ($kernel->getEnvironment() == 'test') {
+            $filename = $kernel->getCacheDir().'/_request_'.date('Y-m-d_H-i-s').'.log';
+
+            file_put_contents($filename, print_r($request->getContent(), true) . "\n\n", FILE_APPEND);
+            file_put_contents($filename, print_r($request->request->all(), true) . "\n\n", FILE_APPEND);
+            file_put_contents($filename, print_r($data, true) . "\n\n", FILE_APPEND);
+        }
+
         /*
 
         $data = [
@@ -78,7 +88,13 @@ class ApiController extends AbstractController
 //        $request2form = new Request();
 //        $request2form->request->set('user', $data);
         $request->request->set('user', $data);
-        $form = $this->createForm(UserFormType::class, $this->user, ['csrf_protection' => false]);
+        $form = $this->createForm(
+            UserFormType::class,
+            $this->user, [
+                'csrf_protection' => false,
+                //'error_bubbling'  => false,
+            ]
+        );
         $form->handleRequest($request);
 //        $form->handleRequest($request2form);
 
@@ -145,7 +161,7 @@ class ApiController extends AbstractController
             $errors = [];
             foreach ($form->getErrors() as $error) {
                 $errors[] = [
-                    'field' => $error->getOrigin()->getName(),
+                    'field' => $error->getOrigin()->getExtraData(),
                     'message' => $error->getMessage(),
                 ];
             }
