@@ -69,7 +69,7 @@ class ApiController extends AbstractController
             'latitude'      => $request->request->get('location')[0],
             'longitude'     => $request->request->get('location')[1],
             'photo'         => $request->request->get('photo'),
-            'smallPhoto'    => $request->request->get('smallPhoto'),
+            'small_photo'    => $request->request->get('smallPhoto'),
             'update'        => true,
         ];
 
