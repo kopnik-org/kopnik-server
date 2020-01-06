@@ -67,7 +67,7 @@ class RequestSubscriber implements EventSubscriberInterface
                 strpos($event->getRequest()->get('_route'), 'api_users_update') === 0
                 //or strpos($event->getRequest()->get('_route'), 'api_users_bla_bla__') === 0
             )
-            and $user->isAllowMessagesFromCommunity()
+            and !$user->isAllowMessagesFromCommunity()
         ) {
             $response = new JsonResponse([
                 'error' => [
