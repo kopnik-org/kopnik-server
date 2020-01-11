@@ -9,6 +9,7 @@ kopnik-init: wait-db migrations
 test-up: test-docker-down test-docker-up test-db-schema-drop test-migrations test-fixtures
 test-up-with-db-schema-update: test-docker-down test-docker-up test-db-schema-drop test-migrations test-db-schema-update test-fixtures
 test-down: test-docker-down
+test-setup-with-db-schema-update: test-db-schema-drop test-migrations test-db-schema-update test-fixtures
 
 docker-up:
 	docker-compose up -d

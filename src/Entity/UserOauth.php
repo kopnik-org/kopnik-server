@@ -16,7 +16,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          @ORM\Index(columns={"email"}),
  *      },
  *      uniqueConstraints={
- *          @ORM\UniqueConstraint(columns={"identifier", "provider"}),
  *          @ORM\UniqueConstraint(columns={"email", "provider"}),
  *          @ORM\UniqueConstraint(columns={"access_token"}),
  *      }

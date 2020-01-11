@@ -85,7 +85,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: <numberBetween(11111111, 999999999)>
+    identifier: 261824271
     createdAt: <date_create()>
 
 
@@ -94,5 +94,5 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: <numberBetween(11111111, 999999999)>
+    identifier: 261824271
     createdAt: <date_create()>
