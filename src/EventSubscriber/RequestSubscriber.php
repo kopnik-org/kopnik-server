@@ -40,7 +40,7 @@ class RequestSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST  => 'validateUser',
+//            KernelEvents::REQUEST  => 'validateUser',
 //            KernelEvents::REQUEST  => 'onKernelRequest',
 //            KernelEvents::RESPONSE => 'onKernelResponse',
         ];

@@ -42,6 +42,8 @@ class User implements UserInterface
      * @var string|null
      *
      * @ORM\Column(type="string", length=64, nullable=true)
+     *
+     * @deprecated
      */
     protected $assurance_chat_invite_link;
 
@@ -183,6 +185,8 @@ class User implements UserInterface
      * @var bool
      *
      * @ORM\Column(type="boolean", options={"default":0})
+     *
+     * @deprecated
      */
     protected $is_allow_messages_from_community;
 
@@ -239,6 +243,8 @@ class User implements UserInterface
 
     /**
      * @return string|null
+     *
+     * @deprecated
      */
     public function getAssuranceChatInviteLink(): ?string
     {
@@ -249,6 +255,8 @@ class User implements UserInterface
      * @param string|null $assurance_chat_invite_link
      *
      * @return $this
+     *
+     * @deprecated
      */
     public function setAssuranceChatInviteLink(?string $assurance_chat_invite_link): self
     {
@@ -423,6 +431,8 @@ class User implements UserInterface
 
     /**
      * @return bool
+     *
+     * @deprecated
      */
     public function getIsAllowMessagesFromCommunity(): bool
     {
@@ -431,6 +441,8 @@ class User implements UserInterface
 
     /**
      * @return bool
+     *
+     * @deprecated
      */
     public function isAllowMessagesFromCommunity(): bool
     {
@@ -441,6 +453,8 @@ class User implements UserInterface
      * @param bool $is_allow_messages_from_community
      *
      * @return $this
+     *
+     * @deprecated
      */
     public function setIsAllowMessagesFromCommunity(bool $is_allow_messages_from_community): self
     {

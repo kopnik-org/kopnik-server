@@ -19,6 +19,7 @@ use Symfony\Flex\Response;
 use VK\Client\VKApiClient;
 use VK\Exceptions\Api\VKApiFloodException;
 use VK\Exceptions\VKApiException;
+use VK\Exceptions\VKClientException;
 
 /**
  * @Route("/api")
@@ -26,20 +27,32 @@ use VK\Exceptions\VKApiException;
 class ApiController extends AbstractController
 {
     /** @var User */
+    // для сериалайзера
     protected $user;
 
     /**
      * @Route("/users/update", methods={"POST"}, name="api_users_update")
      */
-    public function usersUpdate(Request $request, KernelInterface $kernel, EntityManagerInterface $em, $vkCallbackApiAccessToken): JsonResponse
+    public function usersUpdate(Request $request, KernelInterface $kernel, EntityManagerInterface $em, $vkCallbackApiAccessToken, $vkCommunityId): JsonResponse
     {
-        $this->user = $this->getUser();
+        $user = $this->getUser();
+        $this->user = $user;
 
-        if (empty($this->user)) {
+        if (empty($user)) {
             return new JsonResponse([
                 'error' => [
                     'error_code' => 1,
                     'error_msg'  => 'No authentication',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        if ($user->getStatus() == User::STATUS_PENDING) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 3,
+                    'error_msg'  => 'Юзер уже в статусе ожидания заверения',
                     'request_params' => '@todo ',
                 ]
             ]);
@@ -88,13 +101,11 @@ class ApiController extends AbstractController
 //        $request2form = new Request();
 //        $request2form->request->set('user', $data);
         $request->request->set('user', $data);
-        $form = $this->createForm(
-            UserFormType::class,
-            $this->user, [
-                'csrf_protection' => false,
-                //'error_bubbling'  => false,
-            ]
-        );
+        $form = $this->createForm(UserFormType::class, $user, [
+            'csrf_protection' => false,
+            //'error_bubbling'  => false,
+        ]);
+
         $form->handleRequest($request);
 //        $form->handleRequest($request2form);
 
@@ -112,18 +123,51 @@ class ApiController extends AbstractController
         }
 
         if ($form->isValid()) {
-            $this->getUser()->setStatus(User::STATUS_PENDING);
-
             try {
                 $vk = new VKApiClient();
                 /** @var User $user */
                 $user = $this->getUser();
-                $invite_chat_link = $user->getAssuranceChatInviteLink();
 
                 if (empty($user->getWitness())) {
                     $user->setWitness($witness); // @todo костыль...
                 }
 
+                // 1) Создать групповой чат с заверителем и новобранцем
+                $chat_id = $vk->messages()->createChat($vkCallbackApiAccessToken, [
+                    'user_ids' => "{$user->getVkIdentifier()},{$witness->getVkIdentifier()}",
+                    'title' => "{$user} - Заверение пользователя в Копнике",
+                    'group_id' => $vkCommunityId,
+                    //'v' => '5.103'
+                ]);
+
+                // 2) Получить ссылку приглашения в чат
+                $invite_chat_link = $vk->messages()->getInviteLink($vkCallbackApiAccessToken, [
+                    'peer_id' => 2000000000 + $chat_id,
+                    'group_id' => $vkCommunityId,
+                    'reset' => 0,
+                ])['link'];
+
+                // 3) Написать ссылку-приглашение в чат новобранцу
+                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                    'user_id' => $user->getVkIdentifier(),
+                    // 'domain' => 'some_user_name',
+                    'message' => $user->getStatus() == User::STATUS_NEW ?
+                        "Добро пожаловать в kopnik-org! Для заверения, пожалуйста, перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта." :
+                        "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.",
+                    'random_id' => random_int(100, 999999999),
+                ]);
+
+                // 4) Написать ссылку-приглашение в чат заверителю
+                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                    'user_id' => $witness->getVkIdentifier(),
+                    // 'domain' => 'some_user_name',
+                    'message' => $user->getStatus() == User::STATUS_NEW ?
+                        "Зарегистрировался новый пользователь {$user} ссылка на чат $invite_chat_link" :
+                        "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link",
+                    'random_id' => random_int(100, 999999999),
+                ]);
+
+                /*
                 $result = $vk->messages()->send($vkCallbackApiAccessToken, [
                     'user_id' => $user->getVkIdentifier(),
                     'message' => "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.",
@@ -135,6 +179,7 @@ class ApiController extends AbstractController
                     'message' => "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link",
                     'random_id' => random_int(100, 999999999),
                 ]);
+                */
             } catch (VKApiFloodException $e) {
                 return new JsonResponse([
                     'error' => [
@@ -151,9 +196,19 @@ class ApiController extends AbstractController
                         'request_params' => '@todo',
                     ]
                 ]);
+            } catch (VKClientException $e) {
+                return new JsonResponse([
+                    'error' => [
+                        'error_code' => 1000000 + $e->getErrorCode(),
+                        'error_msg'  => $e->getMessage(),
+                        'request_params' => '@todo',
+                    ]
+                ]);
             }
 
-            $em->persist($this->user);
+            $user->setStatus(User::STATUS_PENDING);
+
+            $em->persist($user);
             $em->flush();
 
             $response[] = $this->serializeUser($witness);
