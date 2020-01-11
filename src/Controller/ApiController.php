@@ -48,16 +48,6 @@ class ApiController extends AbstractController
             ]);
         }
 
-        if ($user->getStatus() == User::STATUS_PENDING) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => 3,
-                    'error_msg'  => 'Юзер уже в статусе ожидания заверения',
-                    'request_params' => '@todo ',
-                ]
-            ]);
-        }
-
         $response = [];
 
         $input = json_decode($request->getContent(), true);
