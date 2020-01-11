@@ -1,20 +1,4 @@
 App\Entity\User:
-  user_1_witness:
-    firstName: <ru_RU:firstNameMale()>
-    lastName: <ru_RU:lastName()>
-    patronymic: <ru_RU:lastName()>
-    passportCode: <numberBetween(1111, 9999)>
-    birthYear: <numberBetween(1950, 1990)>
-    latitude: <latitude(-90, 90)>
-    longitude: <longitude(-180, 180)>
-    photo: <imageUrl(200, 200)>
-    smallPhoto: <imageUrl(50, 50)>
-    isWitness: 1
-    status: 2
-    isAllowMessagesFromCommunity: 1
-    createdAt: <date_create()>
-  #   foreman: '@user_1'
-
   user_2_new:
     firstName: <ru_RU:firstNameMale()>
     lastName: <ru_RU:lastName()>
@@ -63,15 +47,23 @@ App\Entity\User:
     createdAt: <date_create()>
   #   foreman: '@user_1'
 
-App\Entity\UserOauth:
-  oauth_{@user_1_witness}:
-    user: <current()>
-    access_token: <sha256()>
-    email: <email()>
-    provider: vkontakte
-    identifier: 261824271
+  user_5_confirmed:
+    firstName: <ru_RU:firstNameMale()>
+    lastName: <ru_RU:lastName()>
+    patronymic: <ru_RU:lastName()>
+    passportCode: <numberBetween(1111, 9999)>
+    birthYear: <numberBetween(1950, 1990)>
+    latitude: <latitude(-90, 90)>
+    longitude: <longitude(-180, 180)>
+    photo: <imageUrl(200, 200)>
+    smallPhoto: <imageUrl(50, 50)>
+    isWitness: 0
+    status: 2
+    isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
+  #   foreman: '@user_1'
 
+App\Entity\UserOauth:
   oauth_{@user_2_new}:
     user: <current()>
     access_token: <sha256()>
@@ -88,8 +80,15 @@ App\Entity\UserOauth:
     identifier: 261824271
     createdAt: <date_create()>
 
-
   oauth_{@user_4_declined}:
+    user: <current()>
+    access_token: <sha256()>
+    email: <email()>
+    provider: vkontakte
+    identifier: 261824271
+    createdAt: <date_create()>
+
+  oauth_{@user_5_confirmed}:
     user: <current()>
     access_token: <sha256()>
     email: <email()>
