@@ -225,6 +225,47 @@ class ApiController extends AbstractController
     }
 
     /**
+     * @Route("/users/pending", methods={"GET"}, name="api_users_pending")
+     */
+    public function usersPending(EntityManagerInterface $em)
+    {
+        $this->user = $this->getUser();
+
+        if (empty($user)) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 1,
+                    'error_msg'  => 'No authentication',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        $response = [];
+
+        $users = $em->getRepository(User::class)->findBy([
+            'status'  => User::STATUS_PENDING,
+            'witness' => $this->user->getId(),
+        ]);
+
+        if ($users) {
+            foreach ($users as $user) {
+                $response[] = $this->serializeUser($user);
+            }
+        } else {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 5,
+                    'error_msg'  => 'Pending users not found',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        return new JsonResponse(['response' => $response]);
+    }
+    
+    /**
      * @Route("/users/witness_request", methods={"POST"}, name="api_users_witness_request")
      */
     public function usersWitnessRequest(Request $request, LoggerInterface $logger): JsonResponse
