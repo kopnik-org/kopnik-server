@@ -227,7 +227,7 @@ class ApiController extends AbstractController
     /**
      * @Route("/users/pending", methods={"GET"}, name="api_users_pending")
      */
-    public function usersPending(EntityManagerInterface $em)
+    public function usersPending(EntityManagerInterface $em): JsonResponse
     {
         $this->user = $this->getUser();
 
@@ -264,7 +264,68 @@ class ApiController extends AbstractController
 
         return new JsonResponse(['response' => $response]);
     }
-    
+
+    /**
+     * @Route("/users/pending/update", methods={"POST"}, name="api_users_pending_update")
+     */
+    public function usersPendingUpdate(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $this->user = $this->getUser();
+
+        if (empty($user)) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 1,
+                    'error_msg'  => 'No authentication',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        $response = [];
+
+        // @todo проверку наличия входных данных
+        $input = json_decode($request->getContent(), true);
+        $data = [
+            'id'     => (int) $input['id'],
+            'status' => (int) $input['status'],
+        ];
+
+        if ($data['status'] !== User::STATUS_CONFIRMED or $data['status'] !== User::STATUS_DECLINE) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 1,
+                    'error_msg'  => 'Not accesible status for pending',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        $userPending = $em->getRepository(User::class)->findOneBy([
+            'id'      => $data['id'],
+            'status'  => User::STATUS_PENDING,
+            'witness' => $this->user->getId(),
+        ]);
+
+        if ($userPending) {
+            $userPending->setStatus($data['status']);
+            $em->flush();
+
+            $response = true;
+        } else {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 5,
+                    'error_msg'  => 'Pending user not found',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        return new JsonResponse(['response' => $response]);
+    }
+
+
     /**
      * @Route("/users/witness_request", methods={"POST"}, name="api_users_witness_request")
      */
