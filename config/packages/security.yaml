@@ -41,6 +41,13 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
+            remember_me:
+                secret: "%env(APP_SECRET)%"
+                name: REMEMBER_ME
+                lifetime: 604800 # 1 week
+                path: /
+                domain: ~
+
     session_fixation_strategy: none
 
     # Easy way to control access for large sections of your site
