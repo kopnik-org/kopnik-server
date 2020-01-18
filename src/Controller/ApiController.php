@@ -26,7 +26,7 @@ use VK\Exceptions\VKClientException;
  */
 class ApiController extends AbstractController
 {
-    const ERROR_NO_AUTH         = 1; // No authentication
+    const ERROR_UNAUTHORIZED    = 401; // No authentication
     const ERROR_NOT_VALID       = 2; // Not valid
     const ERROR_NO_WITNESS      = 3; // В системе отсутствуют заверители
     const ERROR_ACCESS_DENIED   = 4; // Доступ запрещен
@@ -49,7 +49,7 @@ class ApiController extends AbstractController
         if (empty($this->getUser())) {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => self::ERROR_NO_AUTH,
+                    'error_code' => self::ERROR_UNAUTHORIZED,
                     'error_msg'  => 'No authentication',
                     'request_params' => '@todo ',
                 ]
@@ -244,7 +244,7 @@ class ApiController extends AbstractController
         if (empty($this->getUser())) {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => self::ERROR_NO_AUTH,
+                    'error_code' => self::ERROR_UNAUTHORIZED,
                     'error_msg'  => 'No authentication',
                     'request_params' => '@todo ',
                 ]
@@ -289,7 +289,7 @@ class ApiController extends AbstractController
         if (empty($this->getUser())) {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => self::ERROR_NO_AUTH,
+                    'error_code' => self::ERROR_UNAUTHORIZED,
                     'error_msg'  => 'No authentication',
                     'request_params' => '@todo ',
                 ]
