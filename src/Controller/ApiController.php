@@ -26,11 +26,19 @@ use VK\Exceptions\VKClientException;
  */
 class ApiController extends AbstractController
 {
+    const ERROR_NO_AUTH         = 1; // No authentication
+    const ERROR_NOT_VALID       = 2; // Not valid
+    const ERROR_NO_WITNESS      = 3; // В системе отсутствуют заверители
+    const ERROR_ACCESS_DENIED   = 4; // Доступ запрещен
+    const ERROR_NO_PENDING      = 5; // Pending user not found
+
     /** @var User */
     // для сериалайзера
     protected $user;
 
     /**
+     * Обновить своего (текущего) пользователя. Меняет статус пользователя на ОЖИДАЕТ ЗАВЕРЕНИЯ.
+     *
      * @Route("/users/update", methods={"POST"}, name="api_users_update")
      */
     public function usersUpdate(Request $request, KernelInterface $kernel, EntityManagerInterface $em, $vkCallbackApiAccessToken, $vkCommunityId): JsonResponse
@@ -38,10 +46,10 @@ class ApiController extends AbstractController
         $user = $this->getUser();
         $this->user = $user;
 
-        if (empty($user)) {
+        if (empty($this->getUser())) {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => 1,
+                    'error_code' => self::ERROR_NO_AUTH,
                     'error_msg'  => 'No authentication',
                     'request_params' => '@todo ',
                 ]
@@ -105,7 +113,7 @@ class ApiController extends AbstractController
         if (empty($witness)) {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => 3,
+                    'error_code' => self::ERROR_NO_WITNESS,
                     'error_msg'  => 'В системе отсутствуют заверители',
                     'request_params' => '@todo ',
                 ]
@@ -213,7 +221,7 @@ class ApiController extends AbstractController
 
             return new JsonResponse([
                 'error' => [
-                    'error_code' => 2,
+                    'error_code' => self::ERROR_NOT_VALID,
                     'error_msg'  => 'Not valid',
                     'validation_errors' => $errors,
                     'request_params' => '@todo ',
@@ -225,17 +233,29 @@ class ApiController extends AbstractController
     }
 
     /**
+     * Получить заявки на регистрацию, которые должен заверять текущий пользователь, с атрибутом "заверитель".
+     *
      * @Route("/users/pending", methods={"GET"}, name="api_users_pending")
      */
     public function usersPending(EntityManagerInterface $em): JsonResponse
     {
         $this->user = $this->getUser();
 
-        if (empty($this->user)) {
+        if (empty($this->getUser())) {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => 1,
+                    'error_code' => self::ERROR_NO_AUTH,
                     'error_msg'  => 'No authentication',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        if (!$this->user->isWitness()) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => self::ERROR_ACCESS_DENIED,
+                    'error_msg'  => 'ACCESS_DENIED: Получить заявки могут только заверители',
                     'request_params' => '@todo ',
                 ]
             ]);
@@ -258,17 +278,29 @@ class ApiController extends AbstractController
     }
 
     /**
+     * Подтвердить/отклонить заявку на регистрацию.
+     *
      * @Route("/users/pending/update", methods={"POST"}, name="api_users_pending_update")
      */
     public function usersPendingUpdate(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $this->user = $this->getUser();
 
-        if (empty($this->user)) {
+        if (empty($this->getUser())) {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => 1,
+                    'error_code' => self::ERROR_NO_AUTH,
                     'error_msg'  => 'No authentication',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        if (!$this->user->isWitness()) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => self::ERROR_ACCESS_DENIED,
+                    'error_msg'  => 'ACCESS_DENIED: заявку могут обрабатывать только заверители',
                     'request_params' => '@todo ',
                 ]
             ]);
@@ -300,6 +332,16 @@ class ApiController extends AbstractController
         ]);
 
         if ($userPending) {
+            if ($userPending->getWitness()->getId() !== $this->user->getId()) {
+                return new JsonResponse([
+                    'error' => [
+                        'error_code' => self::ERROR_ACCESS_DENIED,
+                        'error_msg'  => 'Обработать можно только юзера у которого вы являетесь заверителем',
+                        'request_params' => '@todo ',
+                    ]
+                ]);
+            }
+
             $userPending->setStatus($data['status']);
             $em->flush();
 
@@ -307,7 +349,7 @@ class ApiController extends AbstractController
         } else {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => 5,
+                    'error_code' => self::ERROR_NO_PENDING,
                     'error_msg'  => 'Pending user not found',
                     'request_params' => '@todo ',
                 ]
@@ -319,6 +361,8 @@ class ApiController extends AbstractController
 
 
     /**
+     * @deprecated
+     *
      * @Route("/users/witness_request", methods={"POST"}, name="api_users_witness_request")
      */
     public function usersWitnessRequest(Request $request, LoggerInterface $logger): JsonResponse
@@ -333,6 +377,10 @@ class ApiController extends AbstractController
     }
 
     /**
+     * Получить нескольких пользовалетей.
+     *
+     * Если параметр ids не задан, будет подставлен идентификатор текущего пользователя из сессии.
+     *
      * @Route("/users/get", methods={"GET"}, name="api_users_get")
      */
     public function usersGet(Request $request, UserRepository $ur): JsonResponse
