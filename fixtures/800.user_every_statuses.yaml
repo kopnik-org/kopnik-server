@@ -13,7 +13,8 @@ App\Entity\User:
     status: 0
     isAllowMessagesFromCommunity: 0
     createdAt: <date_create()>
-  #   foreman: '@user_1'
+#    witness: '@user_1_witness'
+#    foreman: '@user_1'
 
   user_3_pending:
     firstName: <ru_RU:firstNameMale()>
@@ -29,7 +30,8 @@ App\Entity\User:
     status: 1
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
-  #   foreman: '@user_1'
+    witness: '@user_1_witness'
+  #   foreman: '@user_1_witness'
 
   user_4_declined:
     firstName: <ru_RU:firstNameMale()>
@@ -45,6 +47,7 @@ App\Entity\User:
     status: 3
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
+    witness: '@user_1_witness'
   #   foreman: '@user_1'
 
   user_5_confirmed:
@@ -61,6 +64,7 @@ App\Entity\User:
     status: 2
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
+    witness: '@user_1_witness'
   #   foreman: '@user_1'
 
 App\Entity\UserOauth:
