@@ -252,14 +252,6 @@ class ApiController extends AbstractController
             foreach ($users as $user) {
                 $response[] = $this->serializeUser($user);
             }
-        } else {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => 5,
-                    'error_msg'  => 'Pending users not found',
-                    'request_params' => '@todo ',
-                ]
-            ]);
         }
 
         return new JsonResponse(['response' => $response]);
