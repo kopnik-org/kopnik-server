@@ -254,11 +254,11 @@ class ApiController extends AbstractController
         if (!$this->user->isWitness()) {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => self::ERROR_ACCESS_DENIED,
+                    'error_code' => 403,
                     'error_msg'  => 'ACCESS_DENIED: Получить заявки могут только заверители',
                     'request_params' => '@todo ',
                 ]
-            ], 403);
+            ]);
         }
 
         $response = [];
@@ -299,11 +299,11 @@ class ApiController extends AbstractController
         if (!$this->user->isWitness()) {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => self::ERROR_ACCESS_DENIED,
+                    'error_code' => 403,
                     'error_msg'  => 'ACCESS_DENIED: заявку могут обрабатывать только заверители',
                     'request_params' => '@todo ',
                 ]
-            ], 403);
+            ]);
         }
 
         $response = [];
@@ -335,11 +335,11 @@ class ApiController extends AbstractController
             if ($userPending->getWitness()->getId() !== $this->user->getId()) {
                 return new JsonResponse([
                     'error' => [
-                        'error_code' => self::ERROR_ACCESS_DENIED,
+                        'error_code' => 403,
                         'error_msg'  => 'Обработать можно только юзера у которого вы являетесь заверителем',
                         'request_params' => '@todo ',
                     ]
-                ], 403);
+                ]);
             }
 
             $userPending->setStatus($data['status']);
