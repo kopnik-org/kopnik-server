@@ -258,7 +258,7 @@ class ApiController extends AbstractController
                     'error_msg'  => 'ACCESS_DENIED: Получить заявки могут только заверители',
                     'request_params' => '@todo ',
                 ]
-            ]);
+            ], 403);
         }
 
         $response = [];
@@ -303,7 +303,7 @@ class ApiController extends AbstractController
                     'error_msg'  => 'ACCESS_DENIED: заявку могут обрабатывать только заверители',
                     'request_params' => '@todo ',
                 ]
-            ]);
+            ], 403);
         }
 
         $response = [];
@@ -339,7 +339,7 @@ class ApiController extends AbstractController
                         'error_msg'  => 'Обработать можно только юзера у которого вы являетесь заверителем',
                         'request_params' => '@todo ',
                     ]
-                ]);
+                ], 403);
             }
 
             $userPending->setStatus($data['status']);
