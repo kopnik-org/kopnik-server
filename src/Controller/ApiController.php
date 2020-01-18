@@ -231,7 +231,7 @@ class ApiController extends AbstractController
     {
         $this->user = $this->getUser();
 
-        if (empty($user)) {
+        if (empty($this->user)) {
             return new JsonResponse([
                 'error' => [
                     'error_code' => 1,
@@ -272,7 +272,7 @@ class ApiController extends AbstractController
     {
         $this->user = $this->getUser();
 
-        if (empty($user)) {
+        if (empty($this->user)) {
             return new JsonResponse([
                 'error' => [
                     'error_code' => 1,
