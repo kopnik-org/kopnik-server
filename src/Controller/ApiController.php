@@ -270,7 +270,7 @@ class ApiController extends AbstractController
 
         if ($users) {
             foreach ($users as $user) {
-                $response[] = $this->serializeUser($user);
+                $response[] = $this->serializeUser($user, true);
             }
         }
 
@@ -464,7 +464,7 @@ class ApiController extends AbstractController
      *
      * @return array
      */
-    protected function serializeUser(User $user): array
+    protected function serializeUser(User $user, bool $forcePassport = false): array
     {
         return [
             'id' => $user->getId(),
@@ -476,7 +476,7 @@ class ApiController extends AbstractController
             'birthyear' => $user->getBirthYear(),
             'location' => [$user->getLatitude(), $user->getLongitude()],
             'status' => $user->getStatus(),
-            'passport' => $this->user->getId() == $user->getId() ? $user->getPassportCode() : null, // только свой
+            'passport' => ($this->user->getId() == $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
             'photo' => '@todo',
             'smallPhoto' => '@todo',
         ];
