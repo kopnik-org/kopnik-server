@@ -283,7 +283,7 @@ class ApiController extends AbstractController
             'status' => (int) $input['status'],
         ];
 
-        if ($data['status'] !== User::STATUS_CONFIRMED or $data['status'] !== User::STATUS_DECLINE) {
+        if ($data['status'] !== User::STATUS_CONFIRMED and $data['status'] !== User::STATUS_DECLINE) {
             return new JsonResponse([
                 'error' => [
                     'error_code' => 1,
