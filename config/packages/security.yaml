@@ -42,6 +42,9 @@ security:
             # switch_user: true
 
             remember_me:
+                always_remember_me: true
+                httponly: false
+                secure: true
                 secret: "%env(APP_SECRET)%"
                 name: REMEMBER_ME
                 lifetime: 604800 # 1 week
