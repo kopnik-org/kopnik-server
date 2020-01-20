@@ -19,6 +19,7 @@ framework:
         cookie_secure: auto
         cookie_lifetime: 604800 # 1 неделя
         cookie_samesite: none
+        save_path:  "%kernel.project_dir%/var/sessions"
 
     validation:
         enable_annotations: true
