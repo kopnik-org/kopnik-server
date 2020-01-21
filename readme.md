@@ -80,6 +80,41 @@ http://localhost/
 ``` 
 
 
+Запуск клиента и сервера
+-----------------------------
+Шаг 1. Скачать исходники клиента https://github.com/kopnik-org/kopnik-client
+
+Шаг 2. Перейти в директорию с клиентом и собрать проект
+``` 
+# cd ../kopnik-client
+# ./build.sh
+``` 
+
+Проверьте наличие собранных файлов в директории html
+
+Шаг 3. Вернитесь в директорию с исходниками сервера и отредактируйте файл .env.local. Экспортируйте переменные среды.
+
+```
+# cd ../kopnik-server/
+# cat .env.local
+
+export CLIENT_STATIC=../kopnik-client/html
+export COMPOSE_FILE=docker-compose-with-client.yml
+
+export CLIENT_DC_EXTERNAL_PORT=80
+export SERVER_DC_EXTERNAL_PORT=8080
+
+# . ./env.local
+```
+
+Шаг 4. Используйте  make для запуска и остановки кластера.
+```
+# make up
+# make down
+```
+
+Шаг 5. Перейдите по ссылке http://127.0.0.1
+
 Дополнительные команды докера
 ----------------------------- 
 
