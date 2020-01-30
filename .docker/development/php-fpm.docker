@@ -34,13 +34,12 @@ RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-enable apcu \
     && docker-php-ext-enable memcached
 
-RUN docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-configure gd \
+RUN docker-php-ext-configure gd \
         --with-gd \
         --with-freetype-dir=/usr/include/ \
         --with-jpeg-dir=/usr/include/ \
-#        --with-freetype --with-jpeg
-        --with-xpm-dir=/usr/lib/x86_64-linux-gnu
+        --with-xpm-dir=/usr/lib/x86_64-linux-gnu \
+    && docker-php-ext-install -j$(nproc) gd
 
 RUN apt-get install -y imagemagick libmagickcore-dev libmagickwand-dev
 
