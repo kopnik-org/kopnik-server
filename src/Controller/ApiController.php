@@ -390,7 +390,7 @@ class ApiController extends AbstractController
         if (empty($this->user)) {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => 1,
+                    'error_code' => self::ERROR_UNAUTHORIZED,
                     'error_msg'  => 'No authentication',
                     'request_params' => '@todo ',
                 ]
@@ -433,7 +433,7 @@ class ApiController extends AbstractController
         if (empty($this->user)) {
             return new JsonResponse([
                 'error' => [
-                    'error_code' => 1,
+                    'error_code' => self::ERROR_UNAUTHORIZED,
                     'error_msg'  => 'No authentication',
                     'request_params' => '@todo ',
                 ]
@@ -457,6 +457,50 @@ class ApiController extends AbstractController
         }
 
         return new JsonResponse($data);
+    }
+
+    /**
+     * Получить пользовалетей в заданном квадрате координат.
+     *
+     * @Route("/users/getTopInsideSquare", methods={"GET"}, name="api_users_get_top_inside_square")
+     */
+    public function usersGetTopInsideSquare(Request $request, UserRepository $ur): JsonResponse
+    {
+        $this->user = $this->getUser();
+
+        if (empty($this->user)) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => self::ERROR_UNAUTHORIZED,
+                    'error_msg'  => 'No authentication',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        $count = $request->query->get('count', 50);
+        $x1 = $request->query->get('x1');
+        $x2 = $request->query->get('x2');
+        $y1 = $request->query->get('y1');
+        $y2 = $request->query->get('y2');
+
+        $response = [];
+
+        if (empty($x1) or empty($x2) or empty($y1) or empty($y2) or empty($count)) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 403,
+                    'error_msg'  => 'Invalid input params',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        } else {
+            foreach ($ur->findByCoordinates($x1, $y1, $x2, $y2, $count) as $user) {
+                $response[] = $this->serializeUser($user);
+            }
+        }
+
+        return new JsonResponse(['response' => $response]);
     }
 
     /**

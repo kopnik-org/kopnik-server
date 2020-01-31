@@ -45,4 +45,30 @@ class UserRepository extends ServiceEntityRepository
 
         return $q->getResult();
     }
+
+    /**
+     * @param $x1
+     * @param $y1
+     * @param $x2
+     * @param $y2
+     * @param $count
+     *
+     * @return User[]
+     */
+    public function findByCoordinates($x1, $y1, $x2, $y2, $count): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->where('e.latitude > :y1')
+            ->andWhere('e.latitude < :y2')
+            ->andWhere('e.longitude > :x1')
+            ->andWhere('e.longitude < :x2')
+            ->setParameter('x1', $x1)
+            ->setParameter('x2', $x2)
+            ->setParameter('y1', $y1)
+            ->setParameter('y2', $y2)
+            ->setMaxResults((int) $count)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }
