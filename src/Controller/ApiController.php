@@ -486,7 +486,7 @@ class ApiController extends AbstractController
 
         $response = [];
 
-        if (empty($x1) or empty($x2) or empty($y1) or empty($y2) or empty($count)) {
+        if (is_null($x1) or is_null($x2) or is_null($y1) or is_null($y2) or is_null($count)) {
             return new JsonResponse([
                 'error' => [
                     'error_code' => 403,

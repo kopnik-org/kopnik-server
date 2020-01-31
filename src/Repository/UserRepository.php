@@ -62,10 +62,12 @@ class UserRepository extends ServiceEntityRepository
             ->andWhere('e.latitude < :y2')
             ->andWhere('e.longitude > :x1')
             ->andWhere('e.longitude < :x2')
+            ->andWhere('e.status = :status')
             ->setParameter('x1', $x1)
             ->setParameter('x2', $x2)
             ->setParameter('y1', $y1)
             ->setParameter('y2', $y2)
+            ->setParameter('status', User::STATUS_CONFIRMED)
             ->setMaxResults((int) $count)
         ;
 
