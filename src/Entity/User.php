@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      indexes={
  *          @ORM\Index(columns={"created_at"}),
  *          @ORM\Index(columns={"is_witness"}),
+ *          @ORM\Index(columns={"latitude"}),
+ *          @ORM\Index(columns={"longitude"}),
  *          @ORM\Index(columns={"status"}),
  *      },
  * )
@@ -388,7 +390,7 @@ class User implements UserInterface
     {
         return (int) $this->getOauthByProvider('vkontakte')->getIdentifier();
     }
-    
+
     /**
      * @return \DateTime
      */
