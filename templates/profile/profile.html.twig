@@ -40,13 +40,13 @@
                     Ваша заявка отклонена, Пожалуйста, исправьте анкетные данные и повторите запрос.
                 </div>
             {% endif %}
-            
+
 {#            <p><b>VK Access Token:</b> {{ app.user.getOauthByProvider('vkontakte').accessToken }}</p>#}
 
             {{ form_start(form) }}
-            {{ form_row(form.firstname) }}
+            {{ form_row(form.first_name) }}
             {{ form_row(form.patronymic) }}
-            {{ form_row(form.lastname) }}
+            {{ form_row(form.last_name) }}
             {{ form_row(form.birth_year) }}
             {{ form_row(form.passport_code) }}
 

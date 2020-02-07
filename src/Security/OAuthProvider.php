@@ -57,6 +57,8 @@ class OAuthProvider implements UserProviderInterface, OAuthAwareUserProviderInte
                     $user
                         ->setFirstName($response->getFirstName())
                         ->setLastName($response->getLastName())
+                        ->setPhoto($response->getProfilePicture())
+                        ->setSmallPhoto($response->getProfilePicture())
                     ;
                 }
 
@@ -78,10 +80,21 @@ class OAuthProvider implements UserProviderInterface, OAuthAwareUserProviderInte
             $this->em->persist($userOauth);
             $this->em->flush();
 
-            return $user;
+
+        } else {
+            $user = $userOauth->getUser();
+
+            if ($user->getPhoto() !== $response->getProfilePicture()) {
+                $user
+                    ->setPhoto($response->getProfilePicture())
+                    ->setSmallPhoto($response->getProfilePicture())
+                ;
+
+                $this->em->flush();
+            }
         }
 
-        return $userOauth->getUser();
+        return $user;
     }
 
     /**
