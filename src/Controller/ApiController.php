@@ -521,8 +521,8 @@ class ApiController extends AbstractController
             'location' => [$user->getLatitude(), $user->getLongitude()],
             'status' => $user->getStatus(),
             'passport' => ($this->user->getId() == $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
-            'photo' => '@todo',
-            'smallPhoto' => '@todo',
+            'photo' => $user->getPhoto(),
+            'smallPhoto' => $user->getPhoto(),
         ];
     }
 }
