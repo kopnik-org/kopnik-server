@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use VK\Client\VKApiClient;
 use VK\Exceptions\Api\VKApiFloodException;
@@ -21,8 +22,14 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="homepage")
      */
-    public function index(UserRepository $ur): Response
+    public function index(UserRepository $ur, KernelInterface $kernel): Response
     {
+        $templatePath = $kernel->getProjectDir() . '/public/index.html';
+
+        if (file_exists($templatePath)) {
+            //return new Response(file_get_contents($templatePath));
+        }
+
         return $this->render('default/index.html.twig', [
             'users' => $ur->findNear($this->getUser()),
         ]);

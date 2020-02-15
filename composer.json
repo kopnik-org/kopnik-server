@@ -14,6 +14,7 @@
         "php-http/httplug-bundle": "*",
         "smart-core/core-bundle": "dev-master",
         "smart-core/db-dumper-bundle": "dev-master",
+        "smart-core/felib-bundle": "dev-master",
         "symfony/asset": "4.4.*",
         "symfony/console": "4.4.*",
         "symfony/debug-pack": "^1.0",
