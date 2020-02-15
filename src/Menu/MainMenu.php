@@ -49,6 +49,7 @@ class MainMenu // implements ContainerAwareInterface
             ->setLinkAttribute('class', 'nav-link py-0')
         ;
 
+        /*
         $menu->addChild('Stats', ['route' => 'stats'])
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link py-0')
@@ -67,6 +68,7 @@ class MainMenu // implements ContainerAwareInterface
                 ->setLinkAttribute('class', 'nav-link py-0')
             ;
         }
+        */
 
         return $menu;
     }

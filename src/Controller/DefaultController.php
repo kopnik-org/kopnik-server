@@ -8,7 +8,6 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -22,12 +21,12 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="homepage")
      */
-    public function index(UserRepository $ur, KernelInterface $kernel): Response
+    public function index($slug = null, UserRepository $ur, KernelInterface $kernel): Response
     {
         $templatePath = $kernel->getProjectDir() . '/public/index.html';
 
         if (file_exists($templatePath)) {
-            //return new Response(file_get_contents($templatePath));
+            return new Response(file_get_contents($templatePath));
         }
 
         return $this->render('default/index.html.twig', [
@@ -36,7 +35,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/stats/", name="stats")
+     * Route("/stats/", name="stats")
      */
     public function stats(UserRepository $ur, $vkCommunityId, $vkCallbackApiAccessToken): Response
     {
@@ -49,7 +48,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/assurance/", name="assurance")
+     * Route("/assurance/", name="assurance")
      */
     public function assurance(UserRepository $ur): Response
     {

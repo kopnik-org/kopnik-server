@@ -30,7 +30,11 @@
     {{ parent() }}
 
     <script>
-      var mymap = L.map('mapdiv', { attributionControl:false }).setView([{{ app.user.latitude }}, {{ app.user.longitude }}], 4);
+      {% if app.user %}
+        var mymap = L.map('mapdiv', { attributionControl:false }).setView([{{ app.user.latitude }}, {{ app.user.longitude }}], 4);
+      {% else %}
+        var mymap = L.map('mapdiv', { attributionControl:false });
+      {% endif %}
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         // __dummy
