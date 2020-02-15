@@ -35,7 +35,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * Route("/stats/", name="stats")
+     * @Route("/backend/stats/", name="stats")
      */
     public function stats(UserRepository $ur, $vkCommunityId, $vkCallbackApiAccessToken): Response
     {
@@ -48,7 +48,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * Route("/assurance/", name="assurance")
+     * @Route("/backend/assurance/", name="assurance")
      */
     public function assurance(UserRepository $ur): Response
     {
@@ -62,7 +62,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/admin/", name="admin")
+     * @Route("/backend/admin/", name="admin")
      */
     public function admin(Request $request, UserRepository $ur, EntityManagerInterface $em, $vkCallbackApiAccessToken): Response
     {

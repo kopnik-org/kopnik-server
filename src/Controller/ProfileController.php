@@ -17,12 +17,12 @@ use VK\Exceptions\Api\VKApiFloodException;
 use VK\Exceptions\VKApiException;
 
 /**
- * Route("/profile")
+ * @Route("/backend/profile")
  */
 class ProfileController extends AbstractController
 {
     /**
-     * Route("/", name="profile")
+     * @Route("/", name="profile")
      */
     public function profile(Request $request, EntityManagerInterface $em, $vkCallbackApiAccessToken): Response
     {
@@ -79,7 +79,7 @@ class ProfileController extends AbstractController
     }
 
     /**
-     * Route("/allow_messages_from_community/", name="profile_allow_messages_from_community")
+     * @Route("/allow_messages_from_community/", name="profile_allow_messages_from_community")
      */
     public function allowMessagesFromCommunity(Request $request, EntityManagerInterface $em, $vkCommunityId, $vkCallbackApiAccessToken): Response
     {

@@ -62,4 +62,4 @@ security:
         - { path: ^/connect/, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/vk_callback, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/, role: ROLE_USER }
+        - { path: ^/backend/, role: ROLE_USER }
