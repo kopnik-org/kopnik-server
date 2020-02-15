@@ -99,6 +99,7 @@
                     {{ knp_menu_render('top', {'currentClass': 'active'}) }}
                 </div>
                 {% if app.user %}
+                    {{ dump(app.user) }}
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle py-0" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
