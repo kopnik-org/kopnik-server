@@ -511,6 +511,10 @@ class ApiController extends AbstractController
      */
     protected function serializeUser(User $user, bool $forcePassport = false): array
     {
+        $location = new \stdClass();
+        $location->latitude  = $user->getLatitude();
+        $location->longitude = $user->getLongitude();
+
         return [
             'id' => $user->getId(),
             'firstName' => $user->getFirstName(),
@@ -520,7 +524,7 @@ class ApiController extends AbstractController
             'foreman_id' => $user->getForeman() ? $user->getForeman()->getId() : null,
             'witness_id' => $user->getWitness() ? $user->getWitness()->getId() : null,
             'birthyear' => $user->getBirthYear(),
-            'location' => [$user->getLatitude(), $user->getLongitude()],
+            'location' => $location,
             'status' => $user->getStatus(),
             'passport' => ($this->user->getId() == $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
             'photo' => $user->getPhoto(),
