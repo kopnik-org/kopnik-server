@@ -65,8 +65,8 @@ class ApiController extends AbstractController
             'last_name'     => $input['lastName'],
             'birth_year'    => $input['birthyear'],
             'passport_code' => $input['passport'],
-            'latitude'      => $input['location'][0],
-            'longitude'     => $input['location'][1],
+            'latitude'      => $input['location']['lat'],
+            'longitude'     => $input['location']['lng'],
             'locale'        => $input['locale'],
 //            'photo'         => $input['photo'],
 //            'smallPhoto'    => $input['smallPhoto'],
@@ -512,8 +512,8 @@ class ApiController extends AbstractController
     protected function serializeUser(User $user, bool $forcePassport = false): array
     {
         $location = new \stdClass();
-        $location->latitude  = $user->getLatitude();
-        $location->longitude = $user->getLongitude();
+        $location->lat = $user->getLatitude();
+        $location->lng = $user->getLongitude();
 
         return [
             'id' => $user->getId(),
