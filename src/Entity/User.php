@@ -50,6 +50,13 @@ class User implements UserInterface
     protected $assurance_chat_invite_link;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=15, nullable=true)
+     */
+    protected $locale;
+
+    /**
      * Старшина
      *
      * @var User|null
@@ -786,6 +793,26 @@ class User implements UserInterface
     public function setSmallPhoto(?string $small_photo): self
     {
         $this->small_photo = $small_photo;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string|null $locale
+     *
+     * @return $this
+     */
+    public function setLocale(?string $locale): self
+    {
+        $this->locale = $locale;
 
         return $this;
     }

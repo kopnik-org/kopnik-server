@@ -19,6 +19,7 @@ class UserFormType extends AbstractType
             ->add('first_name', null, ['attr' => ['autofocus' => true], 'required' => true])
             ->add('patronymic')
             ->add('last_name', null, ['required' => true])
+            ->add('locale')
             ->add('birth_year')
             ->add('passport_code')
             ->add('latitude', TextType::class,  ['attr' => ['placeholder' => 'Latitude']])

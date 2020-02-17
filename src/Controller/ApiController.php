@@ -67,6 +67,7 @@ class ApiController extends AbstractController
             'passport_code' => $input['passport'],
             'latitude'      => $input['location'][0],
             'longitude'     => $input['location'][1],
+            'locale'        => $input['locale'],
 //            'photo'         => $input['photo'],
 //            'smallPhoto'    => $input['smallPhoto'],
             'update'        => ''
@@ -515,6 +516,7 @@ class ApiController extends AbstractController
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'patronymic' => $user->getPatronymic(),
+            'locale' => $user->getLocale(),
             'foreman_id' => $user->getForeman() ? $user->getForeman()->getId() : null,
             'witness_id' => $user->getWitness() ? $user->getWitness()->getId() : null,
             'birthyear' => $user->getBirthYear(),
