@@ -239,6 +239,7 @@ class User implements UserInterface
         $this->created_at         = new \DateTime();
         $this->is_witness         = false;
         $this->is_allow_messages_from_community = false;
+        $this->locale             = 'ru';
         $this->status             = self::STATUS_NEW;
     }
 
