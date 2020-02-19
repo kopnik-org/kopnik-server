@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use GeoIp2\Exception\AddressNotFoundException;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -16,11 +20,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class RequestSubscriber implements EventSubscriberInterface
 {
+    use ContainerAwareTrait;
+
     /** @var RouterInterface */
     protected $router;
 
     /** @var TokenStorageInterface */
     protected $token_storage;
+
+    /** @var EntityManagerInterface */
+    protected $em;
 
     /**
      * RequestSubscriber constructor.
@@ -28,8 +37,14 @@ class RequestSubscriber implements EventSubscriberInterface
      * @param RouterInterface       $router
      * @param TokenStorageInterface $token_storage
      */
-    public function __construct(RouterInterface $router, TokenStorageInterface $token_storage)
-    {
+    public function __construct(
+        RouterInterface $router,
+        TokenStorageInterface $token_storage,
+        ContainerInterface $container,
+        EntityManagerInterface $em
+    ) {
+        $this->container     = $container;
+        $this->em            = $em;
         $this->router        = $router;
         $this->token_storage = $token_storage;
     }
@@ -40,10 +55,46 @@ class RequestSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            KernelEvents::REQUEST  => 'autoupdateGeoCoords',
 //            KernelEvents::REQUEST  => 'validateUser',
 //            KernelEvents::REQUEST  => 'onKernelRequest',
 //            KernelEvents::RESPONSE => 'onKernelResponse',
         ];
+    }
+
+    /**
+     * @param RequestEvent $event
+     */
+    public function autoupdateGeoCoords(RequestEvent $event): void
+    {
+        if (null === $token = $this->token_storage->getToken()) {
+            return;
+        }
+
+        /** @var User $user */
+        if (!\is_object($user = $token->getUser())) {
+            // e.g. anonymous authentication
+            return;
+        }
+
+        $geoIpService = $this->container->get('cravler_max_mind_geo_ip.service.geo_ip_service');
+
+        if (empty($user->getLatitude()) or empty($user->getLongitude())) {
+            try {
+                $record = $geoIpService->getRecord($event->getRequest()->getClientIp(), 'city', ['locales' => ['ru']]);
+                $user
+                    ->setLatitude($record->location->latitude)
+                    ->setLongitude($record->location->longitude)
+                ;
+
+                $this->em->persist($user);
+                $this->em->flush();
+            } catch (AddressNotFoundException $e) {
+                // dummy
+            } catch (\InvalidArgumentException $e) {
+                // dummy
+            }
+        }
     }
 
     /**
@@ -81,7 +132,7 @@ class RequestSubscriber implements EventSubscriberInterface
             $event->setResponse($response);
         }
     }
-    
+
     /**
      * @param RequestEvent $event
      */

@@ -79,6 +79,12 @@ WEB_PORT=80 make up
 http://localhost/
 ``` 
 
+## Гео-базы
+
+### MaxMind GeoLite2
+
+Для распознования по IP адресу, зарегистрироваться на https://dev.maxmind.com/geoip/geoip2/geolite2/ 
+и скачать файл `GeoLite2-City.mmdb`, который нужно будет расположить по данному пути: `/var/MaxMind/GeoLite2-City.mmdb`  
 
 Дополнительные команды докера
 ----------------------------- 
