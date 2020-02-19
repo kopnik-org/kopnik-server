@@ -360,6 +360,49 @@ class ApiController extends AbstractController
         return new JsonResponse(['response' => $response]);
     }
 
+    /**
+     * @Route("/users/isMessagesFromGroupAllowed", methods={"GET"}, name="api_users_is_messages_from_group_allowed")
+     */
+    public function isMessagesFromGroupAllowed(EntityManagerInterface $em, $vkCommunityId, $vkCallbackApiAccessToken): JsonResponse
+    {
+        $this->user = $this->getUser();
+
+        if (empty($this->user)) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => self::ERROR_UNAUTHORIZED,
+                    'error_msg'  => 'No authentication',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        $response = [];
+
+        try {
+            $vk = new VKApiClient();
+
+            $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                'user_id' => $this->user->getVkIdentifier(),
+                // 'domain' => 'some_user_name',
+                'message' => "Проверка приёма сообщений от сообщества Kopnik.org в VK",
+                'random_id' => random_int(100, 999999999),
+            ]);
+
+            $response = true;
+            //$response['is_messages_from_group_allowed'] = true;
+        } catch (VKApiFloodException $e) {
+            // @todo
+        } catch (VKApiException $e) {
+//            if ($e->getErrorCode() == 901) {
+                $response = false;
+//                $response['is_messages_from_group_allowed'] = false;
+//            }
+        }
+
+        return new JsonResponse($response);
+        //return new JsonResponse(['response' => $response]);
+    }
 
     /**
      * @deprecated
