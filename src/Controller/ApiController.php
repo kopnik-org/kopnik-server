@@ -60,14 +60,14 @@ class ApiController extends AbstractController
 
         $input = json_decode($request->getContent(), true);
         $data = [
-            'first_name'    => $input['firstName'],
-            'patronymic'    => $input['patronymic'],
-            'last_name'     => $input['lastName'],
-            'birth_year'    => $input['birthyear'],
-            'passport_code' => $input['passport'],
-            'latitude'      => $input['location']['lat'],
-            'longitude'     => $input['location']['lng'],
-            'locale'        => $input['locale'],
+            'first_name'    => $input['firstName'] ?? '',
+            'patronymic'    => $input['patronymic'] ?? '',
+            'last_name'     => $input['lastName'] ?? null,
+            'birth_year'    => $input['birthyear'] ?? null,
+            'passport_code' => $input['passport'] ?? null,
+            'latitude'      => $input['location']['lat'] ?? null,
+            'longitude'     => $input['location']['lng'] ?? null,
+            'locale'        => $input['locale'] ?? null,
 //            'photo'         => $input['photo'],
 //            'smallPhoto'    => $input['smallPhoto'],
             'update'        => ''
@@ -81,24 +81,6 @@ class ApiController extends AbstractController
             file_put_contents($filename, print_r($data, true) . "\n\n", FILE_APPEND);
         }
 
-        /*
-
-        $data = [
-            'firstname'     => $request->request->get('firstName'),
-            'patronymic'    => $request->request->get('patronymic'),
-            'lastname'      => $request->request->get('lastName'),
-            'birth_year'    => $request->request->get('birthyear'),
-            'passport_code' => $request->request->get('passport'),
-            'latitude'      => $request->request->get('location')[0],
-            'longitude'     => $request->request->get('location')[1],
-//            'photo'         => $request->request->get('photo'),
-//            'small_photo'    => $request->request->get('smallPhoto'),
-            'update'        => '',
-        ];
-        */
-
-//        $request2form = new Request();
-//        $request2form->request->set('user', $data);
         $request->request->set('user', $data);
         $form = $this->createForm(UserFormType::class, $user, [
             'csrf_protection' => false,

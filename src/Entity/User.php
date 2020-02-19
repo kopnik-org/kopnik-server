@@ -516,7 +516,7 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getFirstName(): ?string
+    public function getFirstName(): string
     {
         return $this->first_name;
     }
@@ -526,7 +526,7 @@ class User implements UserInterface
      *
      * @return $this
      */
-    public function setFirstName($first_name): self
+    public function setFirstName(string $first_name): self
     {
         $this->first_name = $first_name;
 
@@ -542,11 +542,11 @@ class User implements UserInterface
     }
 
     /**
-     * @param string $last_name
+     * @param string|null $last_name
      *
      * @return $this
      */
-    public function setLastName($last_name): self
+    public function setLastName(?string $last_name): self
     {
         $this->last_name = $last_name;
 
