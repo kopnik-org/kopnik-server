@@ -32,6 +32,12 @@
     "clue/stream-filter": {
         "version": "v1.4.1"
     },
+    "composer/ca-bundle": {
+        "version": "1.2.6"
+    },
+    "cravler/maxmind-geoip-bundle": {
+        "version": "v1.4.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -138,6 +144,9 @@
     "fzaninotto/faker": {
         "version": "v1.9.1"
     },
+    "geoip2/geoip2": {
+        "version": "v2.10.0"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.3.3"
     },
@@ -185,6 +194,12 @@
     },
     "league/flysystem": {
         "version": "1.0.64"
+    },
+    "maxmind-db/reader": {
+        "version": "v1.6.0"
+    },
+    "maxmind/web-service-common": {
+        "version": "v0.6.0"
     },
     "monolog/monolog": {
         "version": "1.24.0"

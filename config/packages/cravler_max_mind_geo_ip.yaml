@@ -1,0 +1,33 @@
+cravler_max_mind_geo_ip:
+    client:
+        user_id: ~
+        license_key: ~
+        options: {}
+    path: '%kernel.project_dir%/var/MaxMind'
+    db:
+        country: 'GeoLite2-Country.mmdb'
+        city: 'GeoLite2-City.mmdb'
+        asn: 'GeoLite2-ASN.mmdb'
+        connection_type: 'GeoIP2-Connection-Type.mmdb'
+        anonymous_ip: 'GeoIP2-Anonymous-IP.mmdb'
+        enterprise: 'GeoIP2-Enterprise.mmdb'
+        domain: 'GeoIP2-Domain.mmdb'
+        isp: 'GeoIP2-ISP.mmdb'
+    source:
+        country: ~
+        city: ~
+        asn: ~
+        connection_type: ~
+        anonymous_ip: ~
+        enterprise: ~
+        domain: ~
+        isp: ~
+    md5_check:
+        country: ~
+        city: ~
+        asn: ~
+        connection_type: ~
+        anonymous_ip: ~
+        enterprise: ~
+        domain: ~
+        isp: ~

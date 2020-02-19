@@ -23,4 +23,5 @@ return [
     Nelmio\Alice\Bridge\Symfony\NelmioAliceBundle::class => ['test' => true],
     Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle::class => ['test' => true],
     Hautelook\AliceBundle\HautelookAliceBundle::class => ['test' => true],
+    Cravler\MaxMindGeoIpBundle\CravlerMaxMindGeoIpBundle::class => ['all' => true],
 ];

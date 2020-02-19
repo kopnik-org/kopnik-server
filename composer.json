@@ -7,6 +7,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "cravler/maxmind-geoip-bundle": "^1.4",
         "hwi/oauth-bundle": "dev-master",
         "knplabs/knp-menu-bundle": "*",
         "nelmio/cors-bundle": "^2.0",
