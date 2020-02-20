@@ -69,6 +69,7 @@ class UserListCommand extends Command
                 $user->getId(),
                 $user->__toString(),
                 $user->getVkIdentifier(),
+                $user->getPassportCode(),
 //                $user->getOauthByProvider('vkontakte')->getAccessToken(),
                 $user->getStatusAsText(),
                 $user->isAllowMessagesFromCommunity() ? 'ДА' : '-',
@@ -79,6 +80,6 @@ class UserListCommand extends Command
         }
 
         //$this->io->table(['id', 'ФИО', 'VK ID', 'VK Access Token', 'Статус', 'Дата регистрации'], $rows);
-        $this->io->table(['id', 'ФИО', 'VK ID', 'Статус', 'Сообщения ВК', 'Старшина', 'Заверитель', 'Дата регистрации'], $rows);
+        $this->io->table(['id', 'ФИО', 'VK ID', 'Code', 'Статус', 'Сообщения ВК', 'Старшина', 'Заверитель', 'Дата регистрации'], $rows);
     }
 }
