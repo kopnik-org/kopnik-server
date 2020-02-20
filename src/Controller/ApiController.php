@@ -113,20 +113,24 @@ class ApiController extends AbstractController
                     $user->setWitness($witness); // @todo костыль...
                 }
 
-                // 1) Создать групповой чат с заверителем и новобранцем
-                $chat_id = $vk->messages()->createChat($vkCallbackApiAccessToken, [
-                    'user_ids' => "{$user->getVkIdentifier()},{$witness->getVkIdentifier()}",
-                    'title' => "{$user} - Заверение пользователя в Копнике",
-                    'group_id' => $vkCommunityId,
-                    //'v' => '5.103'
-                ]);
+                if ($user->getAssuranceChatInviteLink()) {
+                    $invite_chat_link = $user->getAssuranceChatInviteLink();
+                } else {
+                    // 1) Создать групповой чат с заверителем и новобранцем
+                    $chat_id = $vk->messages()->createChat($vkCallbackApiAccessToken, [
+                        'user_ids' => "{$user->getVkIdentifier()},{$witness->getVkIdentifier()}",
+                        'title' => "{$user} - Заверение пользователя в Копнике",
+                        'group_id' => $vkCommunityId,
+                        //'v' => '5.103'
+                    ]);
 
-                // 2) Получить ссылку приглашения в чат
-                $invite_chat_link = $vk->messages()->getInviteLink($vkCallbackApiAccessToken, [
-                    'peer_id' => 2000000000 + $chat_id,
-                    'group_id' => $vkCommunityId,
-                    'reset' => 0,
-                ])['link'];
+                    // 2) Получить ссылку приглашения в чат
+                    $invite_chat_link = $vk->messages()->getInviteLink($vkCallbackApiAccessToken, [
+                        'peer_id' => 2000000000 + $chat_id,
+                        'group_id' => $vkCommunityId,
+                        'reset' => 0,
+                    ])['link'];
+                }
 
                 // 3) Написать ссылку-приглашение в чат новобранцу
                 $result = $vk->messages()->send($vkCallbackApiAccessToken, [
@@ -147,6 +151,9 @@ class ApiController extends AbstractController
                         "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link",
                     'random_id' => random_int(100, 999999999),
                 ]);
+
+                // 5) Сохранить ссылку-приглашение в профиле юзера
+                $user->setAssuranceChatInviteLink($invite_chat_link);
 
                 /*
                 $result = $vk->messages()->send($vkCallbackApiAccessToken, [
