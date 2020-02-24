@@ -371,6 +371,14 @@ class ApiController extends AbstractController
         try {
             $vk = new VKApiClient();
 
+            $result = $vk->messages()->isMessagesFromGroupAllowed($vkCallbackApiAccessToken, [
+                'user_id'  => $this->user->getVkIdentifier(),
+                'group_id' => $vkCommunityId,
+            ]);
+
+            return new JsonResponse($result);
+
+            /*
             $result = $vk->messages()->send($vkCallbackApiAccessToken, [
                 'user_id' => $this->user->getVkIdentifier(),
                 // 'domain' => 'some_user_name',
@@ -379,6 +387,7 @@ class ApiController extends AbstractController
             ]);
 
             $response = true;
+            */
             //$response['is_messages_from_group_allowed'] = true;
         } catch (VKApiFloodException $e) {
             // @todo
@@ -389,8 +398,7 @@ class ApiController extends AbstractController
 //            }
         }
 
-        return new JsonResponse($response);
-        //return new JsonResponse(['response' => $response]);
+        return new JsonResponse(['response' => $response]);
     }
 
     /**
