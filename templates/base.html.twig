@@ -96,7 +96,9 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="mr-auto">
-                    {{ knp_menu_render('top', {'currentClass': 'active'}) }}
+                    {% if app.user %}
+                        {{ knp_menu_render('top', {'currentClass': 'active'}) }}
+                    {% endif %}
                 </div>
                 {% if app.user %}
                     {{ app.user }}
