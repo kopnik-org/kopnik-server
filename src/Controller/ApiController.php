@@ -390,12 +390,21 @@ class ApiController extends AbstractController
             */
             //$response['is_messages_from_group_allowed'] = true;
         } catch (VKApiFloodException $e) {
-            // @todo
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 1000000 + $e->getErrorCode(),
+                    'error_msg'  => $e->getMessage(),
+                    'request_params' => '@todo',
+                ]
+            ]);
         } catch (VKApiException $e) {
-//            if ($e->getErrorCode() == 901) {
-                $response = false;
-//                $response['is_messages_from_group_allowed'] = false;
-//            }
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => 1000000 + $e->getErrorCode(),
+                    'error_msg'  => $e->getMessage(),
+                    'request_params' => '@todo',
+                ]
+            ]);
         }
 
         return new JsonResponse(['response' => $response]);
