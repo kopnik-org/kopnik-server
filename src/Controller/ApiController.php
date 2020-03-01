@@ -376,7 +376,9 @@ class ApiController extends AbstractController
                 'group_id' => $vkCommunityId,
             ]);
 
-            return new JsonResponse($result);
+            $response = $result->is_allowed ? true : false;
+
+            return new JsonResponse($response);
 
             /*
             $result = $vk->messages()->send($vkCallbackApiAccessToken, [
