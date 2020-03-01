@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Flex\Response;
 use VK\Client\VKApiClient;
 use VK\Exceptions\Api\VKApiFloodException;
 use VK\Exceptions\VKApiException;
