@@ -56,25 +56,32 @@ class SecurityController extends AbstractController
 
     /**
      * @param User $user
+     * @param bool $forcePassport
      *
      * @return array
+     *
+     * @todo вынести в сервис
      */
-    protected function serializeUser(User $user): array
+    protected function serializeUser(User $user, bool $forcePassport = false): array
     {
+        $location = new \stdClass();
+        $location->lat = $user->getLatitude();
+        $location->lng = $user->getLongitude();
+
         return [
             'id' => $user->getId(),
-            'vk_id' => $user->getVkIdentifier(),
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'patronymic' => $user->getPatronymic(),
+            'locale' => $user->getLocale(),
             'foreman_id' => $user->getForeman() ? $user->getForeman()->getId() : null,
             'witness_id' => $user->getWitness() ? $user->getWitness()->getId() : null,
             'birthyear' => $user->getBirthYear(),
-            'location' => [$user->getLatitude(), $user->getLongitude()],
+            'location' => $location,
             'status' => $user->getStatus(),
-            'passport' => $user->getPassportCode(), // только свой
-            'photo' => '@todo',
-            'smallPhoto' => '@todo',
+            'passport' => $user->getPassportCode(),
+            'photo' => $user->getPhoto(),
+            'smallPhoto' => $user->getPhoto(),
         ];
     }
 }

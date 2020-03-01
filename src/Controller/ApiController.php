@@ -546,8 +546,11 @@ class ApiController extends AbstractController
 
     /**
      * @param User $user
+     * @param bool $forcePassport
      *
      * @return array
+     *
+     * @todo вынести в сервис
      */
     protected function serializeUser(User $user, bool $forcePassport = false): array
     {
