@@ -376,7 +376,7 @@ class ApiController extends AbstractController
                 'group_id' => $vkCommunityId,
             ]);
 
-            $response = $result->is_allowed ? true : false;
+            $response['response'] = $result->is_allowed ? true : false;
 
             return new JsonResponse($response);
 
