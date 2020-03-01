@@ -19,13 +19,13 @@ security:
 #            json_login:
 #                check_path: /test/login
             logout:
-                path: /api/logout
+                path: security_logout
             guard:
                 authenticators:
                     - App\Security\UserAuthenticator
             oauth:
                 resource_owners:
-                    vkontakte:  /login/check-vk
+                    vkontakte:  login_check_vkontakte
                     #github: /login/check-github
                 failure_path:   /login/
                 login_path:     /login/
