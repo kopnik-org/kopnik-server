@@ -1,30 +1,29 @@
 App\Entity\User:
   user_6:
-    firstName: <ru_RU:firstNameMale()>
-    lastName: <ru_RU:lastName()>
-    patronymic: <ru_RU:lastName()>
-    passportCode: <numberBetween(1111, 9999)>
-    birthYear: <numberBetween(1950, 1990)>
-    latitude: <latitude(-90, 90)>
-    longitude: <longitude(-180, 180)>
-    photo: <imageUrl(200, 200)>
-    smallPhoto: <imageUrl(50, 50)>
+    firstName: Борис
+    lastName: Андреев
+    patronymic: Альберт
+    passportCode: 8656
+    birthYear: 1986
+    latitude: 29.953036
+    longitude: 164.840236
+    photo: https://lorempixel.com/200/200/?63436
+    smallPhoto: https://lorempixel.com/200/200/?63436
     isWitness: 0
     status: 2
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
-#    foreman: '@user_6'
 
   user_7:
-    firstName: <ru_RU:firstNameMale()>
-    lastName: <ru_RU:lastName()>
-    patronymic: <ru_RU:lastName()>
-    passportCode: <numberBetween(1111, 9999)>
-    birthYear: <numberBetween(1950, 1990)>
-    latitude: <latitude(-90, 90)>
-    longitude: <longitude(-180, 180)>
-    photo: <imageUrl(200, 200)>
-    smallPhoto: <imageUrl(50, 50)>
+    firstName: Рама
+    lastName: Карпов
+    patronymic: Степанов
+    passportCode: 6847
+    birthYear: 1937
+    latitude: 47.042607
+    longitude: 147.94407
+    photo: https://lorempixel.com/200/200/?64517
+    smallPhoto: https://lorempixel.com/200/200/?64517
     isWitness: 0
     status: 2
     isAllowMessagesFromCommunity: 0
@@ -32,15 +31,15 @@ App\Entity\User:
     foreman: '@user_6'
 
   user_8:
-    firstName: <ru_RU:firstNameMale()>
-    lastName: <ru_RU:lastName()>
-    patronymic: <ru_RU:lastName()>
-    passportCode: <numberBetween(1111, 9999)>
-    birthYear: <numberBetween(1950, 1990)>
-    latitude: <latitude(-90, 90)>
-    longitude: <longitude(-180, 180)>
-    photo: <imageUrl(200, 200)>
-    smallPhoto: <imageUrl(50, 50)>
+    firstName: Калаш
+    lastName: Калашников
+    patronymic: Максимов
+    passportCode: 6848
+    birthYear: 1908
+    latitude: 14.544988
+    longitude: 67.221538
+    photo: https://lorempixel.com/200/200/?38824
+    smallPhoto: https://lorempixel.com/200/200/?38824
     isWitness: 0
     status: 2
     isAllowMessagesFromCommunity: 1
@@ -48,15 +47,15 @@ App\Entity\User:
     foreman: '@user_6'
 
   user_9:
-    firstName: <ru_RU:firstNameMale()>
-    lastName: <ru_RU:lastName()>
-    patronymic: <ru_RU:lastName()>
-    passportCode: <numberBetween(1111, 9999)>
-    birthYear: <numberBetween(1950, 1990)>
-    latitude: <latitude(-90, 90)>
-    longitude: <longitude(-180, 180)>
-    photo: <imageUrl(200, 200)>
-    smallPhoto: <imageUrl(50, 50)>
+    firstName: Валери1
+    lastName: Дементьев
+    patronymic: Краснов
+    passportCode: 8609
+    birthYear: 1979
+    latitude: 74.513169
+    longitude: -29.77029
+    photo: https://lorempixel.com/200/200/?59089
+    smallPhoto: https://lorempixel.com/200/200/?59089
     isWitness: 0
     status: 2
     isAllowMessagesFromCommunity: 1
@@ -64,31 +63,31 @@ App\Entity\User:
     foreman: '@user_6'
 
   user_10:
-    firstName: <ru_RU:firstNameMale()>
-    lastName: <ru_RU:lastName()>
-    patronymic: <ru_RU:lastName()>
+    firstName: Сазон
+    lastName: Климов
+    patronymic: Гуляев
     passportCode: <numberBetween(1111, 9999)>
     birthYear: <numberBetween(1950, 1990)>
-    latitude: <latitude(-90, 90)>
-    longitude: <longitude(-180, 180)>
-    photo: <imageUrl(200, 200)>
-    smallPhoto: <imageUrl(50, 50)>
+    latitude: 84.287010
+    longitude: 108.15810
+    photo: https://lorempixel.com/200/200/?71410
+    smallPhoto: https://lorempixel.com/200/200/?71410
     isWitness: 0
     status: 2
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
     foreman: '@user_6'
-  
+
   user_11:
-    firstName: <ru_RU:firstNameMale()>
-    lastName: <ru_RU:lastName()>
-    patronymic: <ru_RU:lastName()>
-    passportCode: <numberBetween(1111, 9999)>
-    birthYear: <numberBetween(1950, 1990)>
-    latitude: <latitude(-90, 90)>
-    longitude: <longitude(-180, 180)>
-    photo: <imageUrl(200, 200)>
-    smallPhoto: <imageUrl(50, 50)>
+    firstName: Никодим
+    lastName: Селезнёв
+    patronymic: Сазонов
+    passportCode: 4911
+    birthYear: 1911
+    latitude: 59.790211
+    longitude: 167.918211
+    photo: https://lorempixel.com/200/200/?34574
+    smallPhoto: https://lorempixel.com/200/200/?34574
     isWitness: 0
     status: 2
     isAllowMessagesFromCommunity: 1
@@ -96,15 +95,15 @@ App\Entity\User:
     foreman: '@user_6'
 
   user_12:
-    firstName: <ru_RU:firstNameMale()>
-    lastName: <ru_RU:lastName()>
-    patronymic: <ru_RU:lastName()>
-    passportCode: <numberBetween(1111, 9999)>
-    birthYear: <numberBetween(1950, 1990)>
-    latitude: <latitude(-90, 90)>
-    longitude: <longitude(-180, 180)>
-    photo: <imageUrl(200, 200)>
-    smallPhoto: <imageUrl(50, 50)>
+    firstName: Святослав
+    lastName: Андреев
+    patronymic: Доронин
+    passportCode: 8612
+    birthYear: 1912
+    latitude: 82.420112
+    longitude: 33.733612
+    photo: https://lorempixel.com/200/200/?51812
+    smallPhoto: https://lorempixel.com/200/200/?51812
     isWitness: 0
     status: 2
     isAllowMessagesFromCommunity: 0
@@ -112,15 +111,15 @@ App\Entity\User:
     foreman: '@user_6'
 
   user_13:
-    firstName: <ru_RU:firstNameMale()>
-    lastName: <ru_RU:lastName()>
-    patronymic: <ru_RU:lastName()>
-    passportCode: <numberBetween(1111, 9999)>
-    birthYear: <numberBetween(1950, 1990)>
-    latitude: <latitude(-90, 90)>
-    longitude: <longitude(-180, 180)>
-    photo: <imageUrl(200, 200)>
-    smallPhoto: <imageUrl(50, 50)>
+    firstName: Вячеслав
+    lastName: Бобров
+    patronymic: Кудрявцев
+    passportCode: 9813
+    birthYear: 1913
+    latitude: 15.743013
+    longitude: 171.877613
+    photo: https://lorempixel.com/200/200/?13013
+    smallPhoto: https://lorempixel.com/200/200/?13013
     isWitness: 0
     status: 2
     isAllowMessagesFromCommunity: 1
@@ -128,15 +127,15 @@ App\Entity\User:
     foreman: '@user_6'
 
   user_14:
-    firstName: <ru_RU:firstNameMale()>
-    lastName: <ru_RU:lastName()>
-    patronymic: <ru_RU:lastName()>
-    passportCode: <numberBetween(1111, 9999)>
-    birthYear: <numberBetween(1950, 1990)>
-    latitude: <latitude(-90, 90)>
-    longitude: <longitude(-180, 180)>
-    photo: <imageUrl(200, 200)>
-    smallPhoto: <imageUrl(50, 50)>
+    firstName: Меркуш
+    lastName: Гурьев
+    patronymic: Селезнев
+    passportCode: 0514
+    birthYear: 1914
+    latitude: 52.07014
+    longitude: 100.035114
+    photo: https://lorempixel.com/200/200/?90514
+    smallPhoto: https://lorempixel.com/200/200/?90514
     isWitness: 0
     status: 2
     isAllowMessagesFromCommunity: 1
@@ -144,15 +143,15 @@ App\Entity\User:
     foreman: '@user_6'
 
   user_15:
-    firstName: <ru_RU:firstNameMale()>
-    lastName: <ru_RU:lastName()>
-    patronymic: <ru_RU:lastName()>
-    passportCode: <numberBetween(1111, 9999)>
-    birthYear: <numberBetween(1950, 1990)>
-    latitude: <latitude(-90, 90)>
-    longitude: <longitude(-180, 180)>
-    photo: <imageUrl(200, 200)>
-    smallPhoto: <imageUrl(50, 50)>
+    firstName: Иван
+    lastName: Копылов
+    patronymic: Шашков
+    passportCode: 7015
+    birthYear: 1915
+    latitude: 68.491715
+    longitude: 133.189715
+    photo: https://lorempixel.com/200/200/?57215
+    smallPhoto: https://lorempixel.com/200/200/?57215
     isWitness: 0
     status: 2
     isAllowMessagesFromCommunity: 1
