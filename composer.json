@@ -68,8 +68,9 @@
     },
     "scripts": {
         "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "sh bin/clear_cache": "script",
+            "rm -rf public/bundles": "script",
+            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
