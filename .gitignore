@@ -6,12 +6,6 @@ docker-compose.override.yml
 /.env.local.php
 /.env.*.local
 /public/bundles/
-/public/css/
-/public/js/
-/public/img/
-/public/index.html
-/public/manifest.webmanifest
-/public/favicon.ico
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
@@ -20,10 +14,3 @@ docker-compose.override.yml
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
-
-# @todo убрать
-/public/auth-test.html
-/public/auth-test.js
-/public/avatar.png
-/public/logo circle.png
-/public/logo 16
