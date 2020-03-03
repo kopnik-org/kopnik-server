@@ -79,13 +79,6 @@ WEB_PORT=80 make up
 http://localhost/
 ``` 
 
-## Гео-базы
-
-### MaxMind GeoLite2
-
-Для распознования по IP адресу, зарегистрироваться на https://dev.maxmind.com/geoip/geoip2/geolite2/ 
-и скачать файл `GeoLite2-City.mmdb`, который нужно будет расположить по данному пути: `/var/MaxMind/GeoLite2-City.mmdb`  
-
 Дополнительные команды докера
 ----------------------------- 
 
@@ -243,6 +236,29 @@ sudo -u postgres psql
 alter user <username> with encrypted password '<password>';
 grant all privileges on database kopnik to kopnik;
 ```
+
+## Обнуление БД
+
+Нативно
+
+```bash
+bin/console doctrine:schema:drop --dump-sql --full-database --force
+bin/console migrate
+```
+
+В докере
+```bash
+docker-compose run php bin/console doctrine:schema:drop --dump-sql --full-database --force
+docker-compose run php bin/console migrate
+```
+
+## Гео-базы
+
+### MaxMind GeoLite2
+
+Для распознования по IP адресу, зарегистрироваться на https://dev.maxmind.com/geoip/geoip2/geolite2/ 
+и скачать файл `GeoLite2-City.mmdb`, который нужно будет расположить по данному пути: `/var/MaxMind/GeoLite2-City.mmdb`  
+
 
 В продакшен режиме
 ------------------
