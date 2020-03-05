@@ -49,24 +49,24 @@ class MainMenu // implements ContainerAwareInterface
             ->setLinkAttribute('class', 'nav-link py-0')
         ;
 
-        $menu->addChild('Stats', ['route' => 'stats'])
-            ->setAttribute('class', 'nav-item')
-            ->setLinkAttribute('class', 'nav-link py-0')
+//        $menu->addChild('Stats', ['route' => 'stats'])
+//            ->setAttribute('class', 'nav-item')
+//            ->setLinkAttribute('class', 'nav-link py-0')
         ;
 
-        if ($this->security->getUser()->getStatus() == User::STATUS_PENDING) {
-            $menu->addChild('My profile', ['route' => 'profile'])
-                ->setAttribute('class', 'nav-item')
-                ->setLinkAttribute('class', 'nav-link py-0')
-            ;
-        }
+//        if ($this->security->getUser()->getStatus() == User::STATUS_PENDING) {
+//            $menu->addChild('My profile', ['route' => 'profile'])
+//                ->setAttribute('class', 'nav-item')
+//                ->setLinkAttribute('class', 'nav-link py-0')
+//            ;
+//        }
 
-        if ($this->security->getUser()->isWitness()) {
-            $menu->addChild('Manage users', ['route' => 'admin'])
-                ->setAttribute('class', 'nav-item')
-                ->setLinkAttribute('class', 'nav-link py-0')
-            ;
-        }
+//        if ($this->security->getUser()->isWitness()) {
+//            $menu->addChild('Manage users', ['route' => 'admin'])
+//                ->setAttribute('class', 'nav-item')
+//                ->setLinkAttribute('class', 'nav-link py-0')
+//            ;
+//        }
 
         return $menu;
     }
