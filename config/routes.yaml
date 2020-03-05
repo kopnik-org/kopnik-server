@@ -1,7 +1,7 @@
 
 login_check_vkontakte:
     path: /login/check-vk
-    schemes: [https]
+#    schemes: [https]
 
 #login_check_github:
 #    path: /login/check-github
