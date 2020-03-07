@@ -77,7 +77,9 @@ class WitnessPromoteCommand extends Command
         if ($user->isWitness()) {
             $this->io->note($user->getFirstName().' '.$user->getLastName().' - уже является заверителем');
 
-            return;
+            // это мешает в сценарии когда пользователя поставили заверителем, потом он поменял имя и нажал сохранить.
+            // в этот момент он стал "В ОЖИДАНИИ" и повтороне "СДЕЛАТЬ ЗАВЕРИТЕЛЕМ" из-за этого  return не срабатыват
+            // return;
         }
 
         $user
