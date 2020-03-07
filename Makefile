@@ -5,7 +5,7 @@ build: docker-build
 restart: docker-down docker-up
 restart-build: docker-down docker-build docker-up
 init: docker-down-clear  docker-pull docker-build docker-up composer-install db-schema-drop kopnik-init
-kopnik-init: wait-db migrations
+kopnik-init: wait-db db-schema-drop migrations
 test-up: test-docker-down test-docker-up composer-install-dev test-db-schema-drop test-migrations test-fixtures
 test-up-with-db-schema-update: test-docker-down test-docker-up composer-install-dev test-db-schema-drop test-migrations test-db-schema-update test-fixtures
 test-down: test-docker-down
