@@ -28,7 +28,7 @@ security:
                 resource_owners:
                     vkontakte:  login_check_vkontakte
                     #github: /login/check-github
-                failure_path:   /login/
+                failure_path:   /
                 login_path:     /login/
                 use_forward:    false
                 remember_me:    true
