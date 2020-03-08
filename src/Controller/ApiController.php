@@ -271,7 +271,7 @@ class ApiController extends AbstractController
      *
      * @Route("/users/pending/update", methods={"POST"}, name="api_users_pending_update")
      */
-    public function usersPendingUpdate(Request $request, EntityManagerInterface $em): JsonResponse
+    public function usersPendingUpdate(Request $request, EntityManagerInterface $em, $vkCallbackApiAccessToken): JsonResponse
     {
         $this->user = $this->getUser();
 
@@ -333,6 +333,50 @@ class ApiController extends AbstractController
 
             $userPending->setStatus($data['status']);
             $em->flush();
+
+            // Отправка сообщения в вк
+            try {
+                $message = 'Неверное присвоение статуса - обратитесь к разработчикам kopnik.org для разрешения проблеммы.';
+
+                if ($userPending->getStatus() == User::STATUS_DECLINE) {
+                    $message = 'Заявка на вступление в kopnik.org отклонена.';
+                }
+
+                if ($userPending->getStatus() == User::STATUS_CONFIRMED) {
+                    $message = 'Заявка на вступление в kopnik.org одобрена.';
+                }
+
+                $vk = new VKApiClient();
+                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
+                    'user_id' => $userPending->getVkIdentifier(),
+                    'message' => $message,
+                    'random_id' => random_int(100, 999999999),
+                ]);
+            } catch (VKApiFloodException $e) {
+                return new JsonResponse([
+                    'error' => [
+                        'error_code' => 1000000 + $e->getErrorCode(),
+                        'error_msg'  => $e->getMessage(),
+                        'request_params' => '@todo ',
+                    ]
+                ]);
+            } catch (VKApiException $e) {
+                return new JsonResponse([
+                    'error' => [
+                        'error_code' => 1000000 + $e->getErrorCode(),
+                        'error_msg'  => $e->getMessage(),
+                        'request_params' => '@todo',
+                    ]
+                ]);
+            } catch (VKClientException $e) {
+                return new JsonResponse([
+                    'error' => [
+                        'error_code' => 1000000 + $e->getErrorCode(),
+                        'error_msg'  => $e->getMessage(),
+                        'request_params' => '@todo',
+                    ]
+                ]);
+            }
 
             $response = true;
         } else {
