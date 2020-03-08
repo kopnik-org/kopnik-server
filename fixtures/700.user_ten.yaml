@@ -164,7 +164,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 573258825
     createdAt: <date_create()>
 
   oauth_{@user_7}:
@@ -172,7 +172,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 573258826
     createdAt: <date_create()>
 
   oauth_{@user_8}:
@@ -180,7 +180,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 573258827
     createdAt: <date_create()>
 
 
@@ -189,7 +189,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 573258828
     createdAt: <date_create()>
 
   oauth_{@user_10}:
@@ -197,7 +197,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 573258829
     createdAt: <date_create()>
 
   oauth_{@user_11}:
@@ -205,7 +205,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 57325810
     createdAt: <date_create()>
 
   oauth_{@user_12}:
@@ -213,7 +213,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 57325811
     createdAt: <date_create()>
 
   oauth_{@user_13}:
@@ -221,7 +221,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 57325812
     createdAt: <date_create()>
 
 
@@ -230,7 +230,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 57325813
     createdAt: <date_create()>
 
   oauth_{@user_15}:
@@ -238,5 +238,5 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 57325814
     createdAt: <date_create()>
