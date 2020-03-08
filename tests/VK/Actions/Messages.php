@@ -13,7 +13,7 @@ class Messages
 
     public function getInviteLink($access_token, array $params = [])
     {
-        return '//invite/chat/link';
+        return ['link' => '//test/invite/chat/link'];
     }
 
     public function send($access_token, array $params = [])
