@@ -73,7 +73,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 573258821
     createdAt: <date_create()>
 
   oauth_{@user_3_pending}:
@@ -81,7 +81,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 573258822
     createdAt: <date_create()>
 
   oauth_{@user_4_declined}:
@@ -89,7 +89,7 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 573258823
     createdAt: <date_create()>
 
   oauth_{@user_5_confirmed}:
@@ -97,5 +97,5 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 261824271
+    identifier: 573258824
     createdAt: <date_create()>
