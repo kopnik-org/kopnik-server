@@ -149,9 +149,9 @@ class User implements UserInterface
     protected $small_photo;
 
     /**
-     * @var int|null
+     * @var string|null
      *
-     * @ORM\Column(type="integer", length=4, nullable=true)
+     * @ORM\Column(type="string", length=4, nullable=true)
      * @Assert\Length(min = 4, minMessage = "Code length must be at least {{ limit }} characters long")
      * @Assert\Length(max = 4, minMessage = "Code length must be at least {{ limit }} characters long")
      * @Assert\NotNull(message="This value is not valid.")
@@ -494,19 +494,19 @@ class User implements UserInterface
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getPassportCode(): ?int
+    public function getPassportCode(): ?string
     {
         return $this->passport_code;
     }
 
     /**
-     * @param int|null $passport_code
+     * @param string|null $passport_code
      *
      * @return $this
      */
-    public function setPassportCode($passport_code): self
+    public function setPassportCode(?string $passport_code): self
     {
         $this->passport_code = $passport_code;
 
