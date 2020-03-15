@@ -66,8 +66,8 @@ App\Entity\User:
     firstName: Сазон
     lastName: Климов
     patronymic: Гуляев
-    passportCode: <numberBetween(1111, 9999)>
-    birthYear: <numberBetween(1950, 1990)>
+    passportCode: 9810
+    birthYear: 1980
     latitude: 84.287010
     longitude: 108.15810
     photo: https://lorempixel.com/200/200/?71410

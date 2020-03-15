@@ -5,8 +5,8 @@ App\Entity\User:
     patronymic: Иванович
     passportCode: 8212
     birthYear: 1962
-    latitude: 35.2672
-    longitude: 64.7382
+    latitude: 41.016
+    longitude: 29.032
     photo: https://lorempixel.com/200/200/?38192
     smallPhoto: https://lorempixel.com/200/200/?38192
     isWitness: 0
