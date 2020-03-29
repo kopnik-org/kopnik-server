@@ -1,18 +1,19 @@
 App\Entity\User:
   user_6:
-    firstName: Борис
-    lastName: Андреев
-    patronymic: Альберт
+    firstName: Гора
+    lastName: Мира
+    patronymic: Рука
     passportCode: 8656
     birthYear: 1986
-    latitude: 29.953036
-    longitude: 164.840236
+    latitude: 58.1996
+    longitude: 68.256
     photo: https://lorempixel.com/200/200/?63436
     smallPhoto: https://lorempixel.com/200/200/?63436
     isWitness: 0
     status: 2
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
+    role: 1
 
   user_7:
     firstName: Рама
@@ -29,6 +30,7 @@ App\Entity\User:
     isAllowMessagesFromCommunity: 0
     createdAt: <date_create()>
     foreman: '@user_6'
+    role: 1
 
   user_8:
     firstName: Калаш
@@ -45,6 +47,7 @@ App\Entity\User:
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
     foreman: '@user_6'
+    role: 1
 
   user_9:
     firstName: Валери1
@@ -61,6 +64,7 @@ App\Entity\User:
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
     foreman: '@user_6'
+    role: 1
 
   user_10:
     firstName: Сазон
@@ -77,6 +81,7 @@ App\Entity\User:
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
     foreman: '@user_6'
+    role: 1
 
   user_11:
     firstName: Никодим
@@ -93,6 +98,7 @@ App\Entity\User:
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
     foreman: '@user_6'
+    role: 1
 
   user_12:
     firstName: Святослав
@@ -109,6 +115,7 @@ App\Entity\User:
     isAllowMessagesFromCommunity: 0
     createdAt: <date_create()>
     foreman: '@user_6'
+    role: 1
 
   user_13:
     firstName: Вячеслав
@@ -125,6 +132,7 @@ App\Entity\User:
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
     foreman: '@user_6'
+    role: 1
 
   user_14:
     firstName: Меркуш
@@ -141,6 +149,7 @@ App\Entity\User:
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
     foreman: '@user_6'
+    role: 1
 
   user_15:
     firstName: Иван
@@ -157,6 +166,7 @@ App\Entity\User:
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
     foreman: '@user_6'
+    role: 1
 
 App\Entity\UserOauth:
   oauth_{@user_6}:

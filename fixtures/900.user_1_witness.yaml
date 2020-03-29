@@ -13,6 +13,7 @@ App\Entity\User:
     status: 2
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
+    role: 1
 
 App\Entity\UserOauth:
   oauth_{@user_1_witness}:
