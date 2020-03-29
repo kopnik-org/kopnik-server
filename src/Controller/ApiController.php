@@ -625,7 +625,7 @@ class ApiController extends AbstractController
         // @todo сделать список поддерживаемых локалей.
         $locales = ['en', 'ru'];
 
-        if (!in_array($request->request->get('role'), $locales)) {
+        if (!in_array($request->request->get('locale'), $locales)) {
             return new JsonResponse([
                 'error' => [
                     'error_code' => self::ERROR_NOT_VALID,
@@ -635,7 +635,7 @@ class ApiController extends AbstractController
             ]);
         }
 
-        $this->user->setLocale($request->request->get('role'));
+        $this->user->setLocale($request->request->get('locale'));
 
         $em->persist($this->user);
         $em->flush();
