@@ -622,10 +622,13 @@ class ApiController extends AbstractController
             ]);
         }
 
+        $input = json_decode($request->getContent(), true);
+        $locale = $input['locale'] ?? null;
+
         // @todo сделать список поддерживаемых локалей.
         $locales = ['en', 'ru'];
 
-        if (!in_array($request->request->get('locale'), $locales)) {
+        if (!in_array($locale, $locales)) {
             return new JsonResponse([
                 'error' => [
                     'error_code' => self::ERROR_NOT_VALID,
@@ -635,7 +638,7 @@ class ApiController extends AbstractController
             ]);
         }
 
-        $this->user->setLocale($request->request->get('locale'));
+        $this->user->setLocale($locale);
 
         $em->persist($this->user);
         $em->flush();
