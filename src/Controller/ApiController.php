@@ -643,9 +643,9 @@ class ApiController extends AbstractController
         $em->persist($this->user);
         $em->flush();
 
-        $response = $this->serializeUser($this->user);
+        //$response = $this->serializeUser($this->user);
 
-        return new JsonResponse(['response' => $response]);
+        return new JsonResponse(['response' => null]);
     }
 
     /**
