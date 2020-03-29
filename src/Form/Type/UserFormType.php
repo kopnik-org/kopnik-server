@@ -24,6 +24,7 @@ class UserFormType extends AbstractType
             ->add('passport_code')
             ->add('latitude', TextType::class,  ['attr' => ['placeholder' => 'Latitude']])
             ->add('longitude', TextType::class, ['attr' => ['placeholder' => 'Longitude']])
+            ->add('role')
             ->add('update', SubmitType::class,  ['attr' => ['class' => 'btn-success']])
         ;
     }
