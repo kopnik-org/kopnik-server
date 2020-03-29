@@ -604,6 +604,48 @@ class ApiController extends AbstractController
     }
 
     /**
+     * Изменение только локали юзера.
+     *
+     * @Route("/users/updateLocale", methods={"POST"}, name="api_users_update_locale")
+     */
+    public function usersUpdateLocale(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $this->user = $this->getUser();
+
+        if (empty($this->user)) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => self::ERROR_UNAUTHORIZED,
+                    'error_msg'  => 'No authentication',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        // @todo сделать список поддерживаемых локалей.
+        $locales = ['en', 'ru'];
+
+        if (!in_array($request->request->get('role'), $locales)) {
+            return new JsonResponse([
+                'error' => [
+                    'error_code' => self::ERROR_NOT_VALID,
+                    'error_msg'  => 'Не поддерживаемая локаль',
+                    'request_params' => '@todo ',
+                ]
+            ]);
+        }
+
+        $this->user->setLocale($request->request->get('role'));
+
+        $em->persist($this->user);
+        $em->flush();
+
+        $response = $this->serializeUser($this->user);
+
+        return new JsonResponse(['response' => $response]);
+    }
+
+    /**
      * @param User $user
      * @param bool $forcePassport
      *
