@@ -610,7 +610,11 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        return ['ROLE_USER', self::$roles_values[$this->role]];
+        if (isset(self::$roles_values[$this->role])) {
+            return ['ROLE_USER', self::$roles_values[$this->role]];
+        }
+
+        return ['ROLE_USER'];
     }
 
     /**
@@ -887,7 +891,7 @@ class User implements UserInterface
     public function setRole(int $role): self
     {
         if (!isset(self::$roles_values[$role])) {
-            $role = 0;
+            $role = self::ROLE_STRANGER;
         }
 
         $this->role = $role;
