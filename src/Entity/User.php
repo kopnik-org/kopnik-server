@@ -886,6 +886,10 @@ class User implements UserInterface
      */
     public function setRole(int $role): self
     {
+        if (!isset(self::$roles_values[$role])) {
+            $role = 0;
+        }
+
         $this->role = $role;
 
         return $this;
