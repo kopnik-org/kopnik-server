@@ -67,6 +67,7 @@ class ApiController extends AbstractController
             'latitude'      => $input['location']['lat'] ?? null,
             'longitude'     => $input['location']['lng'] ?? null,
             'locale'        => $input['locale'] ?? null,
+            'role'          => $input['role'] ? (int) $input['role'] : 0,
 //            'photo'         => $input['photo'],
 //            'smallPhoto'    => $input['smallPhoto'],
             'update'        => ''
@@ -626,6 +627,7 @@ class ApiController extends AbstractController
             'witness_id' => $user->getWitness() ? $user->getWitness()->getId() : null,
             'birthyear' => $user->getBirthYear(),
             'location' => $location,
+            'role' => $user->getRole(),
             'status' => $user->getStatus(),
             'passport' => ($this->user->getId() == $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
             'photo' => $user->getPhoto(),

@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          @ORM\Index(columns={"is_witness"}),
  *          @ORM\Index(columns={"latitude"}),
  *          @ORM\Index(columns={"longitude"}),
+ *          @ORM\Index(columns={"role"}),
  *          @ORM\Index(columns={"status"}),
  *      },
  * )
@@ -26,6 +27,19 @@ class User implements UserInterface
 {
     use ColumnTrait\Id;
     use ColumnTrait\CreatedAt;
+
+    const ROLE_STRANGER         = 0; // Чужой не член общины (наблюдатель / невидимка / аватарка / провинившийся изгой / инородец)
+    const ROLE_KOPNIK           = 1; // Копный муж
+    const ROLE_DANILOV_KOPNIK   = 2; // Подкопный муж (упрещенные требования, предложенные С. Даниловым)
+    const ROLE_FUTURE_KOPNIK    = 3; // Стремлюсь стать Копным мужем
+    const ROLE_FEMALE           = 4; // Женщина (жена / не замужем)
+    static protected $roles_values = [
+        self::ROLE_STRANGER       => 'ROLE_STRANGER',
+        self::ROLE_KOPNIK         => 'ROLE_KOPNIK',
+        self::ROLE_DANILOV_KOPNIK => 'ROLE_DANILOV_KOPNIK',
+        self::ROLE_FUTURE_KOPNIK  => 'ROLE_FUTURE_KOPNIK',
+        self::ROLE_FEMALE         => 'ROLE_FEMALE',
+    ];
 
     const STATUS_NEW       = 0;
     const STATUS_PENDING   = 1;
@@ -103,6 +117,15 @@ class User implements UserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $confirmed_at;
+
+    /**
+     * Роль
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", nullable=false, options={"default":0})
+     */
+    protected $role;
 
     /**
      * Имя
@@ -240,6 +263,7 @@ class User implements UserInterface
         $this->is_witness         = false;
         $this->is_allow_messages_from_community = false;
         $this->locale             = 'ru';
+        $this->role               = self::ROLE_STRANGER;
         $this->status             = self::STATUS_NEW;
     }
 
@@ -249,6 +273,25 @@ class User implements UserInterface
     public function __toString(): string
     {
         return (string) $this->getFirstName().' '. (string) $this->getLastName();
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string|null
+     */
+    static public function canonicalize(string $string): ?string
+    {
+        if (null === $string) {
+            return null;
+        }
+
+        $encoding = mb_detect_encoding($string);
+        $result = $encoding
+            ? mb_convert_case($string, MB_CASE_LOWER, $encoding)
+            : mb_convert_case($string, MB_CASE_LOWER);
+
+        return $result;
     }
 
     /**
@@ -567,7 +610,7 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        return ['ROLE_USER', self::$roles_values[$this->role]];
     }
 
     /**
@@ -814,6 +857,36 @@ class User implements UserInterface
     public function setLocale(?string $locale): self
     {
         $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function hasRole(string $role): bool
+    {
+        return self::$roles_values[$this->role] == $role ? true : false;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRole(): int
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param int $role
+     *
+     * @return $this
+     */
+    public function setRole(int $role): self
+    {
+        $this->role = $role;
 
         return $this;
     }

@@ -31,7 +31,6 @@ final class Version20200311052503 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE users ALTER passport_code TYPE INT');
         $this->addSql('ALTER TABLE users ALTER passport_code DROP DEFAULT');
         $this->addSql('ALTER TABLE users ALTER passport_code TYPE INT');

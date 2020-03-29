@@ -33,7 +33,6 @@ final class Version20191119092854 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('DROP INDEX IDX_1483A5E97B00651C');
         $this->addSql('ALTER TABLE users ADD is_confirmed BOOLEAN NOT NULL');
         $this->addSql('ALTER TABLE users DROP status');
