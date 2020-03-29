@@ -28,11 +28,11 @@ class User implements UserInterface
     use ColumnTrait\Id;
     use ColumnTrait\CreatedAt;
 
-    const ROLE_KOPNIK           = 10; // Копный муж
-    const ROLE_DANILOV_KOPNIK   = 20; // Подкопный муж (упрещенные требования, предложенные С. Даниловым)
-    const ROLE_FUTURE_KOPNIK    = 30; // Стремлюсь стать Копным мужем
-    const ROLE_FEMALE           = 40; // Женщина (жена / не замужем)
-    const ROLE_STRANGER         = 50; // Чужой не член общины (наблюдатель / невидимка / аватарка / провинившийся изгой / инородец)
+    const ROLE_KOPNIK           = 1; // Копный муж
+    const ROLE_DANILOV_KOPNIK   = 2; // Подкопный муж (упрещенные требования, предложенные С. Даниловым)
+    const ROLE_FUTURE_KOPNIK    = 3; // Стремлюсь стать Копным мужем
+    const ROLE_FEMALE           = 4; // Женщина (жена / не замужем)
+    const ROLE_STRANGER         = 5; // Чужой не член общины (наблюдатель / невидимка / аватарка / провинившийся изгой / инородец)
     static protected $roles_values = [
         self::ROLE_KOPNIK         => 'ROLE_KOPNIK',
         self::ROLE_DANILOV_KOPNIK => 'ROLE_DANILOV_KOPNIK',
@@ -123,7 +123,7 @@ class User implements UserInterface
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", nullable=false, options={"default":50})
+     * @ORM\Column(type="smallint", nullable=false, options={"default":5})
      */
     protected $role;
 
