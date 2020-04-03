@@ -8,6 +8,7 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "cravler/maxmind-geoip-bundle": "^1.4",
+        "gedmo/doctrine-extensions": "^2.4",
         "hwi/oauth-bundle": "dev-master",
         "knplabs/knp-menu-bundle": "*",
         "nelmio/cors-bundle": "^2.0",
