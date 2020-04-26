@@ -17,15 +17,9 @@ class UserRoleDemoteCommand extends Command
 {
     protected static $defaultName = 'app:user:role:demote';
 
-    /** @var SymfonyStyle */
     protected $io;
     protected $em;
 
-    /**
-     * UserRolePromoteCommand constructor.
-     *
-     * @param EntityManagerInterface $em
-     */
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct();
@@ -42,10 +36,6 @@ class UserRoleDemoteCommand extends Command
         ;
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);

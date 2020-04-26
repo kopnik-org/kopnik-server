@@ -17,7 +17,6 @@ class WitnessListCommand extends Command
 {
     protected static $defaultName = 'app:witness:list';
 
-    /** @var SymfonyStyle */
     private $io;
     private $em;
 
@@ -30,11 +29,6 @@ class WitnessListCommand extends Command
         ;
     }
 
-    /**
-     * WitnessListCommand constructor.
-     *
-     * @param EntityManagerInterface $em
-     */
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct();
@@ -42,24 +36,11 @@ class WitnessListCommand extends Command
         $this->em = $em;
     }
 
-    /**
-     * This optional method is the first one executed for a command after configure()
-     * and is useful to initialize properties based on the input arguments and options.
-     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        // SymfonyStyle is an optional feature that Symfony provides so you can
-        // apply a consistent look to the commands of your application.
-        // See https://symfony.com/doc/current/console/style.html
         $this->io = new SymfonyStyle($input, $output);
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int|void|null
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var User[] $users */
@@ -75,5 +56,7 @@ class WitnessListCommand extends Command
         }
 
         $this->io->table(['id', 'ФИО', 'VK ID'], $rows);
+
+        return 0;
     }
 }

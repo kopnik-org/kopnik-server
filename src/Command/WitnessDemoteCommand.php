@@ -29,11 +29,6 @@ class WitnessDemoteCommand extends Command
         ;
     }
 
-    /**
-     * MakeWitnessCommand constructor.
-     *
-     * @param EntityManagerInterface $em
-     */
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct();
@@ -41,24 +36,11 @@ class WitnessDemoteCommand extends Command
         $this->em = $em;
     }
 
-    /**
-     * This optional method is the first one executed for a command after configure()
-     * and is useful to initialize properties based on the input arguments and options.
-     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        // SymfonyStyle is an optional feature that Symfony provides so you can
-        // apply a consistent look to the commands of your application.
-        // See https://symfony.com/doc/current/console/style.html
         $this->io = new SymfonyStyle($input, $output);
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int|void|null
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $vk_id = $input->getArgument('vk_id');
@@ -84,5 +66,7 @@ class WitnessDemoteCommand extends Command
         }
 
         $this->io->note($user->getFirstName().' '.$user->getLastName().' - не является заверителем');
+
+        return 0;
     }
 }

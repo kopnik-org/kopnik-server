@@ -21,11 +21,6 @@ class UserRolePromoteCommand extends Command
     protected $io;
     protected $em;
 
-    /**
-     * UserRolePromoteCommand constructor.
-     *
-     * @param EntityManagerInterface $em
-     */
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct();
@@ -42,19 +37,11 @@ class UserRolePromoteCommand extends Command
         ;
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $username = $input->getArgument('username');
@@ -75,12 +62,6 @@ class UserRolePromoteCommand extends Command
         }
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int|void
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $username = $input->getArgument('username');
