@@ -115,8 +115,6 @@ class ApiUsersForemanController extends AbstractApiController
      * Получить подчиненных пользователя. Если параметр id===null, метод работает для текущего пользователя.
      *
      * @Route("/getSubordinates", methods={"GET"}, name="api_users_get_subordinates")
-     *
-     * @todo
      */
     public function getSubordinates(Request $request, EntityManagerInterface $em): JsonResponse
     {
@@ -124,9 +122,21 @@ class ApiUsersForemanController extends AbstractApiController
             return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
-        $this->user = $user = $this->getUser();
+        $this->user = $this->getUser();
 
-        return $this->json(true);
+        $user = $em->getRepository(User::class)->find($request->query->get('id'));
+
+        if (empty($user)) {
+            $user = $this->getUser();
+        }
+
+        $response = [];
+        foreach ($user->getSubordinatesUsers() as $subordinatesUser) {
+            $response[] = $this->serializeUser($subordinatesUser);
+        }
+
+        return $this->json($response);
+
     }
 
     /**
