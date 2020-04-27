@@ -18,20 +18,14 @@ use VK\Exceptions\VKApiException;
 use VK\Exceptions\VKClientException;
 
 /**
- * @Route("/api")
+ * @Route("/api/users")
  */
 class ApiController extends AbstractApiController
 {
-    const ERROR_UNAUTHORIZED    = 401; // No authentication
-    const ERROR_NOT_VALID       = 2; // Not valid
-    const ERROR_NO_WITNESS      = 3; // В системе отсутствуют заверители
-    const ERROR_ACCESS_DENIED   = 4; // Доступ запрещен
-    const ERROR_NO_PENDING      = 5; // Pending user not found
-
     /**
      * Обновить своего (текущего) пользователя. Меняет статус пользователя на ОЖИДАЕТ ЗАВЕРЕНИЯ.
      *
-     * @Route("/users/update", methods={"POST"}, name="api_users_update")
+     * @Route("/update", methods={"POST"}, name="api_users_update")
      */
     public function usersUpdate(Request $request, KernelInterface $kernel, EntityManagerInterface $em, $vkCallbackApiAccessToken, $vkCommunityId): JsonResponse
     {
@@ -180,7 +174,7 @@ class ApiController extends AbstractApiController
     /**
      * Получить заявки на регистрацию, которые должен заверять текущий пользователь, с атрибутом "заверитель".
      *
-     * @Route("/users/pending", methods={"GET"}, name="api_users_pending")
+     * @Route("/pending", methods={"GET"}, name="api_users_pending")
      */
     public function usersPending(EntityManagerInterface $em): JsonResponse
     {
@@ -212,7 +206,7 @@ class ApiController extends AbstractApiController
     /**
      * Подтвердить/отклонить заявку на регистрацию.
      *
-     * @Route("/users/pending/update", methods={"POST"}, name="api_users_pending_update")
+     * @Route("/pending/update", methods={"POST"}, name="api_users_pending_update")
      */
     public function usersPendingUpdate(Request $request, EntityManagerInterface $em, $vkCallbackApiAccessToken): JsonResponse
     {
@@ -284,7 +278,7 @@ class ApiController extends AbstractApiController
     }
 
     /**
-     * @Route("/users/isMessagesFromGroupAllowed", methods={"GET"}, name="api_users_is_messages_from_group_allowed")
+     * @Route("/isMessagesFromGroupAllowed", methods={"GET"}, name="api_users_is_messages_from_group_allowed")
      */
     public function isMessagesFromGroupAllowed($vkCommunityId, $vkCallbackApiAccessToken): JsonResponse
     {
@@ -333,7 +327,7 @@ class ApiController extends AbstractApiController
      *
      * Если параметр ids не задан, будет подставлен идентификатор текущего пользователя из сессии.
      *
-     * @Route("/users/get", methods={"GET"}, name="api_users_get")
+     * @Route("/get", methods={"GET"}, name="api_users_get")
      */
     public function usersGet(Request $request, EntityManagerInterface $em): JsonResponse
     {
@@ -366,7 +360,7 @@ class ApiController extends AbstractApiController
     }
 
     /**
-     * @Route("/users/getByUid", name="api_users_get_by_uid", methods={"GET"})
+     * @Route("/getByUid", name="api_users_get_by_uid", methods={"GET"})
      */
     public function usersGetByUid(Request $request, EntityManagerInterface $em): JsonResponse
     {
@@ -390,7 +384,7 @@ class ApiController extends AbstractApiController
     /**
      * Получить пользовалетей в заданном квадрате координат.
      *
-     * @Route("/users/getTopInsideSquare", methods={"GET"}, name="api_users_get_top_inside_square")
+     * @Route("/getTopInsideSquare", methods={"GET"}, name="api_users_get_top_inside_square")
      */
     public function usersGetTopInsideSquare(Request $request, EntityManagerInterface $em): JsonResponse
     {
@@ -424,7 +418,7 @@ class ApiController extends AbstractApiController
     /**
      * Изменение только локали юзера.
      *
-     * @Route("/users/updateLocale", methods={"POST"}, name="api_users_update_locale")
+     * @Route("/updateLocale", methods={"POST"}, name="api_users_update_locale")
      */
     public function usersUpdateLocale(Request $request, EntityManagerInterface $em): JsonResponse
     {

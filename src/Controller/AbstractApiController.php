@@ -11,6 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AbstractApiController extends AbstractController
 {
+    const ERROR_UNAUTHORIZED    = 401; // No authentication
+    const ERROR_NOT_VALID       = 2; // Not valid
+    const ERROR_NO_WITNESS      = 3; // В системе отсутствуют заверители
+    const ERROR_ACCESS_DENIED   = 4; // Доступ запрещен
+    const ERROR_NO_PENDING      = 5; // Pending user not found
+
     /** @var User */
     // для сериалайзера
     protected $user;
@@ -43,9 +49,9 @@ class AbstractApiController extends AbstractController
         ];
     }
 
-    public function json($response): JsonResponse
+    public function json($response, int $status = 200, array $headers = [], array $context = []): JsonResponse
     {
-        return new JsonResponse(['response' => $response]);
+        return parent::json(['response' => $response], $status, $headers, $context);
     }
 
     public function jsonError($code, $msg, ?Request $request = null): JsonResponse
