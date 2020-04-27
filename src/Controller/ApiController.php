@@ -7,10 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\UserOauth;
 use App\Form\Type\UserFormType;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -23,17 +20,13 @@ use VK\Exceptions\VKClientException;
 /**
  * @Route("/api")
  */
-class ApiController extends AbstractController
+class ApiController extends AbstractApiController
 {
     const ERROR_UNAUTHORIZED    = 401; // No authentication
     const ERROR_NOT_VALID       = 2; // Not valid
     const ERROR_NO_WITNESS      = 3; // В системе отсутствуют заверители
     const ERROR_ACCESS_DENIED   = 4; // Доступ запрещен
     const ERROR_NO_PENDING      = 5; // Pending user not found
-
-    /** @var User */
-    // для сериалайзера
-    protected $user;
 
     /**
      * Обновить своего (текущего) пользователя. Меняет статус пользователя на ОЖИДАЕТ ЗАВЕРЕНИЯ.
@@ -46,13 +39,7 @@ class ApiController extends AbstractController
         $this->user = $user;
 
         if (empty($this->getUser())) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_UNAUTHORIZED,
-                    'error_msg'  => 'No authentication',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
         $response = [];
@@ -88,19 +75,12 @@ class ApiController extends AbstractController
         ]);
 
         $form->handleRequest($request);
-//        $form->handleRequest($request2form);
 
         // @todo Пока так находит первого и единственного заверителя
         $witness = $em->getRepository(User::class)->findOneBy(['is_witness' => true]);
 
         if (empty($witness)) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_NO_WITNESS,
-                    'error_msg'  => 'В системе отсутствуют заверители',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_NO_WITNESS, 'В системе отсутствуют заверители');
         }
 
         if ($form->isValid()) {
@@ -169,29 +149,11 @@ class ApiController extends AbstractController
                 ]);
                 */
             } catch (VKApiFloodException $e) {
-                return new JsonResponse([
-                    'error' => [
-                        'error_code' => 1000000 + $e->getErrorCode(),
-                        'error_msg'  => $e->getMessage(),
-                        'request_params' => '@todo ',
-                    ]
-                ]);
+                return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             } catch (VKApiException $e) {
-                return new JsonResponse([
-                    'error' => [
-                        'error_code' => 1000000 + $e->getErrorCode(),
-                        'error_msg'  => $e->getMessage(),
-                        'request_params' => '@todo',
-                    ]
-                ]);
+                return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             } catch (VKClientException $e) {
-                return new JsonResponse([
-                    'error' => [
-                        'error_code' => 1000000 + $e->getErrorCode(),
-                        'error_msg'  => $e->getMessage(),
-                        'request_params' => '@todo',
-                    ]
-                ]);
+                return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             }
 
             $user->setStatus(User::STATUS_PENDING);
@@ -209,17 +171,10 @@ class ApiController extends AbstractController
                 ];
             }
 
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_NOT_VALID,
-                    'error_msg'  => 'Not valid',
-                    'validation_errors' => $errors,
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonErrorWithValidation(self::ERROR_NOT_VALID, 'Not valid', $errors, $request);
         }
 
-        return new JsonResponse(['response' => $response]);
+        return $this->json($response);
     }
 
     /**
@@ -232,39 +187,26 @@ class ApiController extends AbstractController
         $this->user = $this->getUser();
 
         if (empty($this->getUser())) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_UNAUTHORIZED,
-                    'error_msg'  => 'No authentication',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
         if (!$this->user->isWitness()) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => 403,
-                    'error_msg'  => 'ACCESS_DENIED: Получить заявки могут только заверители',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(403, 'ACCESS_DENIED: Получить заявки могут только заверители');
         }
-
-        $response = [];
 
         $users = $em->getRepository(User::class)->findBy([
             'status'  => User::STATUS_PENDING,
             'witness' => $this->user->getId(),
         ]);
 
+        $response = [];
         if ($users) {
             foreach ($users as $user) {
                 $response[] = $this->serializeUser($user, true);
             }
         }
 
-        return new JsonResponse(['response' => $response]);
+        return $this->json($response);
     }
 
     /**
@@ -277,26 +219,12 @@ class ApiController extends AbstractController
         $this->user = $this->getUser();
 
         if (empty($this->getUser())) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_UNAUTHORIZED,
-                    'error_msg'  => 'No authentication',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
         if (!$this->user->isWitness()) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => 403,
-                    'error_msg'  => 'ACCESS_DENIED: заявку могут обрабатывать только заверители',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(403, 'ACCESS_DENIED: Получить заявки могут только заверители');
         }
-
-        $response = [];
 
         // @todo проверку наличия входных данных
         $input = json_decode($request->getContent(), true);
@@ -306,13 +234,7 @@ class ApiController extends AbstractController
         ];
 
         if ($data['status'] !== User::STATUS_CONFIRMED and $data['status'] !== User::STATUS_DECLINE) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => 1,
-                    'error_msg'  => 'Not accesible status for pending',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_NO_PENDING, 'Not accesible status for pending');
         }
 
         $userPending = $em->getRepository(User::class)->findOneBy([
@@ -323,13 +245,7 @@ class ApiController extends AbstractController
 
         if ($userPending) {
             if ($userPending->getWitness()->getId() !== $this->user->getId()) {
-                return new JsonResponse([
-                    'error' => [
-                        'error_code' => 403,
-                        'error_msg'  => 'Обработать можно только юзера у которого вы являетесь заверителем',
-                        'request_params' => '@todo ',
-                    ]
-                ]);
+                return $this->jsonError(403, 'Обработать можно только юзера у которого вы являетесь заверителем');
             }
 
             $userPending->setStatus($data['status']);
@@ -354,43 +270,17 @@ class ApiController extends AbstractController
                     'random_id' => random_int(100, 999999999),
                 ]);
             } catch (VKApiFloodException $e) {
-                return new JsonResponse([
-                    'error' => [
-                        'error_code' => 1000000 + $e->getErrorCode(),
-                        'error_msg'  => $e->getMessage(),
-                        'request_params' => '@todo ',
-                    ]
-                ]);
+                return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             } catch (VKApiException $e) {
-                return new JsonResponse([
-                    'error' => [
-                        'error_code' => 1000000 + $e->getErrorCode(),
-                        'error_msg'  => $e->getMessage(),
-                        'request_params' => '@todo',
-                    ]
-                ]);
+                return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             } catch (VKClientException $e) {
-                return new JsonResponse([
-                    'error' => [
-                        'error_code' => 1000000 + $e->getErrorCode(),
-                        'error_msg'  => $e->getMessage(),
-                        'request_params' => '@todo',
-                    ]
-                ]);
+                return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             }
 
-            $response = true;
+            return $this->json(true);
         } else {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_NO_PENDING,
-                    'error_msg'  => 'Pending user not found',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_NO_PENDING, 'Pending user not found', $request);
         }
-
-        return new JsonResponse(['response' => $response]);
     }
 
     /**
@@ -401,16 +291,8 @@ class ApiController extends AbstractController
         $this->user = $this->getUser();
 
         if (empty($this->user)) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_UNAUTHORIZED,
-                    'error_msg'  => 'No authentication',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
-
-        $response = [];
 
         try {
             $vk = new VKApiClient();
@@ -421,12 +303,12 @@ class ApiController extends AbstractController
             ]);
 
             if (isset($result['is_allowed'])) {
-                $response['response'] = $result['is_allowed'] ? true : false;
+                $response = $result['is_allowed'] ? true : false;
             } else {
-                $response['response'] = $result->is_allowed ? true : false;
+                $response = $result->is_allowed ? true : false;
             }
 
-            return new JsonResponse($response);
+            return $this->json($response);
 
             /*
             $result = $vk->messages()->send($vkCallbackApiAccessToken, [
@@ -440,40 +322,10 @@ class ApiController extends AbstractController
             */
             //$response['is_messages_from_group_allowed'] = true;
         } catch (VKApiFloodException $e) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => 1000000 + $e->getErrorCode(),
-                    'error_msg'  => $e->getMessage(),
-                    'request_params' => '@todo',
-                ]
-            ]);
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
         } catch (VKApiException $e) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => 1000000 + $e->getErrorCode(),
-                    'error_msg'  => $e->getMessage(),
-                    'request_params' => '@todo',
-                ]
-            ]);
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
         }
-
-        return new JsonResponse(['response' => $response]);
-    }
-
-    /**
-     * @deprecated
-     *
-     * @Route("/users/witness_request", methods={"POST"}, name="api_users_witness_request")
-     */
-    public function usersWitnessRequest(Request $request, LoggerInterface $logger): JsonResponse
-    {
-        $logger->alert($request, ['TEST1']);
-
-        return new JsonResponse([
-            'CONTENT' => $request->getContent(),
-            'GET' => $request->query->all(),
-            'POST' => $request->request->all(),
-        ]);
     }
 
     /**
@@ -488,13 +340,7 @@ class ApiController extends AbstractController
         $this->user = $this->getUser();
 
         if (empty($this->user)) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_UNAUTHORIZED,
-                    'error_msg'  => 'No authentication',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
         $ids = $request->query->get('ids');
@@ -509,20 +355,14 @@ class ApiController extends AbstractController
                 $user = $ur->find($id);
 
                 if (empty($user)) {
-                    return new JsonResponse([
-                        'error' => [
-                            'error_code' => 1,
-                            'error_msg'  => 'Invalid user ids',
-                            'request_params' => '@todo ',
-                        ]
-                    ]);
+                    return $this->jsonError(1, 'Invalid user ids');
                 }
 
                 $response[] = $this->serializeUser($user);
             }
         }
 
-        return new JsonResponse(['response' => $response]);
+        return $this->json($response);
     }
 
     /**
@@ -533,32 +373,18 @@ class ApiController extends AbstractController
         $this->user = $this->getUser();
 
         if (empty($this->user)) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_UNAUTHORIZED,
-                    'error_msg'  => 'No authentication',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
         $userOauth = $em->getRepository(UserOauth::class)->findOneBy(['identifier' => $request->query->get('uid')]);
 
         if ($userOauth) {
-            $data = [
-                'response' => $this->serializeUser($userOauth->getUser()),
-            ];
+            $response = $this->serializeUser($userOauth->getUser());
         } else {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => 2,
-                    'error_msg'  => 'User not found',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(404, 'User not found');
         }
 
-        return new JsonResponse($data);
+        return $this->json($response);
     }
 
     /**
@@ -571,13 +397,7 @@ class ApiController extends AbstractController
         $this->user = $this->getUser();
 
         if (empty($this->user)) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_UNAUTHORIZED,
-                    'error_msg'  => 'No authentication',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
         $count = $request->query->get('count', 50);
@@ -589,13 +409,7 @@ class ApiController extends AbstractController
         $response = [];
 
         if (is_null($x1) or is_null($x2) or is_null($y1) or is_null($y2) or is_null($count)) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => 403,
-                    'error_msg'  => 'Invalid input params',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(403, 'Invalid input params');
         } else {
             $ur = $em->getRepository(User::class);
 
@@ -604,7 +418,7 @@ class ApiController extends AbstractController
             }
         }
 
-        return new JsonResponse(['response' => $response]);
+        return $this->json($response);
     }
 
     /**
@@ -617,13 +431,7 @@ class ApiController extends AbstractController
         $this->user = $this->getUser();
 
         if (empty($this->user)) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_UNAUTHORIZED,
-                    'error_msg'  => 'No authentication',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
         $input = json_decode($request->getContent(), true);
@@ -633,13 +441,7 @@ class ApiController extends AbstractController
         $locales = ['en', 'ru'];
 
         if (!in_array($locale, $locales)) {
-            return new JsonResponse([
-                'error' => [
-                    'error_code' => self::ERROR_NOT_VALID,
-                    'error_msg'  => 'Не поддерживаемая локаль',
-                    'request_params' => '@todo ',
-                ]
-            ]);
+            return $this->jsonError(self::ERROR_NOT_VALID, 'Не поддерживаемая локаль');
         }
 
         $this->user->setLocale($locale);
@@ -647,41 +449,6 @@ class ApiController extends AbstractController
         $em->persist($this->user);
         $em->flush();
 
-        //$response = $this->serializeUser($this->user);
-
-        return new JsonResponse(['response' => null]);
-    }
-
-    /**
-     * @param User $user
-     * @param bool $forcePassport
-     *
-     * @return array
-     *
-     * @todo вынести в сервис
-     */
-    protected function serializeUser(User $user, bool $forcePassport = false): array
-    {
-        $location = new \stdClass();
-        $location->lat = $user->getLatitude();
-        $location->lng = $user->getLongitude();
-
-        return [
-            'id' => $user->getId(),
-            'firstName' => $user->getFirstName(),
-            'lastName' => $user->getLastName(),
-            'patronymic' => $user->getPatronymic(),
-            'locale' => $user->getLocale(),
-            'foreman_id' => $user->getForeman() ? $user->getForeman()->getId() : null,
-            'witness_id' => $user->getWitness() ? $user->getWitness()->getId() : null,
-            'birthyear' => $user->getBirthYear(),
-            'location' => $location,
-            'rank' => $user->getRole(),
-            'role' => $user->getRole(),
-            'status' => $user->getStatus(),
-            'passport' => ($this->user->getId() == $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
-            'photo' => $user->getPhoto(),
-            'smallPhoto' => $user->getPhoto(),
-        ];
+        return $this->json(null);
     }
 }
