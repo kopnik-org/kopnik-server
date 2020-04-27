@@ -396,7 +396,7 @@ class ApiController extends AbstractController
     /**
      * @Route("/users/isMessagesFromGroupAllowed", methods={"GET"}, name="api_users_is_messages_from_group_allowed")
      */
-    public function isMessagesFromGroupAllowed(EntityManagerInterface $em, $vkCommunityId, $vkCallbackApiAccessToken): JsonResponse
+    public function isMessagesFromGroupAllowed($vkCommunityId, $vkCallbackApiAccessToken): JsonResponse
     {
         $this->user = $this->getUser();
 
@@ -483,7 +483,7 @@ class ApiController extends AbstractController
      *
      * @Route("/users/get", methods={"GET"}, name="api_users_get")
      */
-    public function usersGet(Request $request, UserRepository $ur): JsonResponse
+    public function usersGet(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $this->user = $this->getUser();
 
@@ -503,6 +503,8 @@ class ApiController extends AbstractController
         if (empty($ids)) {
             $response[] = $this->serializeUser($this->user);
         } else {
+            $ur = $em->getRepository(User::class);
+
             foreach (explode(',', $ids) as $id) {
                 $user = $ur->find($id);
 
@@ -564,7 +566,7 @@ class ApiController extends AbstractController
      *
      * @Route("/users/getTopInsideSquare", methods={"GET"}, name="api_users_get_top_inside_square")
      */
-    public function usersGetTopInsideSquare(Request $request, UserRepository $ur): JsonResponse
+    public function usersGetTopInsideSquare(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $this->user = $this->getUser();
 
@@ -595,6 +597,8 @@ class ApiController extends AbstractController
                 ]
             ]);
         } else {
+            $ur = $em->getRepository(User::class);
+
             foreach ($ur->findByCoordinates($x1, $y1, $x2, $y2, $count) as $user) {
                 $response[] = $this->serializeUser($user);
             }
@@ -672,6 +676,7 @@ class ApiController extends AbstractController
             'witness_id' => $user->getWitness() ? $user->getWitness()->getId() : null,
             'birthyear' => $user->getBirthYear(),
             'location' => $location,
+            'rank' => $user->getRole(),
             'role' => $user->getRole(),
             'status' => $user->getStatus(),
             'passport' => ($this->user->getId() == $user->getId() or $forcePassport) ? $user->getPassportCode() : null,

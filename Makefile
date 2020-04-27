@@ -46,9 +46,6 @@ wait-db:
 migrations:
 	docker-compose run --rm php php bin/console doctrine:migrations:migrate --no-interaction
 
-fixtures:
-	docker-compose run --rm php php bin/console doctrine:fixtures:load --no-interaction
-
 ready:
 	docker run --rm -v ${PWD}:/app --workdir=/app alpine touch .ready
 

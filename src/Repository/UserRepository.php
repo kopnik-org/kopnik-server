@@ -5,35 +5,18 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
 use Smart\CoreBundle\Doctrine\RepositoryTrait;
 
-/**
- * @method User|null find($id, $lockMode = null, $lockVersion = null)
- * @method User|null findOneBy(array $criteria, array $orderBy = null)
- * @method User[]    findAll()
- * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class UserRepository extends ServiceEntityRepository
+class UserRepository extends ClosureTreeRepository
 {
     use RepositoryTrait\CountBy;
     use RepositoryTrait\FindByQuery;
 
     /**
-     * UserRepository constructor.
-     *
-     * @param RegistryInterface $registry
-     */
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, User::class);
-    }
-
-    /**
-     * @param $user
-     *
      * @return User[]|array
+     *
+     * @deprecated
      */
     public function findNear($user): array
     {
@@ -47,17 +30,11 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $x1
-     * @param $y1
-     * @param $x2
-     * @param $y2
-     * @param $count
-     *
      * @return User[]
      */
     public function findByCoordinates($x1, $y1, $x2, $y2, $count): array
     {
-        $qb = $this->createQueryBuilder('e')
+        return $this->createQueryBuilder('e')
             ->where('e.latitude > :y1')
             ->andWhere('e.latitude < :y2')
             ->andWhere('e.longitude > :x1')
@@ -69,8 +46,19 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter('y2', $y2)
             ->setParameter('status', User::STATUS_CONFIRMED)
             ->setMaxResults((int) $count)
-        ;
+        ->getQuery()
+        ->getResult();
+    }
 
-        return $qb->getQuery()->getResult();
+    public function findByEmail(string $email, string $provider = 'vkontakte'): ?User
+    {
+        return $this->createQueryBuilder('e')
+            ->join('e.oauths', 'oa')
+            ->where('oa.email = :email')
+            ->andWhere('oa.provider = :provider')
+            ->setParameter('email', $email)
+            ->setParameter('provider', $provider)
+        ->getQuery()
+        ->getOneOrNullResult();
     }
 }

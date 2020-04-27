@@ -21,13 +21,15 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="homepage")
      */
-    public function index($slug = null, UserRepository $ur, KernelInterface $kernel): Response
+    public function index($slug = null, EntityManagerInterface $em, KernelInterface $kernel): Response
     {
         $templatePath = $kernel->getProjectDir() . '/public/index.html';
 
         if (file_exists($templatePath)) {
             return new Response(file_get_contents($templatePath));
         }
+
+        $ur = $em->getRepository(User::class);
 
         return $this->render('default/index.html.twig', [
             'users' => $ur->findNear($this->getUser()),
@@ -37,8 +39,10 @@ class DefaultController extends AbstractController
     /**
      * Route("/backend/stats/", name="stats")
      */
-    public function stats(UserRepository $ur, $vkCommunityId, $vkCallbackApiAccessToken): Response
+    public function stats(EntityManagerInterface $em, $vkCommunityId, $vkCallbackApiAccessToken): Response
     {
+        $ur = $em->getRepository(User::class);
+
         return $this->render('default/stats.html.twig', [
             'total' => $ur->countBy([]),
             'confirmed' => $ur->countBy(['status' => User::STATUS_CONFIRMED]),
@@ -50,11 +54,13 @@ class DefaultController extends AbstractController
     /**
      * Route("/backend/assurance/", name="assurance")
      */
-    public function assurance(UserRepository $ur): Response
+    public function assurance(EntityManagerInterface $em): Response
     {
         if ($this->getUser()->getStatus() == User::STATUS_CONFIRMED) {
             return $this->redirectToRoute('homepage');
         }
+
+        $ur = $em->getRepository(User::class);
 
         return $this->render('default/assurance.html.twig', [
             'witness' => $ur->findOneBy(['is_witness' => true], ['created_at' => 'ASC']),
@@ -64,14 +70,14 @@ class DefaultController extends AbstractController
     /**
      * Route("/backend/admin/", name="admin")
      */
-    public function admin(Request $request, UserRepository $ur, EntityManagerInterface $em, $vkCallbackApiAccessToken): Response
+    public function admin(Request $request, EntityManagerInterface $em, $vkCallbackApiAccessToken): Response
     {
         if (!$this->getUser()->isWitness()) {
             return $this->redirectToRoute('homepage');
         }
 
         $action = $request->query->get('action');
-
+        $ur = $em->getRepository(User::class);
 
         if ($action) {
             $user = $ur->find($request->query->get('user', 0));

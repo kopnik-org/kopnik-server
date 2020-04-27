@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Smart\CoreBundle\Doctrine\ColumnTrait;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,10 +19,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          @ORM\Index(columns={"is_witness"}),
  *          @ORM\Index(columns={"latitude"}),
  *          @ORM\Index(columns={"longitude"}),
+ *          @ORM\Index(columns={"rank"}),
  *          @ORM\Index(columns={"role"}),
  *          @ORM\Index(columns={"status"}),
  *      },
  * )
+ * @Gedmo\Tree(type="closure")
+ * @Gedmo\TreeClosure(class="UserClosure")
  */
 class User implements UserInterface
 {
@@ -64,6 +68,13 @@ class User implements UserInterface
     protected $assurance_chat_invite_link;
 
     /**
+     * @var int|null
+     *
+     * @ORM\Column(type="integer", nullable=false, options={"default":1})
+     */
+    protected $rank;
+
+    /**
      * @var string|null
      *
      * @ORM\Column(type="string", length=15, nullable=true)
@@ -76,11 +87,12 @@ class User implements UserInterface
      * @var User|null
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="subordinates_users", cascade={"persist"})
+     * @Gedmo\TreeParent
      */
     protected $foreman;
 
     /**
-     * Вписок подчинённых юзеров у старейшины.
+     * Список подчинённых юзеров у старшины.
      *
      * @var User[]|ArrayCollection
      *
@@ -263,6 +275,7 @@ class User implements UserInterface
         $this->is_witness         = false;
         $this->is_allow_messages_from_community = false;
         $this->locale             = 'ru';
+        $this->rank               = 1;
         $this->role               = self::ROLE_STRANGER;
         $this->status             = self::STATUS_NEW;
     }
@@ -897,5 +910,30 @@ class User implements UserInterface
         $this->role = $role;
 
         return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getRank(): ?int
+    {
+        return $this->rank;
+    }
+
+    /**
+     * @param int|null $rank
+     *
+     * @return $this
+     */
+    public function setRank(?int $rank): self
+    {
+        $this->rank = $rank;
+
+        return $this;
+    }
+
+    public function addClosure(UserClosure $closure)
+    {
+        $this->closures[] = $closure;
     }
 }

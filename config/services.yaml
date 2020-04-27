@@ -37,12 +37,24 @@ services:
             - App\Entity\User
             - []
 
+    app.listener.rank:
+        class: App\EventSubscriber\RankListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default, priority: -255, event: 'postPersist' }
+
     app.menu.main:
         class: App\Menu\MainMenu
         arguments: ["@knp_menu.factory"]
         tags:
             - { name: knp_menu.menu_builder, method: top, alias: top } # The alias is what is used to retrieve the menu
             - { name: knp_menu.menu_builder, method: profile, alias: profile }
+
+    gedmo.listener.tree:
+        class: Gedmo\Tree\TreeListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
 imports:
     - { resource: "_local.yaml", ignore_errors: true }
