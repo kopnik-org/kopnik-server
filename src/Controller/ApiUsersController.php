@@ -20,7 +20,7 @@ use VK\Exceptions\VKClientException;
 /**
  * @Route("/api/users")
  */
-class ApiController extends AbstractApiController
+class ApiUsersController extends AbstractApiController
 {
     /**
      * Обновить своего (текущего) пользователя. Меняет статус пользователя на ОЖИДАЕТ ЗАВЕРЕНИЯ.
