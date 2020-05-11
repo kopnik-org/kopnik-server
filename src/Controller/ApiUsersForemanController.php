@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Event\UserEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @Route("/api/users")
@@ -20,17 +22,40 @@ class ApiUsersForemanController extends AbstractApiController
      * Подать/отменить заявку от имени текущего пользователя на выбор другого пользователя старшиной
      *
      * @Route("/putForemanRequest", methods={"POST"}, name="api_users_put_foreman_request")
-     *
-     * @todo
      */
-    public function putForemanRequest(Request $request, EntityManagerInterface $em): JsonResponse
+    public function putForemanRequest(Request $request, EntityManagerInterface $em, EventDispatcherInterface $dispatcher): JsonResponse
     {
         if (empty($this->getUser())) {
             return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
+        /** @var User $user */
         $this->user = $user = $this->getUser();
 
+        $input = json_decode($request->getContent(), true);
+        $foreman = $input['id'] ?? null;
+
+        if ($foreman) {
+            $foreman = $em->getRepository(User::class)->findOneBy(['id' => $foreman]);
+
+            if (empty($foreman)) {
+                return $this->jsonError(1000 + 404, 'Старшина не найден');
+            }
+
+            if ($foreman->getRole() != User::ROLE_KOPNIK or $foreman->getRole() != User::ROLE_DANILOV_KOPNIK) {
+                return $this->jsonError(1000 + 510, 'Старшина не Копник и не Копник по Данилову');
+            }
+
+            if ($foreman->getStatus() != User::STATUS_CONFIRMED) {
+                return $this->jsonError(1000 + 510, 'Старшина не является заверенным пользователем');
+            }
+        }
+
+        $user->setForemanRequest($foreman);
+
+        $em->flush();
+
+        $dispatcher->dispatch($user, UserEvent::FOREMAN_REQUEST);
 
         return $this->json(true);
     }
@@ -39,34 +64,60 @@ class ApiUsersForemanController extends AbstractApiController
      * Получить заявки других пользователей на выбор текущего пользователя своим старшиной.
      *
      * @Route("/getForemanRequests", methods={"GET"}, name="api_users_get_foreman_requests")
-     *
-     * @todo
      */
-    public function getForemanRequests(Request $request, EntityManagerInterface $em): JsonResponse
+    public function getForemanRequests(): JsonResponse
     {
         if (empty($this->getUser())) {
             return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
+        /** @var User $user */
         $this->user = $user = $this->getUser();
 
-        return $this->json(true);
+        $response = [];
+        foreach ($user->getForemanRequests() as $foremanRequest) {
+            $response[] = $this->serializeUser($foremanRequest);
+        }
+
+        return $this->json($response);
     }
 
     /**
      * Одобрить заявку другого пользователя на выбор текущего пользователя старшиной.
      *
      * @Route("/confirmForemanRequest", methods={"POST"}, name="api_users_confirm_foreman_request")
-     *
-     * @todo
      */
-    public function confirmForemanRequest(Request $request, EntityManagerInterface $em): JsonResponse
+    public function confirmForemanRequest(Request $request, EntityManagerInterface $em, EventDispatcherInterface $dispatcher): JsonResponse
     {
         if (empty($this->getUser())) {
             return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
+        /** @var User $user */
         $this->user = $user = $this->getUser();
+
+        $input = json_decode($request->getContent(), true);
+        $challenger = $input['id'] ?? null; // Идентификатор пользователя, подавшего заявку
+
+        if ($challenger) {
+            $challenger = $em->getRepository(User::class)->findOneBy(['id' => $challenger]);
+
+            if (empty($challenger)) {
+                return $this->jsonError(1000 + 404, 'User не найден');
+            }
+
+            if ($challenger->getForemanRequest() == $user) {
+                $user->setForeman($challenger);
+
+                $em->flush();
+
+                $dispatcher->dispatch($challenger, UserEvent::FOREMAN_CONFIRM);
+            } else {
+                return $this->jsonError(1000 + 511, 'Неверная заявка на выбор старшины');
+            }
+        } else {
+            return $this->jsonError(1000 + 404, 'User не найден');
+        }
 
         return $this->json(true);
     }
@@ -75,16 +126,38 @@ class ApiUsersForemanController extends AbstractApiController
      * Отклонить заявку другого пользователя на выбор текущего пользователя старшиной.
      *
      * @Route("/declineForemanRequest", methods={"POST"}, name="api_users_decline_foreman_request")
-     *
-     * @todo
      */
-    public function declineForemanRequest(Request $request, EntityManagerInterface $em): JsonResponse
+    public function declineForemanRequest(Request $request, EntityManagerInterface $em, EventDispatcherInterface $dispatcher): JsonResponse
     {
         if (empty($this->getUser())) {
             return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
+        /** @var User $user */
         $this->user = $user = $this->getUser();
+
+        $input = json_decode($request->getContent(), true);
+        $challenger = $input['id'] ?? null; // Идентификатор пользователя, подавшего заявку
+
+        if ($challenger) {
+            $challenger = $em->getRepository(User::class)->findOneBy(['id' => $challenger]);
+
+            if (empty($challenger)) {
+                return $this->jsonError(1000 + 404, 'User не найден');
+            }
+
+            if ($challenger->getForemanRequest() == $user) {
+                $user->setForemanRequest(null);
+
+                $em->flush();
+
+                $dispatcher->dispatch($challenger, UserEvent::FOREMAN_DECLINE);
+            } else {
+                return $this->jsonError(1000 + 511, 'Неверная заявка на выбор старшины');
+            }
+        } else {
+            return $this->jsonError(1000 + 404, 'User не найден');
+        }
 
         return $this->json(true);
     }
@@ -106,6 +179,7 @@ class ApiUsersForemanController extends AbstractApiController
             return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
+        /** @var User $user */
         $this->user = $user = $this->getUser();
 
         return $this->json(true);
@@ -136,7 +210,6 @@ class ApiUsersForemanController extends AbstractApiController
         }
 
         return $this->json($response);
-
     }
 
     /**
@@ -152,6 +225,7 @@ class ApiUsersForemanController extends AbstractApiController
             return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
+        /** @var User $user */
         $this->user = $user = $this->getUser();
 
         return $this->json(true);
@@ -168,7 +242,8 @@ class ApiUsersForemanController extends AbstractApiController
             return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
-        $this->user = $this->getUser();
+        /** @var User $user */
+        $this->user = $user = $this->getUser();
 
         $user = $em->getRepository(User::class)->find($request->query->get('id'));
 
@@ -199,6 +274,7 @@ class ApiUsersForemanController extends AbstractApiController
             return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
+        /** @var User $user */
         $this->user = $user = $this->getUser();
 
         return $this->json(true);

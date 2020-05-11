@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Smart\CoreBundle\Doctrine\ColumnTrait;
@@ -94,23 +95,50 @@ class User implements UserInterface
     /**
      * Список подчинённых юзеров у старшины.
      *
-     * @var User[]|ArrayCollection
+     * @var User[]|Collection
      *
      * @ORM\OneToMany(targetEntity="User", mappedBy="foreman", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     protected $subordinates_users;
 
     /**
+     * Заявка на старшину
+     *
+     * @var User|null
+     *
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="foreman_requests", cascade={"persist"})
+     */
+    protected $foreman_request;
+
+    /**
+     * Дата подачи заявки на старшину
+     *
+     * @var \DateTimeInterface|null
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $foreman_request_date;
+
+    /**
+     * Заявки других пользователей на выбор текущего пользователя своим старшиной.
+     *
+     * @var User[]|Collection
+     *
+     * @ORM\OneToMany(targetEntity="User", mappedBy="foreman_request", cascade={"persist"}, fetch="EXTRA_LAZY")
+     */
+    protected $foreman_requests;
+
+    /**
      * Cписок всеx заверенных юзеров.
      *
-     * @var User[]|ArrayCollection
+     * @var User[]|Collection
      *
      * @ORM\OneToMany(targetEntity="User", mappedBy="witness", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     protected $approved_users;
 
     /**
-     * @var UserOauth[]|ArrayCollection
+     * @var UserOauth[]|Collection
      *
      * @ORM\OneToMany(targetEntity="UserOauth", mappedBy="user", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
@@ -271,6 +299,7 @@ class User implements UserInterface
     {
         $this->approved_users     = new ArrayCollection();
         $this->subordinates_users = new ArrayCollection();
+        $this->foreman_requests   = new ArrayCollection();
         $this->created_at         = new \DateTime();
         $this->is_witness         = false;
         $this->is_allow_messages_from_community = false;
@@ -286,6 +315,11 @@ class User implements UserInterface
     public function __toString(): string
     {
         return (string) $this->getFirstName().' '. (string) $this->getLastName();
+    }
+
+    public function addClosure(UserClosure $closure)
+    {
+        $this->closures[] = $closure;
     }
 
     /**
@@ -305,6 +339,30 @@ class User implements UserInterface
             : mb_convert_case($string, MB_CASE_LOWER);
 
         return $result;
+    }
+
+    /**
+     * @param string $provider
+     *
+     * @return UserOauth|null
+     */
+    public function getOauthByProvider(string $provider): ?UserOauth
+    {
+        foreach ($this->oauths as $oauth) {
+            if ($oauth->getProvider() == $provider) {
+                return $oauth;
+            }
+        }
+
+        throw new \Exception("Провайдер $provider не найден");
+    }
+
+    /**
+     * @return int
+     */
+    public function getVkIdentifier(): int
+    {
+        return (int) $this->getOauthByProvider('vkontakte')->getIdentifier();
     }
 
     /**
@@ -348,19 +406,24 @@ class User implements UserInterface
     {
         $this->foreman = $foreman;
 
+        if ($foreman) {
+            $this->foreman_request = null;
+            $this->foreman_request_date = null;
+        }
+
         return $this;
     }
 
     /**
-     * @return User[]|ArrayCollection
+     * @return User[]|Collection
      */
-    public function getSubordinatesUsers()
+    public function getSubordinatesUsers(): Collection
     {
         return $this->subordinates_users;
     }
 
     /**
-     * @param User[]|ArrayCollection $subordinates_users
+     * @param User[]|Collection $subordinates_users
      *
      * @return $this
      */
@@ -392,15 +455,15 @@ class User implements UserInterface
     }
 
     /**
-     * @return User[]|ArrayCollection
+     * @return User[]|Collection
      */
-    public function getApprovedUsers()
+    public function getApprovedUsers(): Collection
     {
         return $this->approved_users;
     }
 
     /**
-     * @param User[]|ArrayCollection $approved_users
+     * @param User[]|Collection $approved_users
      *
      * @return $this
      */
@@ -412,15 +475,15 @@ class User implements UserInterface
     }
 
     /**
-     * @return UserOauth[]|ArrayCollection
+     * @return UserOauth[]|Collection
      */
-    public function getOauths()
+    public function getOauths(): Collection
     {
         return $this->oauths;
     }
 
     /**
-     * @param UserOauth[]|ArrayCollection $oauths
+     * @param UserOauth[]|Collection $oauths
      *
      * @return $this
      */
@@ -429,30 +492,6 @@ class User implements UserInterface
         $this->oauths = $oauths;
 
         return $this;
-    }
-
-    /**
-     * @param string $provider
-     *
-     * @return UserOauth|null
-     */
-    public function getOauthByProvider(string $provider): ?UserOauth
-    {
-        foreach ($this->oauths as $oauth) {
-            if ($oauth->getProvider() == $provider) {
-                return $oauth;
-            }
-        }
-
-        throw new \Exception("Провайдер $provider не найден");
-    }
-
-    /**
-     * @return int
-     */
-    public function getVkIdentifier(): int
-    {
-        return (int) $this->getOauthByProvider('vkontakte')->getIdentifier();
     }
 
     /**
@@ -932,8 +971,70 @@ class User implements UserInterface
         return $this;
     }
 
-    public function addClosure(UserClosure $closure)
+    /**
+     * @return User|null
+     */
+    public function getForemanRequest(): ?User
     {
-        $this->closures[] = $closure;
+        return $this->foreman_request;
+    }
+
+    /**
+     * @param User|null $foreman_request
+     *
+     * @return $this
+     */
+    public function setForemanRequest(?User $foreman_request): self
+    {
+        $this->foreman_request = $foreman_request;
+
+        if ($foreman_request) {
+            $this->foreman = null;
+            $this->foreman_request_date = new \DateTime();
+        } else {
+            $this->foreman_request_date = null;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getForemanRequestDate(): ?\DateTimeInterface
+    {
+        return $this->foreman_request_date;
+    }
+
+    /**
+     * @param \DateTimeInterface|null $foreman_request_date
+     *
+     * @return $this
+     */
+    public function setForemanRequestDate(?\DateTimeInterface $foreman_request_date): self
+    {
+        $this->foreman_request_date = $foreman_request_date;
+
+        return $this;
+    }
+
+    /**
+     * @return User[]|Collection
+     */
+    public function getForemanRequests(): Collection
+    {
+        return $this->foreman_requests;
+    }
+
+    /**
+     * @param User[]|Collection $foreman_requests
+     *
+     * @return $this
+     */
+    public function setForemanRequests($foreman_requests): self
+    {
+        $this->foreman_requests = $foreman_requests;
+
+        return $this;
     }
 }
