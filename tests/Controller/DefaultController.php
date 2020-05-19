@@ -53,7 +53,7 @@ class DefaultController extends AbstractApiController
     }
 
     /**
-     * @Route("/api/test/createUser", name="test_create_user")
+     * @Route("/api/test/createUser", methods={"POST"}, name="test_create_user")
      */
     public function createUser(Request $request, EntityManagerInterface $em): JsonResponse
     {
@@ -74,8 +74,8 @@ class DefaultController extends AbstractApiController
             'email'         => $input['email'],
             'access_token'  => $input['access_token'],
             // only test
-            'photo'         => $input['photo'],
-            'smallPhoto'    => $input['smallPhoto'],
+            'photo'         => $input['photo'] ?? null,
+            'smallPhoto'    => $input['smallPhoto'] ?? null,
         ];
 
         $userOauth = $em->getRepository(UserOauth::class)->findOneBy([
@@ -116,6 +116,6 @@ class DefaultController extends AbstractApiController
         $em->persist($user);
         $em->flush();
 
-        return $this->json($data);
+        return $this->json($user->getId());
     }
 }
