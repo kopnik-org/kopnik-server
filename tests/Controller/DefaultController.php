@@ -118,6 +118,7 @@ class DefaultController extends AbstractApiController
         ;
 
         try {
+            $em->persist($userOauth);
             $em->persist($user);
             $em->flush();
         } catch (DriverException $e) {
