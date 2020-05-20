@@ -49,7 +49,7 @@ class DefaultController extends AbstractApiController
         ]);
         $application->run($input, $output);
 
-        return new Response($output->fetch());
+        return $this->json(['output' => $output->fetch()]);
     }
 
     /**
