@@ -7,6 +7,7 @@ namespace App\Tests\Controller;
 use App\Controller\AbstractApiController;
 use App\Entity\User;
 use App\Entity\UserOauth;
+use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -77,12 +78,16 @@ class DefaultController extends AbstractApiController
             'smallPhoto'    => $input['smallPhoto'] ?? null,
         ];
 
-        $userOauth = $em->getRepository(UserOauth::class)->findOneBy([
-            'email' => $data['email'],
-            'identifier' => $data['identifier'],
-            'access_token' => $data['access_token'],
-            'provider' => 'vkontakte',
-        ]);
+        try {
+            $userOauth = $em->getRepository(UserOauth::class)->findOneBy([
+                'email' => $data['email'],
+                'identifier' => $data['identifier'],
+                'access_token' => $data['access_token'],
+                'provider' => 'vkontakte',
+            ]);
+        } catch (DriverException $e) {
+            return $this->jsonError($e->getCode(), $e->getMessage());
+        }
 
         if ($userOauth) {
             return $this->jsonError(self::ERROR_NOT_VALID, 'Такой юзер уже зареган');
@@ -112,8 +117,12 @@ class DefaultController extends AbstractApiController
             ->setUser($user)
         ;
 
-        $em->persist($user);
-        $em->flush();
+        try {
+            $em->persist($user);
+            $em->flush();
+        } catch (DriverException $e) {
+            return $this->jsonError($e->getCode(), $e->getMessage());
+        }
 
         return $this->json($user->getId());
     }
