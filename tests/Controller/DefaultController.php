@@ -62,6 +62,8 @@ class DefaultController extends AbstractApiController
         $data = [
             'first_name'    => $input['firstName'] ?? '',
             'last_name'     => $input['lastName'] ?? null,
+            'is_witness'    => $input['isWitness'] ?? false,
+            'witness_id'    => $input['witness_id'] ?? null,
             'patronymic'    => $input['patronymic'] ?? '',
             'birth_year'    => $input['birthyear'] ?? null,
             'passport_code' => $input['passport'] ?? null,
@@ -103,10 +105,21 @@ class DefaultController extends AbstractApiController
             ->setLatitude($data['latitude'])
             ->setLongitude($data['longitude'])
             ->setLocale($data['locale'])
+            ->setIsWitness((bool) $data['is_witness'])
             ->setRole($data['role'])
             ->setPhoto($data['photo'])
             ->setSmallPhoto($data['smallPhoto'])
         ;
+
+        if ($data['witness_id']) {
+            $witness = $em->getRepository(User::class)->find((int) $data['witness_id']);
+
+            if (!$witness) {
+                return $this->jsonError(self::ERROR_NOT_VALID, 'Указан не существующий witness_id');
+            }
+
+            $user->setWitness($witness);
+        }
 
         $userOauth = new UserOauth();
         $userOauth
