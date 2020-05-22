@@ -45,7 +45,7 @@ class SecurityController extends AbstractApiController
 
         // Fire the login event manually
         $event = new InteractiveLoginEvent($request, $authenticatedToken);
-        $dispatcher->dispatch('security.interactive_login', $event);
+        $dispatcher->dispatch($event, 'security.interactive_login');
 
         $response = [
             'status' => 'success',
