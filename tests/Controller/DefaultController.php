@@ -71,6 +71,7 @@ class DefaultController extends AbstractApiController
             'longitude'     => $input['location']['lng'] ?? null,
             'locale'        => $input['locale'] ?? null,
             'role'          => $input['role'] ? (int) $input['role'] : User::ROLE_STRANGER,
+            'status'        => $input['status'] ? (int) $input['status'] : User::STATUS_NEW,
             // oAuth
             'identifier'    => $input['identifier'],
             'email'         => $input['email'],
@@ -107,6 +108,7 @@ class DefaultController extends AbstractApiController
             ->setLocale($data['locale'])
             ->setIsWitness((bool) $data['is_witness'])
             ->setRole($data['role'])
+            ->setStatus($data['status'])
             ->setPhoto($data['photo'])
             ->setSmallPhoto($data['smallPhoto'])
         ;
