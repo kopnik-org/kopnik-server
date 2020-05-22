@@ -168,7 +168,7 @@ class ApiUsersController extends AbstractApiController
             return $this->jsonErrorWithValidation(self::ERROR_NOT_VALID, 'Not valid', $errors, $request);
         }
 
-        return $this->json($response);
+        return $this->jsonResponse($response);
     }
 
     /**
@@ -200,7 +200,7 @@ class ApiUsersController extends AbstractApiController
             }
         }
 
-        return $this->json($response);
+        return $this->jsonResponse($response);
     }
 
     /**
@@ -271,7 +271,7 @@ class ApiUsersController extends AbstractApiController
                 return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             }
 
-            return $this->json(true);
+            return $this->jsonResponse(true);
         } else {
             return $this->jsonError(self::ERROR_NO_PENDING, 'Pending user not found', $request);
         }
@@ -302,7 +302,7 @@ class ApiUsersController extends AbstractApiController
                 $response = $result->is_allowed ? true : false;
             }
 
-            return $this->json($response);
+            return $this->jsonResponse($response);
 
             /*
             $result = $vk->messages()->send($vkCallbackApiAccessToken, [
@@ -356,7 +356,7 @@ class ApiUsersController extends AbstractApiController
             }
         }
 
-        return $this->json($response);
+        return $this->jsonResponse($response);
     }
 
     /**
@@ -378,7 +378,7 @@ class ApiUsersController extends AbstractApiController
             return $this->jsonError(404, 'User not found');
         }
 
-        return $this->json($response);
+        return $this->jsonResponse($response);
     }
 
     /**
@@ -412,7 +412,7 @@ class ApiUsersController extends AbstractApiController
             }
         }
 
-        return $this->json($response);
+        return $this->jsonResponse($response);
     }
 
     /**
@@ -443,6 +443,6 @@ class ApiUsersController extends AbstractApiController
         $em->persist($this->user);
         $em->flush();
 
-        return $this->json(null);
+        return $this->jsonResponse(null);
     }
 }

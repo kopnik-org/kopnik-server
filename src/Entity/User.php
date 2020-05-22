@@ -215,8 +215,8 @@ class User implements UserInterface
      * @var string|null
      *
      * @ORM\Column(type="string", length=4, nullable=true)
-     * @Assert\Length(min = 4, minMessage = "Code length must be at least {{ limit }} characters long")
-     * @Assert\Length(max = 4, minMessage = "Code length must be at least {{ limit }} characters long")
+     * @Assert\Length(min = 4, minMessage = "Code length must be at least {{ limit }} characters long", allowEmptyString=false)
+     * @Assert\Length(max = 4, minMessage = "Code length must be at least {{ limit }} characters long", allowEmptyString=false)
      * @Assert\NotNull(message="This value is not valid.")
      */
     protected $passport_code;
@@ -277,8 +277,8 @@ class User implements UserInterface
      * @var int|null
      *
      * @ORM\Column(type="integer", length=4, nullable=true)
-     * @Assert\Length(min = 4, minMessage = "Code length must be at least {{ limit }} characters long")
-     * @Assert\Length(max = 4, minMessage = "Code length must be at least {{ limit }} characters long")
+     * @Assert\Length(min = 4, minMessage = "Code length must be at least {{ limit }} characters long", allowEmptyString=false)
+     * @Assert\Length(max = 4, minMessage = "Code length must be at least {{ limit }} characters long", allowEmptyString=false)
      * @Assert\NotNull(message="This value is not valid.")
      */
     protected $birth_year;

@@ -49,12 +49,12 @@ class AbstractApiController extends AbstractController
         ];
     }
 
-    public function json($response, int $status = 200, array $headers = [], array $context = []): JsonResponse
+    protected function jsonResponse($data, int $status = 200, array $headers = [], array $context = []): JsonResponse
     {
-        return parent::json(['response' => $response], $status, $headers, $context);
+        return parent::json(['response' => $data], $status, $headers, $context);
     }
 
-    public function jsonError($code, $msg, ?Request $request = null): JsonResponse
+    protected function jsonError($code, $msg, ?Request $request = null): JsonResponse
     {
         return new JsonResponse([
             'error' => [
@@ -65,7 +65,7 @@ class AbstractApiController extends AbstractController
         ]);
     }
 
-    public function jsonErrorWithValidation($code, $msg, $validation_errors, ?Request $request): JsonResponse
+    protected function jsonErrorWithValidation($code, $msg, $validation_errors, ?Request $request): JsonResponse
     {
         return new JsonResponse([
             'error' => [

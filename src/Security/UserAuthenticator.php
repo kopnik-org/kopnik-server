@@ -8,7 +8,6 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
@@ -22,12 +21,6 @@ class UserAuthenticator extends AbstractGuardAuthenticator
 
     private $security;
 
-    /**
-     * UserAuthenticator constructor.
-     *
-     * @param EntityManagerInterface $em
-     * @param Security               $security
-     */
     public function __construct(EntityManagerInterface $em, Security $security)
     {
         $this->em = $em;

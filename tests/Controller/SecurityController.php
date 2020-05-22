@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\Controller\AbstractApiController;
 use App\Entity\User;
 use App\Security\UserAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +16,9 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterfac
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class SecurityController extends AbstractController
+class SecurityController extends AbstractApiController
 {
     /**
      * @Route("/api/test/login/{id}", name="test_security_login")
@@ -28,13 +29,14 @@ class SecurityController extends AbstractController
         EntityManagerInterface $em,
         AuthenticationManagerInterface $authenticationManager,
         TokenStorageInterface $tokenStorage,
-        UserAuthenticator $authenticator
-    ): Response {
+        UserAuthenticator $authenticator,
+        EventDispatcherInterface $dispatcher
+    ): JsonResponse {
         /** @var User $user */
         $user = $em->find(User::class, $id);
 
-        if (empty($user)) {
-            return new JsonResponse(['user not found'], 404);
+        if ($user === null) {
+            return $this->jsonError(404, 'user not found');
         }
 
         $authenticatedToken = $authenticator->createAuthenticatedToken($user, 'main');
@@ -43,7 +45,7 @@ class SecurityController extends AbstractController
 
         // Fire the login event manually
         $event = new InteractiveLoginEvent($request, $authenticatedToken);
-        $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
+        $dispatcher->dispatch('security.interactive_login', $event);
 
         $response = [
             'status' => 'success',
@@ -51,15 +53,10 @@ class SecurityController extends AbstractController
             'user'   => $this->serializeUser($user),
         ];
 
-        return new JsonResponse(['response' => $response]);
+        return $this->jsonResponse($response);
     }
 
     /**
-     * @param User $user
-     * @param bool $forcePassport
-     *
-     * @return array
-     *
      * @todo вынести в сервис
      */
     protected function serializeUser(User $user, bool $forcePassport = false): array

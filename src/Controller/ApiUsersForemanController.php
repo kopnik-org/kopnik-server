@@ -9,7 +9,6 @@ use App\Event\UserEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -57,7 +56,7 @@ class ApiUsersForemanController extends AbstractApiController
 
         $dispatcher->dispatch($user, UserEvent::FOREMAN_REQUEST);
 
-        return $this->json(true);
+        return $this->jsonResponse(true);
     }
 
     /**
@@ -79,7 +78,7 @@ class ApiUsersForemanController extends AbstractApiController
             $response[] = $this->serializeUser($foremanRequest);
         }
 
-        return $this->json($response);
+        return $this->jsonResponse($response);
     }
 
     /**
@@ -119,7 +118,7 @@ class ApiUsersForemanController extends AbstractApiController
             return $this->jsonError(1000 + 404, 'User не найден');
         }
 
-        return $this->json(true);
+        return $this->jsonResponse(true);
     }
 
     /**
@@ -159,7 +158,7 @@ class ApiUsersForemanController extends AbstractApiController
             return $this->jsonError(1000 + 404, 'User не найден');
         }
 
-        return $this->json(true);
+        return $this->jsonResponse(true);
     }
 
     /**
@@ -182,7 +181,7 @@ class ApiUsersForemanController extends AbstractApiController
         /** @var User $user */
         $this->user = $user = $this->getUser();
 
-        return $this->json(true);
+        return $this->jsonResponse(true);
     }
 
     /**
@@ -209,7 +208,7 @@ class ApiUsersForemanController extends AbstractApiController
             $response[] = $this->serializeUser($subordinatesUser);
         }
 
-        return $this->json($response);
+        return $this->jsonResponse($response);
     }
 
     /**
@@ -228,7 +227,7 @@ class ApiUsersForemanController extends AbstractApiController
         /** @var User $user */
         $this->user = $user = $this->getUser();
 
-        return $this->json(true);
+        return $this->jsonResponse(true);
     }
 
     /**
@@ -254,10 +253,10 @@ class ApiUsersForemanController extends AbstractApiController
         $foreman = $user->getForeman();
 
         if ($foreman) {
-            return $this->json($this->serializeUser($foreman));
+            return $this->jsonResponse($this->serializeUser($foreman));
         }
 
-        return $this->json(null);
+        return $this->jsonResponse(null);
     }
 
     /**
@@ -277,6 +276,6 @@ class ApiUsersForemanController extends AbstractApiController
         /** @var User $user */
         $this->user = $user = $this->getUser();
 
-        return $this->json(true);
+        return $this->jsonResponse(true);
     }
 }

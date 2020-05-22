@@ -49,7 +49,7 @@ class DefaultController extends AbstractApiController
         ]);
         $application->run($input, $output);
 
-        return $this->json(['output' => $output->fetch()]);
+        return $this->jsonResponse(['output' => $output->fetch()]);
     }
 
     /**
@@ -138,6 +138,6 @@ class DefaultController extends AbstractApiController
             return $this->jsonError($e->getCode(), $e->getMessage());
         }
 
-        return $this->json($user->getId());
+        return $this->jsonResponse($user->getId());
     }
 }

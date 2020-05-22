@@ -16,14 +16,8 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class OAuthProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
-    /** @var EntityManagerInterface */
     protected $em;
 
-    /**
-     * OAuthProvider constructor.
-     *
-     * @param EntityManagerInterface $em
-     */
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
