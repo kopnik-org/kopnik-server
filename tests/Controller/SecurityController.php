@@ -79,7 +79,7 @@ class SecurityController extends AbstractApiController
             'role' => $user->getRole(),
             'isWitness' => $user->isWitness(),
             'status' => $user->getStatus(),
-            'passport' => ($this->user->getId() == $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
+            'passport' => $user->getPassportCode(),
             'photo' => $user->getPhoto(),
             'smallPhoto' => $user->getPhoto(),
         ];
