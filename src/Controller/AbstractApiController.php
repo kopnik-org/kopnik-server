@@ -42,6 +42,7 @@ class AbstractApiController extends AbstractController
             'location' => $location,
             'rank' => $user->getRank(),
             'role' => $user->getRole(),
+            'isWitness' => $user->isWitness(),
             'status' => $user->getStatus(),
             'passport' => ($this->user->getId() == $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
             'photo' => $user->getPhoto(),
