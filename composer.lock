@@ -95,12 +95,6 @@
                 "brick",
                 "math"
             ],
-            "funding": [
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/brick/math",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-04-15T15:59:35+00:00"
         },
         {
@@ -652,16 +646,6 @@
                 "ssl",
                 "tls"
             ],
-            "funding": [
-                {
-                    "url": "https://packagist.com",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-04-08T08:27:21+00:00"
         },
         {
@@ -1137,20 +1121,6 @@
                 "sqlserver",
                 "sqlsrv"
             ],
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fdbal",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-04-20T17:19:26+00:00"
         },
         {
@@ -1242,20 +1212,6 @@
                 "dbal",
                 "orm",
                 "persistence"
-            ],
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fdoctrine-bundle",
-                    "type": "tidelift"
-                }
             ],
             "time": "2020-04-23T10:52:09+00:00"
         },
@@ -1777,20 +1733,6 @@
                 "database",
                 "orm"
             ],
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine/orm",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-03-19T06:41:02+00:00"
         },
         {
@@ -1873,20 +1815,6 @@
                 "odm",
                 "orm",
                 "persistence"
-            ],
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fpersistence",
-                    "type": "tidelift"
-                }
             ],
             "time": "2020-03-21T15:13:52+00:00"
         },
@@ -2636,16 +2564,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.68",
+            "version": "1.0.69",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "3e4198372276ec99ac3409a21d7c9d1ced9026e4"
+                "reference": "7106f78428a344bc4f643c233a94e48795f10967"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/3e4198372276ec99ac3409a21d7c9d1ced9026e4",
-                "reference": "3e4198372276ec99ac3409a21d7c9d1ced9026e4",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/7106f78428a344bc4f643c233a94e48795f10967",
+                "reference": "7106f78428a344bc4f643c233a94e48795f10967",
                 "shasum": ""
             },
             "require": {
@@ -2722,7 +2650,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2020-05-12T20:33:44+00:00"
+            "time": "2020-05-18T15:13:39+00:00"
         },
         {
             "name": "maxmind-db/reader",
@@ -4342,12 +4270,6 @@
                 "identifier",
                 "uuid"
             ],
-            "funding": [
-                {
-                    "url": "https://github.com/ramsey",
-                    "type": "github"
-                }
-            ],
             "time": "2020-03-29T20:13:32+00:00"
         },
         {
@@ -5060,20 +4982,6 @@
                 "MIT"
             ],
             "description": "A debug pack for Symfony projects",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-04-07T10:08:51+00:00"
         },
         {
@@ -5683,32 +5591,32 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.6.3",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "89999fdaad52cab14637709f2d2ce25835a051e6"
+                "reference": "d606fabffa3547a61632bcf3b3bb677e79475449"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/89999fdaad52cab14637709f2d2ce25835a051e6",
-                "reference": "89999fdaad52cab14637709f2d2ce25835a051e6",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/d606fabffa3547a61632bcf3b3bb677e79475449",
+                "reference": "d606fabffa3547a61632bcf3b3bb677e79475449",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.0",
-                "php": "^7.0"
+                "php": ">=7.1"
             },
             "require-dev": {
                 "composer/composer": "^1.0.2",
-                "symfony/dotenv": "^3.4|^4.0|^5.0",
-                "symfony/phpunit-bridge": "^3.4.19|^4.1.8|^5.0",
-                "symfony/process": "^2.7|^3.0|^4.0|^5.0"
+                "symfony/dotenv": "^4.4|^5.0",
+                "symfony/phpunit-bridge": "^4.4|^5.0",
+                "symfony/process": "^4.4|^5.0"
             },
             "type": "composer-plugin",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.5-dev"
+                    "dev-master": "1.7-dev"
                 },
                 "class": "Symfony\\Flex\\Flex"
             },
@@ -5742,7 +5650,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-09T12:10:32+00:00"
+            "time": "2020-05-21T12:14:09+00:00"
         },
         {
             "name": "symfony/form",
@@ -9183,12 +9091,6 @@
                 "orm",
                 "symfony"
             ],
-            "funding": [
-                {
-                    "url": "https://github.com/theofidry",
-                    "type": "github"
-                }
-            ],
             "time": "2020-03-15T10:07:54+00:00"
         },
         {
@@ -9241,22 +9143,22 @@
         },
         {
             "name": "nelmio/alice",
-            "version": "v3.6.0",
+            "version": "v3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/alice.git",
-                "reference": "1cfaca8e8c798796b3dfe1f55e4e25dee965ffb6"
+                "reference": "1cc70b40f0f66e8cd4d39dc554fcb5f757e25c2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/alice/zipball/1cfaca8e8c798796b3dfe1f55e4e25dee965ffb6",
-                "reference": "1cfaca8e8c798796b3dfe1f55e4e25dee965ffb6",
+                "url": "https://api.github.com/repos/nelmio/alice/zipball/1cc70b40f0f66e8cd4d39dc554fcb5f757e25c2c",
+                "reference": "1cc70b40f0f66e8cd4d39dc554fcb5f757e25c2c",
                 "shasum": ""
             },
             "require": {
                 "fzaninotto/faker": "^1.6",
                 "myclabs/deep-copy": "^1.5.2",
-                "php": "^7.1",
+                "php": "^7.3",
                 "sebastian/comparator": "^3.0 || ^4.0",
                 "symfony/property-access": "^2.8 || ^3.4 || ^4.0 || ^5.0",
                 "symfony/yaml": "^2.8 || ^3.4 || ^4.0 || ^5.0"
@@ -9268,8 +9170,9 @@
                 "bamarni/composer-bin-plugin": "^1.1.0",
                 "php-mock/php-mock": "^2.0",
                 "phpspec/prophecy": "^1.6",
-                "phpunit/phpunit": "^7.0 || ^8.5",
-                "symfony/phpunit-bridge": "^3.4.5 || ^4.0.5 || ^5.0",
+                "phpspec/prophecy-phpunit": "^2.0",
+                "phpunit/phpunit": "^8.5.4 || ^9.0",
+                "symfony/phpunit-bridge": "^5.0",
                 "symfony/var-dumper": "^3.4 || ^4.0 || ^5.0"
             },
             "suggest": {
@@ -9317,7 +9220,13 @@
                 "faker",
                 "test"
             ],
-            "time": "2020-03-08T23:24:35+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/theofidry",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-05-16T20:51:02+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -9964,16 +9873,6 @@
                 "phpunit",
                 "testing",
                 "xunit"
-            ],
-            "funding": [
-                {
-                    "url": "https://phpunit.de/donate.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/sebastianbergmann",
-                    "type": "github"
-                }
             ],
             "time": "2020-04-23T04:39:42+00:00"
         },
