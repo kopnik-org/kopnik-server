@@ -21,6 +21,8 @@ services:
             APP_ENV: test
             APP_DEBUG: 1
             DATABASE_URL: 'pgsql://kopnik_test:1234@db-test:5432/kopnik_test'
+            XDEBUG_CONFIG: "remote_host=192.168.0.101 remote_enable=1"
+            PHP_IDE_CONFIG: "serverName=Docker"
 #        depends_on:
 #            - db-test
     db-test:
