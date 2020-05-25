@@ -116,7 +116,7 @@ class RequestSubscriber implements EventSubscriberInterface
         if (
             $event->getRequest()->get('_route') and
             (
-                strpos($event->getRequest()->get('_route'), 'api_users_update') === 0
+                strpos($event->getRequest()->get('_route'), 'api_users_update_profile') === 0
                 //or strpos($event->getRequest()->get('_route'), 'api_users_bla_bla__') === 0
             )
             and !$user->isAllowMessagesFromCommunity()

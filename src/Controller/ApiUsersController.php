@@ -25,9 +25,9 @@ class ApiUsersController extends AbstractApiController
     /**
      * Обновить своего (текущего) пользователя. Меняет статус пользователя на ОЖИДАЕТ ЗАВЕРЕНИЯ.
      *
-     * @Route("/update", methods={"POST"}, name="api_users_update")
+     * @Route("/updateProfile", methods={"POST"}, name="api_users_update_profile")
      */
-    public function usersUpdate(Request $request, KernelInterface $kernel, EntityManagerInterface $em, $vkCallbackApiAccessToken, $vkCommunityId): JsonResponse
+    public function usersProfile(Request $request, KernelInterface $kernel, EntityManagerInterface $em, $vkCallbackApiAccessToken, $vkCommunityId): JsonResponse
     {
         $user = $this->getUser();
         $this->user = $user;
