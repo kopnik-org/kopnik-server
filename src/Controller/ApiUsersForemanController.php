@@ -52,6 +52,7 @@ class ApiUsersForemanController extends AbstractApiController
 
         $user->setForemanRequest($foreman);
 
+        $em->persist($user);
         $em->flush();
 
         $dispatcher->dispatch($user, UserEvent::FOREMAN_REQUEST);
