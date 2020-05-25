@@ -30,6 +30,8 @@ class AbstractApiController extends AbstractController
         $location->lat = $user->getLatitude();
         $location->lng = $user->getLongitude();
 
+        $foremanRequestId = $user->getForemanRequest() ? $user->getForemanRequest()->getId() : null;
+
         return [
             'id' => $user->getId(),
             'firstName' => $user->getFirstName(),
@@ -44,9 +46,11 @@ class AbstractApiController extends AbstractController
             'role' => $user->getRole(),
             'isWitness' => $user->isWitness(),
             'status' => $user->getStatus(),
-            'passport' => ($this->user->getId() == $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
             'photo' => $user->getPhoto(),
             'smallPhoto' => $user->getPhoto(),
+
+            'passport' => ($this->user->getId() == $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
+            'foremanRequest_id' => ($this->user->getId() == $user->getId()) ? $foremanRequestId : null,
         ];
     }
 

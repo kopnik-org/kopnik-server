@@ -65,6 +65,8 @@ class SecurityController extends AbstractApiController
         $location->lat = $user->getLatitude();
         $location->lng = $user->getLongitude();
 
+        $foremanRequestId = $user->getForemanRequest() ? $user->getForemanRequest()->getId() : null;
+
         return [
             'id' => $user->getId(),
             'firstName' => $user->getFirstName(),
@@ -82,6 +84,7 @@ class SecurityController extends AbstractApiController
             'passport' => $user->getPassportCode(),
             'photo' => $user->getPhoto(),
             'smallPhoto' => $user->getPhoto(),
+            'foremanRequest_id' => $foremanRequestId,
         ];
     }
 }
