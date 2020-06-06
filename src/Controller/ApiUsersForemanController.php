@@ -41,7 +41,7 @@ class ApiUsersForemanController extends AbstractApiController
                 return $this->jsonError(1000 + 404, 'Старшина не найден');
             }
 
-            if ($foreman->getRole() != User::ROLE_KOPNIK or $foreman->getRole() != User::ROLE_DANILOV_KOPNIK) {
+            if ($foreman->getRole() != User::ROLE_KOPNIK and $foreman->getRole() != User::ROLE_DANILOV_KOPNIK) {
                 return $this->jsonError(1000 + 510, 'Старшина не Копник и не Копник по Данилову');
             }
 
