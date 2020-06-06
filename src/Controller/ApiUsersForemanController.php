@@ -85,6 +85,8 @@ class ApiUsersForemanController extends AbstractApiController
     /**
      * Одобрить заявку другого пользователя на выбор текущего пользователя старшиной.
      *
+     * Вызывает старшина, в качестве аргумента приходит ид претендента на подчинённого.
+     *
      * @Route("/confirmForemanRequest", methods={"POST"}, name="api_users_confirm_foreman_request")
      */
     public function confirmForemanRequest(Request $request, EntityManagerInterface $em, EventDispatcherInterface $dispatcher): JsonResponse
@@ -100,14 +102,14 @@ class ApiUsersForemanController extends AbstractApiController
         $challenger = $input['id'] ?? null; // Идентификатор пользователя, подавшего заявку
 
         if ($challenger) {
-            $challenger = $em->getRepository(User::class)->findOneBy(['id' => $challenger]);
+            $challenger = $em->getRepository(User::class)->find((int) $challenger);
 
             if (empty($challenger)) {
-                return $this->jsonError(1000 + 404, 'User не найден');
+                return $this->jsonError(1000 + 404, 'User подавший заявку не найден');
             }
 
             if ($challenger->getForemanRequest() == $user) {
-                $user->setForeman($challenger);
+                $challenger->setForeman($user);
 
                 $em->flush();
 
@@ -116,7 +118,7 @@ class ApiUsersForemanController extends AbstractApiController
                 return $this->jsonError(1000 + 511, 'Неверная заявка на выбор старшины');
             }
         } else {
-            return $this->jsonError(1000 + 404, 'User не найден');
+            return $this->jsonError(1000 + 404, 'User подавший заявку не указан');
         }
 
         return $this->jsonResponse(true);
