@@ -79,6 +79,7 @@ class DefaultController extends AbstractApiController
             // only test
             'photo'         => $input['photo'] ?? null,
             'smallPhoto'    => $input['smallPhoto'] ?? null,
+            'foremanRequest_id' => $input['foremanRequest_id'] ?? null,
         ];
 
         try {
@@ -116,11 +117,21 @@ class DefaultController extends AbstractApiController
         if ($data['witness_id']) {
             $witness = $em->getRepository(User::class)->find((int) $data['witness_id']);
 
-            if (!$witness) {
+            if ( ! $witness) {
                 return $this->jsonError(self::ERROR_NOT_VALID, 'Указан не существующий witness_id');
             }
 
             $user->setWitness($witness);
+        }
+
+        if ($data['foremanRequest_id']) {
+            $foreman = $em->getRepository(User::class)->find((int) $data['foremanRequest_id']);
+
+            if ( ! $foreman) {
+                return $this->jsonError(self::ERROR_NOT_VALID, 'Указан не существующий foremanRequest_id');
+            }
+
+            $user->setForemanRequest($foreman);
         }
 
         $userOauth = new UserOauth();
