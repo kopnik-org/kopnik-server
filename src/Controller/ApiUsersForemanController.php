@@ -149,7 +149,7 @@ class ApiUsersForemanController extends AbstractApiController
             }
 
             if ($challenger->getForemanRequest() == $user) {
-                $user->setForemanRequest(null);
+                $challenger->setForemanRequest(null);
 
                 $em->flush();
 
