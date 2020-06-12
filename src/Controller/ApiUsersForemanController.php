@@ -204,15 +204,13 @@ class ApiUsersForemanController extends AbstractApiController
             }
         } else {
             // Пользователь отказался от старшины
-            if ($user->getForeman() === null) {
-                return $this->jsonError(1000 + 511, 'У вас нет старшины. Отказ невозможен.');
+            if ($user->getForeman()) {
+                $dispatcher->dispatch($user, UserEvent::FOREMAN_RESET);
+
+                $user->setForeman(null);
+
+                $em->flush();
             }
-
-            $dispatcher->dispatch($user, UserEvent::FOREMAN_RESET);
-
-            $user->setForeman(null);
-
-            $em->flush();
         }
 
         return $this->jsonResponse(true);
