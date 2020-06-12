@@ -18,6 +18,12 @@ class UserEvent extends Event
     // Отклонить заявку другого пользователя на выбор текущего пользователя старшиной.
     const FOREMAN_DECLINE = 'app.user_foreman_decline';
 
+    // Пользователь отказался от старшины
+    const FOREMAN_RESET = 'app.user_foreman_reset';
+
+    // Старшина отказался от подчинённого
+    const SUBORDINATE_RESET = 'app.user_subordinate_reset';
+
     protected $user;
 
     public function __construct(User $user)

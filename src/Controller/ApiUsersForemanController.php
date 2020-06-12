@@ -172,10 +172,8 @@ class ApiUsersForemanController extends AbstractApiController
      * Если параметр отсутствует, метод имеет следующеее значение: текущий пользователь выходит из подчиненния своего текущего старшины.
      *
      * @Route("/resetForeman", methods={"POST"}, name="api_users_reset_foreman")
-     *
-     * @todo
      */
-    public function resetForeman(Request $request, EntityManagerInterface $em): JsonResponse
+    public function resetForeman(Request $request, EventDispatcherInterface $dispatcher, EntityManagerInterface $em): JsonResponse
     {
         if (empty($this->getUser())) {
             return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
@@ -183,6 +181,39 @@ class ApiUsersForemanController extends AbstractApiController
 
         /** @var User $user */
         $this->user = $user = $this->getUser();
+
+        $input = json_decode($request->getContent(), true);
+        $subordinate = $input['id'] ?? null; // Идентификатор подчинённого пользователя
+
+        if ($subordinate) {
+            $subordinate = $em->getRepository(User::class)->find((int) $subordinate);
+
+            if ($subordinate === null) {
+                return $this->jsonError(1000 + 404, 'Указан не существующий юзер для сброса старшины.');
+            }
+
+            // Старшина исключает подчинённого
+            if ($subordinate->getForeman() == $user) {
+                $dispatcher->dispatch($subordinate, UserEvent::SUBORDINATE_RESET);
+
+                $subordinate->setForeman(null);
+
+                $em->flush();
+            } else {
+                return $this->jsonError(1000 + 511, 'Неверная заявка на выбор старшины');
+            }
+        } else {
+            // Пользователь отказался от старшины
+            if ($user->getForeman() === null) {
+                return $this->jsonError(1000 + 511, 'У вас нет старшины. Отказ невозможен.');
+            }
+
+            $dispatcher->dispatch($user, UserEvent::FOREMAN_RESET);
+
+            $user->setForeman(null);
+
+            $em->flush();
+        }
 
         return $this->jsonResponse(true);
     }
@@ -215,25 +246,6 @@ class ApiUsersForemanController extends AbstractApiController
     }
 
     /**
-     * Получить подчиненных пользователя включая подчиненных прямых подчиненных. Если параметр id===null, метод работает для текущего пользователя.
-     *
-     * @Route("/getAllSubordinates", methods={"GET"}, name="api_users_get_all_subordinates")
-     *
-     * @todo
-     */
-    public function getAllSubordinates(Request $request, EntityManagerInterface $em): JsonResponse
-    {
-        if (empty($this->getUser())) {
-            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
-        }
-
-        /** @var User $user */
-        $this->user = $user = $this->getUser();
-
-        return $this->jsonResponse(true);
-    }
-
-    /**
      * Получить старшину пользователя. Если параметр id===null, метод работает для текущего пльзователя.
      *
      * @Route("/getForeman", methods={"GET"}, name="api_users_get_foreman")
@@ -260,6 +272,25 @@ class ApiUsersForemanController extends AbstractApiController
         }
 
         return $this->jsonResponse(null);
+    }
+
+    /**
+     * Получить подчиненных пользователя включая подчиненных прямых подчиненных. Если параметр id===null, метод работает для текущего пользователя.
+     *
+     * @Route("/getAllSubordinates", methods={"GET"}, name="api_users_get_all_subordinates")
+     *
+     * @todo
+     */
+    public function getAllSubordinates(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (empty($this->getUser())) {
+            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
+        }
+
+        /** @var User $user */
+        $this->user = $user = $this->getUser();
+
+        return $this->jsonResponse(true);
     }
 
     /**

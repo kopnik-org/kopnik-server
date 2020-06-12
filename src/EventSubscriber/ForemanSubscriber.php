@@ -21,9 +21,11 @@ class ForemanSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            UserEvent::FOREMAN_REQUEST  => 'sendNotifyToForemanRequest',
-            UserEvent::FOREMAN_CONFIRM  => 'sendNotifyToForemanConfirm',
-            UserEvent::FOREMAN_DECLINE  => 'sendNotifyToForemanDecline',
+            UserEvent::FOREMAN_REQUEST   => 'sendNotifyToForemanRequest',
+            UserEvent::FOREMAN_CONFIRM   => 'sendNotifyToForemanConfirm',
+            UserEvent::FOREMAN_DECLINE   => 'sendNotifyToForemanDecline',
+            UserEvent::FOREMAN_RESET     => 'sendNotifyToForemanReset',
+            UserEvent::SUBORDINATE_RESET => 'sendNotifyToSubordinateReset',
         ];
     }
 
@@ -37,11 +39,29 @@ class ForemanSubscriber implements EventSubscriberInterface
 
     public function sendNotifyToForemanConfirm(User $user): void
     {
-        $this->vk->sendMessage($user, 'Ваша заявка на старшину принята, ваш старшина' . (string) $user->getForeman());
+        $this->vk->sendMessage($user, 'Ваша заявка на старшину принята, ваш старшина ' . (string) $user->getForeman());
     }
 
     public function sendNotifyToForemanDecline(User $user): void
     {
         $this->vk->sendMessage($user, 'Ваша заявка на старшину отклонена');
+    }
+
+    public function sendNotifyToForemanReset(User $user): void
+    {
+        $foreman = $user->getForeman();
+
+        if ($foreman) {
+            $this->vk->sendMessage($foreman, sprintf('Пользователь %s исключил вас из старшины', (string) $user));
+        }
+    }
+
+    public function sendNotifyToSubordinateReset(User $user): void
+    {
+        $foreman = $user->getForeman();
+
+        if ($foreman) {
+            $this->vk->sendMessage($user, sprintf('Старшина %s исключил вас из подчинённых', (string) $user->getForeman()));
+        }
     }
 }
