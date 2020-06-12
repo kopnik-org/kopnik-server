@@ -200,7 +200,7 @@ class ApiUsersForemanController extends AbstractApiController
 
                 $em->flush();
             } else {
-                return $this->jsonError(1000 + 511, 'Неверная заявка на выбор старшины');
+                return $this->jsonError(1000 + 512, 'Неверная заявка на выбор старшины');
             }
         } else {
             // Пользователь отказался от старшины
