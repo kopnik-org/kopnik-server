@@ -47,13 +47,15 @@ class SecurityController extends AbstractApiController
         $event = new InteractiveLoginEvent($request, $authenticatedToken);
         $dispatcher->dispatch($event, 'security.interactive_login');
 
+        /*
         $response = [
             'status' => 'success',
             'message' => 'test login success',
             'user'   => $this->serializeUser($user),
         ];
+        */
 
-        return $this->jsonResponse($response);
+        return $this->jsonResponse('ok');
     }
 
     /**
