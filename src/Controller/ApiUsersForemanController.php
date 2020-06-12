@@ -31,6 +31,13 @@ class ApiUsersForemanController extends AbstractApiController
         /** @var User $user */
         $this->user = $user = $this->getUser();
 
+        if ($user->getStatus() === User::STATUS_NEW
+            or $user->getStatus() === User::STATUS_PENDING
+            or $user->getStatus() === User::STATUS_DECLINE
+        ) {
+            return $this->jsonError(1000 + 403, 'Нет доступа к выбору старшины');
+        }
+
         $input = json_decode($request->getContent(), true);
         $foreman = $input['id'] ?? null;
 
