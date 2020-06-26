@@ -49,8 +49,8 @@ class AbstractApiController extends AbstractController
             'photo' => $user->getPhoto(),
             'smallPhoto' => $user->getPhoto(),
 
-            'passport' => ($this->user->getId() == $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
-            'foremanRequest_id' => ($this->user->getId() == $user->getId()) ? $foremanRequestId : null,
+            'passport' => ($this->user->getId() === $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
+            'foremanRequest_id' => ($this->user->getId() === $user->getId()) ? $foremanRequestId : null,
         ];
     }
 
