@@ -10,6 +10,8 @@ services:
             - php-test
         ports:
             - "${WEB_PORT_TEST}:82"
+        networks:
+            - test
     php-test:
         build:
             context: ./.docker/test
@@ -21,10 +23,12 @@ services:
             APP_ENV: test
             APP_DEBUG: 1
             DATABASE_URL: 'pgsql://kopnik_test:1234@db-test:5432/kopnik_test'
-            XDEBUG_CONFIG: "remote_host=192.168.0.101 remote_enable=1"
+            XDEBUG_CONFIG: "remote_host=192.168.0.102 remote_enable=1"
             PHP_IDE_CONFIG: "serverName=Docker"
 #        depends_on:
 #            - db-test
+        networks:
+            - test
     db-test:
         build:
             context: ./.docker/test
@@ -38,6 +42,13 @@ services:
             - "54333:5432"
         volumes:
             - kopnik-db-test:/var/lib/postgresql/data
+        networks:
+            - test
 volumes:
     composer:
     kopnik-db-test:
+networks:
+    # separate network other than docker-compose.yml
+    test:
+        # Use a custom driver
+#        driver: custom-driver-1
