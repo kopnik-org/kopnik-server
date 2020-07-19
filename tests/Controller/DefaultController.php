@@ -109,7 +109,7 @@ class DefaultController extends AbstractApiController
             ->setLongitude($data['longitude'])
             ->setLocale($data['locale'])
             ->setIsWitness((bool) $data['is_witness'])
-            ->setRole($data['role'])
+            ->setKopnikRole($data['role'])
             ->setStatus($data['status'])
             ->setPhoto($data['photo'])
             ->setSmallPhoto($data['smallPhoto'])

@@ -39,7 +39,7 @@ class DefaultController extends AbstractController
     /**
      * Route("/backend/stats/", name="stats")
      */
-    public function stats(EntityManagerInterface $em, $vkCommunityId, $vkCallbackApiAccessToken): Response
+    public function stats(EntityManagerInterface $em): Response
     {
         $ur = $em->getRepository(User::class);
 

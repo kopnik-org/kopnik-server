@@ -7,12 +7,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\UserOauth;
 use App\Form\Type\UserFormType;
+use App\Service\VkService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use VK\Client\VKApiClient;
 use VK\Exceptions\Api\VKApiFloodException;
 use VK\Exceptions\VKApiException;
 use VK\Exceptions\VKClientException;
@@ -27,7 +27,7 @@ class ApiUsersController extends AbstractApiController
      *
      * @Route("/updateProfile", methods={"POST"}, name="api_users_update_profile")
      */
-    public function usersProfile(Request $request, KernelInterface $kernel, EntityManagerInterface $em, $vkCallbackApiAccessToken, $vkCommunityId): JsonResponse
+    public function usersProfile(Request $request, KernelInterface $kernel, EntityManagerInterface $em, VkService $vk): JsonResponse
     {
         $user = $this->getUser();
         $this->user = $user;
@@ -79,7 +79,7 @@ class ApiUsersController extends AbstractApiController
 
         if ($form->isValid()) {
             try {
-                $vk = new VKApiClient();
+                //$vk = new VKApiClient(); // @todo remove
                 /** @var User $user */
                 $user = $this->getUser();
 
@@ -91,22 +91,35 @@ class ApiUsersController extends AbstractApiController
                     $invite_chat_link = $user->getAssuranceChatInviteLink();
                 } else {
                     // 1) Создать групповой чат с заверителем и новобранцем
+                    $chat_id = $vk->createChat($user, $witness);
+                    /*
                     $chat_id = $vk->messages()->createChat($vkCallbackApiAccessToken, [
                         'user_ids' => "{$user->getVkIdentifier()},{$witness->getVkIdentifier()}",
                         'title' => "{$user} - Заверение пользователя в Копнике",
                         'group_id' => $vkCommunityId,
                         //'v' => '5.103'
                     ]);
+                    */
 
                     // 2) Получить ссылку приглашения в чат
+                    $invite_chat_link = $vk->getInviteLink($chat_id);
+                    /*
                     $invite_chat_link = $vk->messages()->getInviteLink($vkCallbackApiAccessToken, [
                         'peer_id' => 2000000000 + $chat_id,
                         'group_id' => $vkCommunityId,
                         'reset' => 0,
                     ])['link'];
+                    */
                 }
 
                 // 3) Написать ссылку-приглашение в чат новобранцу
+                $message = $user->getStatus() == User::STATUS_NEW ?
+                    "Добро пожаловать в kopnik-org! Для заверения, пожалуйста, перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта." :
+                    "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.";
+
+                $result = $vk->sendMessage($user, $message);
+
+                /*
                 $result = $vk->messages()->send($vkCallbackApiAccessToken, [
                     'user_id' => $user->getVkIdentifier(),
                     // 'domain' => 'some_user_name',
@@ -115,8 +128,16 @@ class ApiUsersController extends AbstractApiController
                         "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.",
                     'random_id' => random_int(100, 999999999),
                 ]);
+                */
 
                 // 4) Написать ссылку-приглашение в чат заверителю
+                $message = $user->getStatus() == User::STATUS_NEW ?
+                    "Зарегистрировался новый пользователь {$user} ссылка на чат $invite_chat_link" :
+                    "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link";
+
+                $result = $vk->sendMessage($user, $message);
+
+                /*
                 $result = $vk->messages()->send($vkCallbackApiAccessToken, [
                     'user_id' => $witness->getVkIdentifier(),
                     // 'domain' => 'some_user_name',
@@ -125,6 +146,7 @@ class ApiUsersController extends AbstractApiController
                         "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link",
                     'random_id' => random_int(100, 999999999),
                 ]);
+                */
 
                 // 5) Сохранить ссылку-приглашение в профиле юзера
                 $user->setAssuranceChatInviteLink($invite_chat_link);
@@ -208,7 +230,7 @@ class ApiUsersController extends AbstractApiController
      *
      * @Route("/pending/update", methods={"POST"}, name="api_users_pending_update")
      */
-    public function usersPendingUpdate(Request $request, EntityManagerInterface $em, $vkCallbackApiAccessToken): JsonResponse
+    public function usersPendingUpdate(Request $request, EntityManagerInterface $em, VkService $vk): JsonResponse
     {
         $this->user = $this->getUser();
 
@@ -257,12 +279,7 @@ class ApiUsersController extends AbstractApiController
                     $message = 'Заявка на вступление в kopnik.org одобрена.';
                 }
 
-                $vk = new VKApiClient();
-                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
-                    'user_id' => $userPending->getVkIdentifier(),
-                    'message' => $message,
-                    'random_id' => random_int(100, 999999999),
-                ]);
+                $result = $vk->sendMessage($userPending, $message);
             } catch (VKApiFloodException $e) {
                 return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             } catch (VKApiException $e) {
@@ -280,7 +297,7 @@ class ApiUsersController extends AbstractApiController
     /**
      * @Route("/isMessagesFromGroupAllowed", methods={"GET"}, name="api_users_is_messages_from_group_allowed")
      */
-    public function isMessagesFromGroupAllowed($vkCommunityId, $vkCallbackApiAccessToken): JsonResponse
+    public function isMessagesFromGroupAllowed(VkService $vk): JsonResponse
     {
         $this->user = $this->getUser();
 
@@ -289,12 +306,7 @@ class ApiUsersController extends AbstractApiController
         }
 
         try {
-            $vk = new VKApiClient();
-
-            $result = $vk->messages()->isMessagesFromGroupAllowed($vkCallbackApiAccessToken, [
-                'user_id'  => $this->user->getVkIdentifier(),
-                'group_id' => $vkCommunityId,
-            ]);
+            $result = $vk->isMessagesFromGroupAllowed($this->user);
 
             if (isset($result['is_allowed'])) {
                 $response = $result['is_allowed'] ? true : false;

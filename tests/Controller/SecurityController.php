@@ -80,7 +80,7 @@ class SecurityController extends AbstractApiController
             'birthyear' => $user->getBirthYear(),
             'location' => $location,
             'rank' => $user->getRank(),
-            'role' => $user->getRole(),
+            'role' => $user->getKopnikRole(),
             'isWitness' => $user->isWitness(),
             'status' => $user->getStatus(),
             'passport' => $user->getPassportCode(),

@@ -5,12 +5,13 @@ build: docker-build
 restart: docker-down docker-up
 restart-build: docker-down docker-build docker-up
 init: docker-down-clear  docker-pull docker-build docker-up composer-install db-schema-drop kopnik-init
-kopnik-init: wait-db db-schema-drop migrations db-fixtures
+kopnik-init: db-schema-drop migrations db-fixtures
+#kopnik-init: wait-db db-schema-drop migrations db-fixtures
 init-db: db-schema-drop migrations db-fixtures
 full-up: up init-db
 
 # test
-test-up: test-docker-down test-docker-up test-composer-install-dev
+test-up: test-docker-down test-docker-up test-composer-install
 test-down: test-docker-down
 test-init-db: test-db-schema-drop test-migrations
 test-full-up: test-up test-init-db
@@ -37,22 +38,19 @@ cli:
 	docker-compose run php bin/console ${ARGS}
 
 composer-install:
-	docker-compose exec php composer install
-
-composer-install-dev:
-	docker-compose exec php composer install
+	docker-compose run php composer install # --no-dev @todo для прода
 
 db-schema-drop:
-	docker-compose exec php bin/console doctrine:schema:drop --force --full-database
+	docker-compose run php bin/console doctrine:schema:drop --force --full-database
 
-wait-db:
-	until docker-compose exec -T db pg_isready --timeout=0 --dbname=kopnik ; do sleep 1 ; done
+#wait-db:
+	#until docker-compose run -T db pg_isready --timeout=0 --dbname=kopnik ; do sleep 1 ; done
 
 migrations:
-	docker-compose exec php php bin/console doctrine:migrations:migrate --no-interaction
+	docker-compose run php php bin/console doctrine:migrations:migrate --no-interaction
 
 db-fixtures:
-	docker-compose exec php php bin/console hautelook:fixtures:load -q
+	docker-compose run php php bin/console hautelook:fixtures:load -q
 
 ready:
 	docker run --rm -v ${PWD}:/app --workdir=/app alpine touch .ready
@@ -63,17 +61,17 @@ test-docker-up:
 test-docker-down:
 	docker-compose -f docker-compose-test.yml down
 
-test-composer-install-dev:
-	docker-compose -f docker-compose-test.yml exec php-test composer install
+test-composer-install:
+	docker-compose -f docker-compose-test.yml run php-test composer install
 
 test-db-schema-drop:
-	docker-compose -f docker-compose-test.yml exec php-test bin/console doctrine:schema:drop --force --full-database
+	docker-compose -f docker-compose-test.yml run php-test bin/console doctrine:schema:drop --force --full-database
 
 test-db-schema-update:
-	docker-compose -f docker-compose-test.yml exec php-test php bin/console doctrine:schema:update --force
+	docker-compose -f docker-compose-test.yml run php-test php bin/console doctrine:schema:update --force
 
 test-migrations:
-	docker-compose -f docker-compose-test.yml exec php-test php bin/console doctrine:migrations:migrate --no-interaction
+	docker-compose -f docker-compose-test.yml run php-test php bin/console doctrine:migrations:migrate --no-interaction
 
 test-db-fixtures:
-	docker-compose -f docker-compose-test.yml exec php-test php bin/console hautelook:fixtures:load -q
+	docker-compose -f docker-compose-test.yml run php-test php bin/console hautelook:fixtures:load -q
