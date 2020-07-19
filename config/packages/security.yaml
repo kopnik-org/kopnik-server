@@ -11,9 +11,11 @@ security:
             id: app.oauth_aware.user_provider.service
     firewalls:
         dev:
+            logout_on_user_change: false
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            logout_on_user_change: false
             provider: hwi
             anonymous: ~
 #            json_login:
