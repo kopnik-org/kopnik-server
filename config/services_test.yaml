@@ -5,3 +5,5 @@ services:
     App\Tests\Controller\:
         resource: '../tests/Controller'
         tags: ['controller.service_arguments']
+
+    App\Service\VkService: 'App\Tests\Service\VkService'

@@ -12,17 +12,17 @@ use VK\Exceptions\Api\VKApiFloodException;
 use VK\Exceptions\VKApiException;
 use VK\Exceptions\VKClientException;
 
+/**
+ * @todo VK\TransportClient\TransportRequestException
+ */
 class VkService
 {
-    protected $isTestEnv;
     protected $vkCallbackApiAccessToken;
     protected $vkCommunityId;
     protected $vk;
 
-    public function __construct(KernelInterface $kernel, $vkCallbackApiAccessToken, $vkCommunityId)
+    public function __construct($vkCallbackApiAccessToken, $vkCommunityId)
     {
-        $this->isTestEnv = $kernel->getEnvironment() === 'test' ? true : false;
-
         $this->vk = new VKApiClient();
         $this->vkCallbackApiAccessToken = $vkCallbackApiAccessToken;
         $this->vkCommunityId = $vkCommunityId;
@@ -50,10 +50,6 @@ class VkService
      */
     public function sendMessage(User $user, string $message)
     {
-        if ($this->isTestEnv) {
-            return;
-        }
-
         return $this->vk->messages()->send($this->vkCallbackApiAccessToken, [
             'user_id' => $user->getVkIdentifier(),
             // 'domain' => 'some_user_name',
@@ -81,10 +77,6 @@ class VkService
 
     public function createChat(User $user, User $witness)
     {
-        if ($this->isTestEnv) {
-            return rand(100, 200);
-        }
-
         return $this->vk->messages()->createChat($this->vkCallbackApiAccessToken, [
             'user_ids' => "{$user->getVkIdentifier()},{$witness->getVkIdentifier()}",
             'title' => "{$user} - Заверение пользователя в Копнике",
@@ -95,10 +87,6 @@ class VkService
 
     public function getInviteLink($chat_id)
     {
-        if ($this->isTestEnv) {
-            return ['link' => '//test/invite/chat/link'];
-        }
-
         return $this->vk->messages()->getInviteLink($this->vkCallbackApiAccessToken, [
             'peer_id' => 2000000000 + $chat_id,
             'group_id' => $this->vkCommunityId,
@@ -108,10 +96,6 @@ class VkService
 
     public function isMessagesFromGroupAllowed(User $user)
     {
-        if ($this->isTestEnv) {
-            return ['is_allowed' => true];
-        }
-
         return $this->vk->messages()->isMessagesFromGroupAllowed($this->vkCallbackApiAccessToken, [
             'user_id'  => $user->getVkIdentifier(),
             'group_id' => $this->vkCommunityId,
