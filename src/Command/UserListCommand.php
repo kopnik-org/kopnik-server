@@ -47,26 +47,12 @@ class UserListCommand extends Command
 
         $rows = [];
         foreach ($users as $user) {
-            $roles = '';
-
-            foreach ($user->getRoles() as $key => $role) {
-                if ($role == 'ROLE_USER') {
-                    $role = '';
-                }
-
-                $roles .= $role;
-
-                if (count($user->getRoles()) > $key + 1) {
-//                    $roles .= "\n";
-                }
-            }
-
             $rows[] = [
                 $user->getId(),
                 $user->__toString(),
                 $user->getVkIdentifier(),
                 $user->getPassportCode(),
-                $roles,
+                $user->getKopnikRole() . ': ' . $user->getKopnikRoleAsText(),
 //                $user->getOauthByProvider('vkontakte')->getAccessToken(),
                 $user->getStatusAsText(),
                 $user->isAllowMessagesFromCommunity() ? 'ДА' : '-',
@@ -77,7 +63,7 @@ class UserListCommand extends Command
         }
 
         //$this->io->table(['id', 'ФИО', 'VK ID', 'VK Access Token', 'Статус', 'Дата регистрации'], $rows);
-        $this->io->table(['id', 'ФИО', 'VK ID', 'Code', 'Role', 'Статус', 'Сообщения ВК', 'Старшина', 'Заверитель', 'Дата регистрации'], $rows);
+        $this->io->table(['id', 'ФИО', 'VK ID', 'Code', 'Kopnik Role', 'Статус', 'Сообщения ВК', 'Старшина', 'Заверитель', 'Дата регистрации'], $rows);
 
         return 0;
     }

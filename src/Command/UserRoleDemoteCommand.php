@@ -84,14 +84,14 @@ class UserRoleDemoteCommand extends Command
             return 0;
         }
 
-        if (!$user->hasRole($role)) {
+        if (!$user->hasKopnikRole($role)) {
             $this->io->warning(sprintf('User "%s" didn\'t have "%s" role.', $username, $role));
 
             return 0;
         }
 
 //        $user->removeRole($role);
-        $user->setRole(0);
+        $user->setKopnikRole(0);
 
         $this->em->flush();
 

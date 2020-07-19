@@ -33,7 +33,7 @@ class UserRolePromoteCommand extends Command
         $this
             ->setDescription('Promotes a user by adding a role')
             ->addArgument('username', InputArgument::REQUIRED, 'The username')
-            ->addArgument('role', InputArgument::OPTIONAL, 'The role')
+            ->addArgument('role', InputArgument::OPTIONAL, 'The Kopnik role')
         ;
     }
 
@@ -55,9 +55,9 @@ class UserRolePromoteCommand extends Command
 
         $role = $input->getArgument('role');
         if (null !== $role) {
-            $this->io->text(' > <info>Role</info>: '.$role);
+            $this->io->text(' > <info>Kopnik Role</info>: '.$role);
         } else {
-            $role = $this->io->ask('Role');
+            $role = $this->io->ask('Kopnik Role');
             $input->setArgument('role', $role);
         }
     }
@@ -76,13 +76,13 @@ class UserRolePromoteCommand extends Command
             return 0;
         }
 
-        if ($user->hasRole($role)) {
+        if ($user->hasKopnikRole($role)) {
             $this->io->warning(sprintf('User "%s" did already have "%s" role.', $username, $role));
 
             return 0;
         }
 
-        $user->setRole((int) $role);
+        $user->setKopnikRole((int) $role);
 
         $this->em->flush();
 

@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          @ORM\Index(columns={"latitude"}),
  *          @ORM\Index(columns={"longitude"}),
  *          @ORM\Index(columns={"rank"}),
- *          @ORM\Index(columns={"role"}),
+ *          @ORM\Index(columns={"kopnik_role"}),
  *          @ORM\Index(columns={"status"}),
  *      },
  * )
@@ -165,7 +165,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="smallint", nullable=false, options={"default":5})
      */
-    protected $role;
+    protected $kopnik_role;
 
     /**
      * Имя
@@ -305,7 +305,7 @@ class User implements UserInterface
         $this->is_allow_messages_from_community = false;
         $this->locale             = 'ru';
         $this->rank               = 1;
-        $this->role               = self::ROLE_STRANGER;
+        $this->kopnik_role        = self::ROLE_STRANGER;
         $this->status             = self::STATUS_NEW;
     }
 
@@ -662,9 +662,11 @@ class User implements UserInterface
      */
     public function getRoles()
     {
+        /*
         if (isset(self::$roles_values[$this->role])) {
             return ['ROLE_USER', self::$roles_values[$this->role]];
         }
+        */
 
         return ['ROLE_USER'];
     }
@@ -922,17 +924,29 @@ class User implements UserInterface
      *
      * @return bool
      */
-    public function hasRole(string $role): bool
+    public function hasKopnikRole(string $role): bool
     {
-        return self::$roles_values[$this->role] == $role ? true : false;
+        return self::$roles_values[$this->kopnik_role] == $role ? true : false;
     }
 
     /**
      * @return int
      */
-    public function getRole(): int
+    public function getKopnikRole(): int
     {
-        return $this->role;
+        return $this->kopnik_role;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getKopnikRoleAsText(): ?string
+    {
+        if ( ! isset(self::$roles_values[$this->kopnik_role])) {
+            return null;
+        }
+
+        return self::$roles_values[$this->kopnik_role];
     }
 
     /**
@@ -940,13 +954,13 @@ class User implements UserInterface
      *
      * @return $this
      */
-    public function setRole(int $role): self
+    public function setKopnikRole(int $role): self
     {
-        if (!isset(self::$roles_values[$role])) {
+        if ( ! isset(self::$roles_values[$role])) {
             $role = self::ROLE_STRANGER;
         }
 
-        $this->role = $role;
+        $this->kopnik_role = $role;
 
         return $this;
     }
