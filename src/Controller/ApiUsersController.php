@@ -280,7 +280,7 @@ class ApiUsersController extends AbstractApiController
                     $message = 'Заявка на вступление в kopnik.org одобрена.';
                 }
 
-                $result = $vk->sendMessageToChat($userPending->setAssuranceChatId(), $message);
+                $result = $vk->sendMessageToChat($userPending->getAssuranceChatId(), $message);
             } catch (VKApiFloodException $e) {
                 return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             } catch (VKApiException $e) {
