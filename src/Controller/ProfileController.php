@@ -17,6 +17,8 @@ use VK\Exceptions\Api\VKApiFloodException;
 use VK\Exceptions\VKApiException;
 
 /**
+ * @deprecated
+ *
  * Route("/backend/profile")
  */
 class ProfileController extends AbstractController
