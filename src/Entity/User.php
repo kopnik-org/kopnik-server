@@ -938,6 +938,14 @@ class User implements UserInterface
     }
 
     /**
+     * Для старых фикстур
+     */
+    public function getRole(): int
+    {
+        return $this->kopnik_role;
+    }
+
+    /**
      * @return string|null
      */
     public function getKopnikRoleAsText(): ?string
@@ -963,6 +971,14 @@ class User implements UserInterface
         $this->kopnik_role = $role;
 
         return $this;
+    }
+
+    /**
+     * Для старых фикстур
+     */
+    public function setRole(int $role): self
+    {
+        return $this->setKopnikRole($role);
     }
 
     /**
