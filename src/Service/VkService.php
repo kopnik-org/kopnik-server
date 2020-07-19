@@ -75,6 +75,16 @@ class VkService
         */
     }
 
+    public function sendMessageToChat($chat_id, string $message)
+    {
+        return $this->vk->messages()->send($this->vkCallbackApiAccessToken, [
+            // 'domain' => 'some_user_name',
+            'chat_id' => $chat_id,
+            'message' => $message,
+            'random_id' => \random_int(100, 999999999),
+        ]);
+    }
+
     public function createChat(User $user, User $witness)
     {
         return $this->vk->messages()->createChat($this->vkCallbackApiAccessToken, [

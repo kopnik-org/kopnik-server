@@ -13,6 +13,11 @@ class VkService
         return;
     }
 
+    public function sendMessageToChat($chat_id, string $message)
+    {
+        return;
+    }
+
     public function createChat(User $user, User $witness)
     {
         return rand(100, 200);

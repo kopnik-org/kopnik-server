@@ -64,9 +64,16 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", length=64, nullable=true)
      *
-     * @deprecated
+     * @deprecated надо всмпонить почему депрекедет... потому что вроде как используется...
      */
     protected $assurance_chat_invite_link;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $assurance_chat_id;
 
     /**
      * @var int|null
@@ -1064,6 +1071,26 @@ class User implements UserInterface
     public function setForemanRequests($foreman_requests): self
     {
         $this->foreman_requests = $foreman_requests;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getAssuranceChatId(): ?int
+    {
+        return $this->assurance_chat_id;
+    }
+
+    /**
+     * @param int|null $assurance_chat_id
+     *
+     * @return $this
+     */
+    public function setAssuranceChatId(?int $assurance_chat_id): self
+    {
+        $this->assurance_chat_id = $assurance_chat_id;
 
         return $this;
     }

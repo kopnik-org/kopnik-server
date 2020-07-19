@@ -92,6 +92,7 @@ class ApiUsersController extends AbstractApiController
                 } else {
                     // 1) Создать групповой чат с заверителем и новобранцем
                     $chat_id = $vk->createChat($user, $witness);
+                    $user->setAssuranceChatId($chat_id);
                     /*
                     $chat_id = $vk->messages()->createChat($vkCallbackApiAccessToken, [
                         'user_ids' => "{$user->getVkIdentifier()},{$witness->getVkIdentifier()}",
@@ -279,7 +280,7 @@ class ApiUsersController extends AbstractApiController
                     $message = 'Заявка на вступление в kopnik.org одобрена.';
                 }
 
-                $result = $vk->sendMessage($userPending, $message);
+                $result = $vk->sendMessageToChat($userPending->setAssuranceChatId(), $message);
             } catch (VKApiFloodException $e) {
                 return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             } catch (VKApiException $e) {
