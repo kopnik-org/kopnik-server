@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Contracts\MessengerInterface;
 use App\Entity\User;
 use App\Entity\UserOauth;
 use App\Form\Type\UserFormType;
-use App\Service\VkService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +27,7 @@ class ApiUsersController extends AbstractApiController
      *
      * @Route("/updateProfile", methods={"POST"}, name="api_users_update_profile")
      */
-    public function usersProfile(Request $request, KernelInterface $kernel, EntityManagerInterface $em, VkService $vk): JsonResponse
+    public function usersProfile(Request $request, KernelInterface $kernel, EntityManagerInterface $em, MessengerInterface $vk): JsonResponse
     {
         $user = $this->getUser();
         $this->user = $user;
@@ -231,7 +231,7 @@ class ApiUsersController extends AbstractApiController
      *
      * @Route("/pending/update", methods={"POST"}, name="api_users_pending_update")
      */
-    public function usersPendingUpdate(Request $request, EntityManagerInterface $em, VkService $vk): JsonResponse
+    public function usersPendingUpdate(Request $request, EntityManagerInterface $em, MessengerInterface $vk): JsonResponse
     {
         $this->user = $this->getUser();
 
@@ -298,7 +298,7 @@ class ApiUsersController extends AbstractApiController
     /**
      * @Route("/isMessagesFromGroupAllowed", methods={"GET"}, name="api_users_is_messages_from_group_allowed")
      */
-    public function isMessagesFromGroupAllowed(VkService $vk): JsonResponse
+    public function isMessagesFromGroupAllowed(MessengerInterface $vk): JsonResponse
     {
         $this->user = $this->getUser();
 

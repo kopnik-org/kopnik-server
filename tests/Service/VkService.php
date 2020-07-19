@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Service;
 
+use App\Contracts\MessengerInterface;
 use App\Entity\User;
 
-class VkService
+class VkService implements MessengerInterface
 {
     public function sendMessage(User $user, string $message)
     {

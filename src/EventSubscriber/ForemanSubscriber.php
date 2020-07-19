@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Contracts\MessengerInterface;
 use App\Entity\User;
 use App\Event\UserEvent;
-use App\Service\VkService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ForemanSubscriber implements EventSubscriberInterface
 {
     protected $vk;
 
-    public function __construct(VkService $vk)
+    public function __construct(MessengerInterface $vk)
     {
         $this->vk = $vk;
     }

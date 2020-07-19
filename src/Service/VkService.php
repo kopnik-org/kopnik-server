@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Contracts\MessengerInterface;
 use App\Entity\User;
 use App\Exception\VkException;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -15,7 +16,7 @@ use VK\Exceptions\VKClientException;
 /**
  * @todo VK\TransportClient\TransportRequestException
  */
-class VkService
+class VkService implements MessengerInterface
 {
     protected $vkCallbackApiAccessToken;
     protected $vkCommunityId;
