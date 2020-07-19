@@ -5,15 +5,15 @@ build: docker-build
 restart: docker-down docker-up
 restart-build: docker-down docker-build docker-up
 init: docker-down-clear  docker-pull docker-build docker-up composer-install db-schema-drop kopnik-init
-kopnik-init: wait-db db-schema-drop migrations
-
-# dev = prod + fixtures
-dev-up: init fixtures
+kopnik-init: wait-db db-schema-drop migrations db-fixtures
+init-db: db-schema-drop migrations db-fixtures
+full-up: up init-db
 
 # test
-test-up: test-docker-down test-docker-up test-composer-install-dev test-db-schema-drop test-migrations test-fixtures
+test-up: test-docker-down test-docker-up test-composer-install-dev
 test-down: test-docker-down
-test-setup: test-db-schema-drop test-migrations
+test-init-db: test-db-schema-drop test-migrations
+test-full-up: test-up test-init-db
 
 docker-up:
 	docker-compose up -d
@@ -37,7 +37,7 @@ cli:
 	docker-compose run php bin/console ${ARGS}
 
 composer-install:
-	docker-compose exec php composer install --no-dev
+	docker-compose exec php composer install
 
 composer-install-dev:
 	docker-compose exec php composer install
@@ -51,7 +51,7 @@ wait-db:
 migrations:
 	docker-compose exec php php bin/console doctrine:migrations:migrate --no-interaction
 
-fixtures:
+db-fixtures:
 	docker-compose exec php php bin/console hautelook:fixtures:load -q
 
 ready:
@@ -75,5 +75,5 @@ test-db-schema-update:
 test-migrations:
 	docker-compose -f docker-compose-test.yml exec php-test php bin/console doctrine:migrations:migrate --no-interaction
 
-test-fixtures:
+test-db-fixtures:
 	docker-compose -f docker-compose-test.yml exec php-test php bin/console hautelook:fixtures:load -q

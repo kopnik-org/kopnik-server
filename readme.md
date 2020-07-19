@@ -106,6 +106,7 @@ make down
 Посмотреть список всех пользователей:
 ```
 docker-compose run php bin/console app:user:list
+docker-compose -f docker-compose-test.yml run php-test bin/console app:user:list
 ```
 
 Посмотреть список всех заверителей:

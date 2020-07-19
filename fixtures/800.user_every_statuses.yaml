@@ -77,7 +77,8 @@ App\Entity\UserOauth:
     access_token: <sha256()>
     email: <email()>
     provider: vkontakte
-    identifier: 573258821
+#    identifier: 573258821
+    identifier: 573258821000
     createdAt: <date_create()>
 
   oauth_{@user_3_pending}:
