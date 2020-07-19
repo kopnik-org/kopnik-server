@@ -135,7 +135,7 @@ class ApiUsersController extends AbstractApiController
                     "Зарегистрировался новый пользователь {$user} ссылка на чат $invite_chat_link" :
                     "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link";
 
-                $result = $vk->sendMessage($user, $message);
+                $result = $vk->sendMessage($witness, $message);
 
                 /*
                 $result = $vk->messages()->send($vkCallbackApiAccessToken, [
