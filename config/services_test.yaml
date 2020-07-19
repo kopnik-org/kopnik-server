@@ -2,8 +2,18 @@ imports:
     - { resource: "_local.test.yaml", ignore_errors: true }
 
 services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\Tests\:
+        resource: '../tests/*'
+        exclude: '../tests/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
     App\Tests\Controller\:
         resource: '../tests/Controller'
         tags: ['controller.service_arguments']
 
-    App\Service\VkService: 'App\Tests\Service\VkService'
+    App\Service\VkService: '@App\Tests\Service\VkService'
