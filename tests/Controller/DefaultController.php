@@ -214,11 +214,18 @@ class DefaultController extends AbstractApiController
             $date = (new \DateTime())->format('d.m.Y H:i:s');
             $chat_id = $vk->createChat('Тестовый чат ' . $date, [$testVkUserId]);
             $invite_chat_link = $vk->getInviteLink($chat_id);
-            $msg = $vk->sendMessage($testVkUserId, "Тестовая проверка создания чата. Ссылка на чат $invite_chat_link");
+            $msg_id = $vk->sendMessage($testVkUserId, "Тестовая проверка создания чата. Ссылка на чат $invite_chat_link");
+//            $add_to_chat = $vk->addChatUser($chat_id, $testVkUserId);
+//            $join_chat = $vk->joinChatByInviteLink($invite_chat_link);
+            $chat_msg_id = $vk->sendMessageToChat($chat_id, 'Тестовое сообщение от бота');
 
             $result = [
                 'chat_id' => $chat_id,
                 'invite_chat_link' => $invite_chat_link,
+                'msg_id' => $msg_id,
+//                'join_chat' => $join_chat,
+//                'add_to_chat' => $add_to_chat,
+                'chat_msg_id' => $chat_msg_id,
             ];
         } catch (VKApiFloodException $e) {
             return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());

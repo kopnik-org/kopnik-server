@@ -96,12 +96,25 @@ class VkService implements MessengerInterface
         ]);
     }
 
+    /**
+     * Не используется
+     */
+    public function addChatUser($chat_id, $user_id)
+    {
+        return $this->vk->messages()->addChatUser($this->vkCallbackApiAccessToken, [
+            'chat_id'  => $chat_id,
+            'user_id'  => $user_id,
+            'visible_messages_count' => 100,
+        ]);
+    }
+
     public function getInviteLink($chat_id)
     {
         return $this->vk->messages()->getInviteLink($this->vkCallbackApiAccessToken, [
+//            'chat_id'  => $chat_id,
             'peer_id'  => 2000000000 + $chat_id,
-            'group_id' => $this->vkCommunityId,
             'reset'    => 0,
+            'group_id' => $this->vkCommunityId,
         ])['link'];
     }
 
@@ -110,6 +123,16 @@ class VkService implements MessengerInterface
         return $this->vk->messages()->isMessagesFromGroupAllowed($this->vkCallbackApiAccessToken, [
             'user_id'  => $userId,
             'group_id' => $this->vkCommunityId,
+        ]);
+    }
+
+    /**
+     * Не используется
+     */
+    public function joinChatByInviteLink($link)
+    {
+        return $this->vk->messages()->joinChatByInviteLink($this->vkCallbackApiAccessToken, [
+            'link'  => $link,
         ]);
     }
 }
