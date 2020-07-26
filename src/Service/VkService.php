@@ -79,8 +79,8 @@ class VkService implements MessengerInterface
     public function sendMessageToChat($chat_id, string $message)
     {
         return $this->vk->messages()->send($this->vkCallbackApiAccessToken, [
-            // 'domain' => 'some_user_name',
-            'chat_id'   => $chat_id,
+//            'chat_id'   => $chat_id,
+            'peer_id'   => 2000000000 + $chat_id,
             'message'   => $message,
             'random_id' => \random_int(100, 999999999),
         ]);
