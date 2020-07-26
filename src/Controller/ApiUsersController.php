@@ -118,7 +118,7 @@ class ApiUsersController extends AbstractApiController
                     "Добро пожаловать в kopnik-org! Для заверения, пожалуйста, перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта." :
                     "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.";
 
-                $result = $vk->sendMessage($user, $message);
+                $result = $vk->sendMessage($user->getVkIdentifier(), $message);
 
                 /*
                 $result = $vk->messages()->send($vkCallbackApiAccessToken, [
@@ -136,7 +136,7 @@ class ApiUsersController extends AbstractApiController
                     "Зарегистрировался новый пользователь {$user} ссылка на чат $invite_chat_link" :
                     "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link";
 
-                $result = $vk->sendMessage($witness, $message);
+                $result = $vk->sendMessage($witness->getVkIdentifier(), $message);
 
                 /*
                 $result = $vk->messages()->send($vkCallbackApiAccessToken, [
@@ -307,7 +307,7 @@ class ApiUsersController extends AbstractApiController
         }
 
         try {
-            $result = $vk->isMessagesFromGroupAllowed($this->user);
+            $result = $vk->isMessagesFromGroupAllowed($this->user->getVkIdentifier());
 
             if (isset($result['is_allowed'])) {
                 $response = $result['is_allowed'] ? true : false;

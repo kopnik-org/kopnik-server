@@ -7,6 +7,7 @@ namespace App\Tests\Controller;
 use App\Controller\AbstractApiController;
 use App\Entity\User;
 use App\Entity\UserOauth;
+use App\Service\VkService;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -16,6 +17,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use VK\Exceptions\Api\VKApiFloodException;
+use VK\Exceptions\VKApiException;
+use VK\Exceptions\VKClientException;
+use VK\TransportClient\TransportRequestException;
 
 class DefaultController extends AbstractApiController
 {
@@ -163,5 +168,29 @@ class DefaultController extends AbstractApiController
         }
 
         return $this->jsonResponse($user->getId());
+    }
+
+    /**
+     * @Route("/api/test/sendVkMessage", methods={"GET"}, name="test_send_vk_message")
+     */
+    public function sendVkMessage($testVkUserId, VkService $vk): JsonResponse
+    {
+        if (empty($testVkUserId)) {
+            return $this->jsonError(400, 'В .env.test.local не задано TEST_VK_USER_ID');
+        }
+
+        try {
+            $result = $vk->sendMessage($testVkUserId, 'Test OK');
+        } catch (VKApiFloodException $e) {
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
+        } catch (VKApiException $e) {
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
+        } catch (VKClientException $e) {
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
+        } catch (TransportRequestException $e) {
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
+        }
+
+        return $this->jsonResponse($result);
     }
 }

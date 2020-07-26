@@ -125,6 +125,8 @@ docker-compose run php bin/console app:witness:promote
 
 Заполнить файл .env.test.local аналогично .env.local (см. выше)
 
+Также в .env.test.local нужно задать TEST_VK_USER_ID на который будут приходить тестовое сообщение.
+
 Создать фикстуру локального юзера в файле fixtures/local_user.yaml пример содержимого:
 
 ```yaml

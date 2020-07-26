@@ -33,9 +33,6 @@ class RequestSubscriber implements EventSubscriberInterface
 
     /**
      * RequestSubscriber constructor.
-     *
-     * @param RouterInterface       $router
-     * @param TokenStorageInterface $token_storage
      */
     public function __construct(
         RouterInterface $router,

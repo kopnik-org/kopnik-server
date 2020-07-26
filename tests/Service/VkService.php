@@ -9,7 +9,7 @@ use App\Entity\User;
 
 class VkService implements MessengerInterface
 {
-    public function sendMessage(User $user, string $message)
+    public function sendMessage($userId, string $message)
     {
         return;
     }
@@ -29,7 +29,7 @@ class VkService implements MessengerInterface
         return ['link' => '//test/invite/chat/link'];
     }
 
-    public function isMessagesFromGroupAllowed(User $user)
+    public function isMessagesFromGroupAllowed($userId)
     {
         return ['is_allowed' => true];
     }

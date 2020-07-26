@@ -49,10 +49,10 @@ class VkService implements MessengerInterface
      * @throws \VK\Exceptions\Api\VKApiMessagesTooManyPostsException
      * @throws \VK\Exceptions\Api\VKApiMessagesUserBlockedException
      */
-    public function sendMessage(User $user, string $message)
+    public function sendMessage($userId, string $message)
     {
         return $this->vk->messages()->send($this->vkCallbackApiAccessToken, [
-            'user_id' => $user->getVkIdentifier(),
+            'user_id' => $userId,
             // 'domain' => 'some_user_name',
             'message' => $message,
             'random_id' => \random_int(100, 999999999),
@@ -105,10 +105,10 @@ class VkService implements MessengerInterface
         ])['link'];
     }
 
-    public function isMessagesFromGroupAllowed(User $user)
+    public function isMessagesFromGroupAllowed($userId)
     {
         return $this->vk->messages()->isMessagesFromGroupAllowed($this->vkCallbackApiAccessToken, [
-            'user_id'  => $user->getVkIdentifier(),
+            'user_id'  => $userId,
             'group_id' => $this->vkCommunityId,
         ]);
     }
