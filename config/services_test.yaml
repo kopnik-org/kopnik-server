@@ -19,3 +19,11 @@ services:
         tags: ['controller.service_arguments']
 
     App\Service\VkService: '@App\Tests\Service\VkService'
+
+    # Сервис отправки сообщений, который реально работает с ВК, а не заглушка
+    test_vk_service:
+        class: App\Service\VkService
+        public: true
+        arguments:
+            - '%env(VK_CALLBACK_API_ACCESS_TOKEN)%'
+            - '%env(VK_COMMUNITY_ID)%'

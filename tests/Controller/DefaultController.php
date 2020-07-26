@@ -7,9 +7,9 @@ namespace App\Tests\Controller;
 use App\Controller\AbstractApiController;
 use App\Entity\User;
 use App\Entity\UserOauth;
-use App\Service\VkService;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -173,8 +173,10 @@ class DefaultController extends AbstractApiController
     /**
      * @Route("/api/test/sendVkMessage", methods={"GET"}, name="test_send_vk_message")
      */
-    public function sendVkMessage($testVkUserId, VkService $vk): JsonResponse
+    public function sendVkMessage($testVkUserId, ContainerInterface $container): JsonResponse
     {
+        $vk = $container->get('test_vk_service');
+
         if (empty($testVkUserId)) {
             return $this->jsonError(400, 'В .env.test.local не задано TEST_VK_USER_ID');
         }
