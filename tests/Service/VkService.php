@@ -19,7 +19,7 @@ class VkService implements MessengerInterface
         return;
     }
 
-    public function createChat(User $user, User $witness)
+    public function createChat($title, array $users)
     {
         return rand(100, 200);
     }

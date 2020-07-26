@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use VK\Exceptions\Api\VKApiFloodException;
+use VK\Exceptions\Api\VKApiMessagesContactNotFoundException;
 use VK\Exceptions\VKApiException;
 use VK\Exceptions\VKClientException;
 use VK\TransportClient\TransportRequestException;
@@ -190,6 +191,44 @@ class DefaultController extends AbstractApiController
         } catch (VKClientException $e) {
             return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
         } catch (TransportRequestException $e) {
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
+        } catch (VKApiMessagesContactNotFoundException $e) {
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
+        }
+
+        return $this->jsonResponse($result);
+    }
+
+    /**
+     * @Route("/api/test/createVkChat", methods={"GET"}, name="test_create_vk_chat")
+     */
+    public function createVkChat($testVkUserId, ContainerInterface $container): JsonResponse
+    {
+        $vk = $container->get('test_vk_service');
+
+        if (empty($testVkUserId)) {
+            return $this->jsonError(400, 'В .env.test.local не задано TEST_VK_USER_ID');
+        }
+
+        try {
+            $date = (new \DateTime())->format('d.m.Y H:i:s');
+            $chat_id = $vk->createChat('Тестовый чат ' . $date, [$testVkUserId]);
+            $invite_chat_link = $vk->getInviteLink($chat_id);
+            $msg = $vk->sendMessage($testVkUserId, "Тестовая проверка создания чата. Ссылка на чат $invite_chat_link");
+
+            $result = [
+                'chat_id' => $chat_id,
+                'invite_chat_link' => $invite_chat_link,
+            ];
+        } catch (VKApiFloodException $e) {
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
+        } catch (VKApiException $e) {
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
+        } catch (VKClientException $e) {
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
+        } catch (TransportRequestException $e) {
+            return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
+        } catch (VKApiMessagesContactNotFoundException $e) {
             return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
         }
 

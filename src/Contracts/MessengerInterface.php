@@ -12,7 +12,7 @@ interface MessengerInterface
 
     public function sendMessageToChat($chat_id, string $message);
 
-    public function createChat(User $user, User $witness);
+    public function createChat($title, array $users);
 
     public function getInviteLink($chat_id);
 

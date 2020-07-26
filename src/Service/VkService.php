@@ -80,17 +80,17 @@ class VkService implements MessengerInterface
     {
         return $this->vk->messages()->send($this->vkCallbackApiAccessToken, [
             // 'domain' => 'some_user_name',
-            'chat_id' => $chat_id,
-            'message' => $message,
+            'chat_id'   => $chat_id,
+            'message'   => $message,
             'random_id' => \random_int(100, 999999999),
         ]);
     }
 
-    public function createChat(User $user, User $witness)
+    public function createChat($title, array $users)
     {
         return $this->vk->messages()->createChat($this->vkCallbackApiAccessToken, [
-            'user_ids' => "{$user->getVkIdentifier()},{$witness->getVkIdentifier()}",
-            'title' => "{$user} - Заверение пользователя в Копнике",
+            'title'    => $title,
+            'user_ids' => implode(',', $users),
             'group_id' => $this->vkCommunityId,
             //'v' => '5.103'
         ]);
@@ -99,9 +99,9 @@ class VkService implements MessengerInterface
     public function getInviteLink($chat_id)
     {
         return $this->vk->messages()->getInviteLink($this->vkCallbackApiAccessToken, [
-            'peer_id' => 2000000000 + $chat_id,
+            'peer_id'  => 2000000000 + $chat_id,
             'group_id' => $this->vkCommunityId,
-            'reset' => 0,
+            'reset'    => 0,
         ])['link'];
     }
 

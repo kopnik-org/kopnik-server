@@ -91,7 +91,9 @@ class ApiUsersController extends AbstractApiController
                     $invite_chat_link = $user->getAssuranceChatInviteLink();
                 } else {
                     // 1) Создать групповой чат с заверителем и новобранцем
-                    $chat_id = $vk->createChat($user, $witness);
+                    $chat_id = $vk->createChat("{$user} - Заверение пользователя в Копнике",
+                        [$user->getVkIdentifier(), $witness->getVkIdentifier()]
+                    );
                     $user->setAssuranceChatId($chat_id);
                     /*
                     $chat_id = $vk->messages()->createChat($vkCallbackApiAccessToken, [
