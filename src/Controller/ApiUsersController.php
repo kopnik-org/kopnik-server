@@ -105,7 +105,7 @@ class ApiUsersController extends AbstractApiController
                     */
 
                     // 2) Получить ссылку приглашения в чат
-                    $invite_chat_link = $vk->getInviteLink($chat_id)['link'];
+                    $invite_chat_link = $vk->getInviteLink($chat_id);
                     /*
                     $invite_chat_link = $vk->messages()->getInviteLink($vkCallbackApiAccessToken, [
                         'peer_id' => 2000000000 + $chat_id,
