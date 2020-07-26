@@ -1,2 +1,6 @@
 imports:
     - { resource: "_local.dev.yaml", ignore_errors: true }
+
+    App\Tests\Controller\:
+        resource: '../tests/Controller'
+        tags: ['controller.service_arguments']
