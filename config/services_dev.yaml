@@ -1,6 +1,14 @@
 imports:
     - { resource: "_local.dev.yaml", ignore_errors: true }
 
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:               # defines the scalar arguments once and apply them to any service defined/created in this file
+            $testVkUserId: '%env(TEST_VK_USER_ID)%'
+
     App\Tests\Controller\:
         resource: '../tests/Controller'
         tags: ['controller.service_arguments']
