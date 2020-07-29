@@ -40,6 +40,7 @@ class UserRepository extends ClosureTreeRepository
             ->andWhere('e.longitude > :x1')
             ->andWhere('e.longitude < :x2')
             ->andWhere('e.status = :status')
+            ->orderBy('rank', 'DESC')
             ->setParameter('x1', $x1)
             ->setParameter('x2', $x2)
             ->setParameter('y1', $y1)
