@@ -32,9 +32,9 @@ class UserRepository extends ClosureTreeRepository
     /**
      * @return User[]
      */
-    public function findByCoordinates($x1, $y1, $x2, $y2, $count): array
+    public function findByCoordinates($x1, $y1, $x2, $y2, $count, $maxRank = null, $minRank = null): array
     {
-        return $this->createQueryBuilder('e')
+        $qb = $this->createQueryBuilder('e')
             ->where('e.latitude > :y1')
             ->andWhere('e.latitude < :y2')
             ->andWhere('e.longitude > :x1')
@@ -46,9 +46,23 @@ class UserRepository extends ClosureTreeRepository
             ->setParameter('y1', $y1)
             ->setParameter('y2', $y2)
             ->setParameter('status', User::STATUS_CONFIRMED)
-            ->setMaxResults((int) $count)
-        ->getQuery()
-        ->getResult();
+            ->setMaxResults((int) $count);
+
+        if ($maxRank !== null) {
+            $qb
+                ->andWhere('e.rank <= :maxRank')
+                ->setParameter('maxRank', $maxRank)
+            ;
+        }
+
+        if ($minRank !== null) {
+            $qb
+                ->andWhere('e.rank >= :minRank')
+                ->setParameter('minRank', $minRank)
+            ;
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     public function findByEmail(string $email, string $provider = 'vkontakte'): ?User

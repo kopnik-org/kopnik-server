@@ -414,6 +414,16 @@ class ApiUsersController extends AbstractApiController
         $x2 = $request->query->get('x2');
         $y1 = $request->query->get('y1');
         $y2 = $request->query->get('y2');
+        $maxRank = $request->query->get('maxRank');
+        $minRank = $request->query->get('minRank');
+
+        if ($maxRank !== null) {
+            $maxRank = (int) $maxRank;
+        }
+
+        if ($minRank !== null) {
+            $minRank = (int) $minRank;
+        }
 
         $response = [];
 
@@ -422,7 +432,7 @@ class ApiUsersController extends AbstractApiController
         } else {
             $ur = $em->getRepository(User::class);
 
-            foreach ($ur->findByCoordinates($x1, $y1, $x2, $y2, $count) as $user) {
+            foreach ($ur->findByCoordinates($x1, $y1, $x2, $y2, $count, $maxRank, $minRank) as $user) {
                 $response[] = $this->serializeUser($user);
             }
         }
