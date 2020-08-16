@@ -131,7 +131,7 @@ App\Entity\User:
     status: 2
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
-    foreman: '@user_6'
+    foreman: '@user_7'
     role: 1
 
   user_14:
@@ -148,7 +148,7 @@ App\Entity\User:
     status: 2
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
-    foreman: '@user_6'
+    foreman: '@user_7'
     role: 1
 
   user_15:
@@ -165,7 +165,7 @@ App\Entity\User:
     status: 2
     isAllowMessagesFromCommunity: 1
     createdAt: <date_create()>
-    foreman: '@user_6'
+    foreman: '@user_7'
     role: 1
 
 App\Entity\UserOauth:
