@@ -1,4 +1,4 @@
-up: docker-up composer-install
+up: docker-up
 upb: docker-build docker-up
 down: docker-down
 build: docker-build
@@ -8,7 +8,7 @@ init: docker-down-clear  docker-pull docker-build docker-up composer-install db-
 kopnik-init: db-schema-drop migrations db-fixtures
 #kopnik-init: wait-db db-schema-drop migrations db-fixtures
 init-db: db-schema-drop migrations db-fixtures
-full-up: up init-db
+full-up: up composer-install init-db
 
 # test
 test-up: test-docker-down test-docker-up test-composer-install
