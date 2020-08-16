@@ -42,10 +42,10 @@ RUN docker-php-ext-install -j$(nproc) gd \
 #        --with-freetype --with-jpeg
         --with-xpm-dir=/usr/lib/x86_64-linux-gnu
 
-RUN apt-get install -y imagemagick libmagickcore-dev libmagickwand-dev
+# RUN apt-get install -y imagemagick libmagickcore-dev libmagickwand-dev
 
-RUN pecl install imagick
-RUN docker-php-ext-enable imagick
+# RUN pecl install imagick
+# RUN docker-php-ext-enable imagick
 
 # COPY ./php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
