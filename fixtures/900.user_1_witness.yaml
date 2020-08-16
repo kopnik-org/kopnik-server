@@ -5,8 +5,8 @@ App\Entity\User:
     patronymic: Колесников
     passportCode: 2541
     birthYear: 1961
-    latitude: 62.335961
-    longitude: 29.089971
+    latitude: 58.1996
+    longitude: 68.256
     photo: https://lorempixel.com/200/200/?38191
     smallPhoto: https://lorempixel.com/200/200/?38191
     isWitness: 1
