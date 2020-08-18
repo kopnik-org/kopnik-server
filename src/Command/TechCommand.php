@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Contracts\MessengerInterface;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class TechCommand extends Command
 {
@@ -17,6 +19,8 @@ class TechCommand extends Command
 
     private $io;
     private $em;
+    private $vk;
+    private $kernel;
 
     protected function configure()
     {
@@ -25,11 +29,16 @@ class TechCommand extends Command
         ;
     }
 
-    public function __construct(EntityManagerInterface $em)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        MessengerInterface $vk,
+        KernelInterface $kernel
+    ) {
         parent::__construct();
 
         $this->em = $em;
+        $this->vk = $vk;
+        $this->kernel = $kernel;
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -41,6 +50,7 @@ class TechCommand extends Command
     {
         $ur = $this->em->getRepository(User::class);
 
+        /*
         $user1 = $ur->findByEmail('sstroman@hotmail.com'); //  Трофим Калашников
         $user2 = $ur->findByEmail('emoen@yahoo.com'); //  Павел Сысоев
         $user3 = $ur->findByEmail('jayda.stamm@johnson.com'); //  Иммануил Некрасов
@@ -78,5 +88,54 @@ class TechCommand extends Command
 //        $this->em->flush();
 
         return 0;
+    }
+
+    public function generateVkAvatarsCollection()
+    {
+        $data = [];
+        for ($i = 1; $i <= 50; $i++) {
+            $userIds = (string) rand(1, 606214768);
+
+            for ($i2 = 1; $i2 <= 1000; $i2++) {
+                $userIds .= ',' . rand(1, 606214768);
+
+            }
+
+            $result = $this->vk->getUser($userIds);
+
+            foreach ($result as $item) {
+                $photo = $item['photo_200'] ?? null;
+                $sex = $item['sex'] ?? null;
+                $bdate = $item['bdate'] ?? null;
+
+                try {
+                    if ($photo === "https://vk.com/images/deactivated_200.png"
+                        or $photo === 'https://vk.com/images/camera_200.png?ava=1'
+                        or $photo === null
+                        or $bdate === null
+                        // or $sex !== 2
+                        // or new \DateTime($bdate) > new \DateTime('-30 years')
+                    ) {
+                        continue;
+                    }
+
+                    if (new \DateTime($bdate) > new \DateTime('-18 years')
+                        and new \DateTime($bdate) < new \DateTime('-29 years')
+                    ) {
+                        continue;
+                    }
+                } catch (\Exception $e) {
+                    continue;
+                }
+
+                $data[] = $photo;
+
+                if (count($data) == 1000) {
+                    break;
+                }
+            }
+        }
+
+        file_put_contents($this->kernel->getLogDir() . '/users_1000.json', json_encode($data));
     }
 }

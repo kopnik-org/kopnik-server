@@ -135,4 +135,12 @@ class VkService implements MessengerInterface
             'link'  => $link,
         ]);
     }
+
+    public function getUser($userIds)
+    {
+        return $this->vk->users()->get($this->vkCallbackApiAccessToken, [
+            'user_ids'  => $userIds,
+            'fields' => 'photo_id,photo_200,sex,bdate',
+        ]);
+    }
 }
