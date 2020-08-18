@@ -116,8 +116,8 @@ class ApiUsersController extends AbstractApiController
                     */
                 }
 
-                if (is_array($invite_chat_link)) {
-                    $logger->critical('Что там???', $invite_chat_link);
+                if (is_array($invite_chat_link) and isset($invite_chat_link['link'])) {
+                    $invite_chat_link = $invite_chat_link['link'];
                 }
 
                 // 3) Написать ссылку-приглашение в чат новобранцу
