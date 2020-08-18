@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Entity\UserOauth;
 use App\Form\Type\UserFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -27,7 +28,7 @@ class ApiUsersController extends AbstractApiController
      *
      * @Route("/updateProfile", methods={"POST"}, name="api_users_update_profile")
      */
-    public function usersProfile(Request $request, KernelInterface $kernel, EntityManagerInterface $em, MessengerInterface $vk): JsonResponse
+    public function usersProfile(Request $request, KernelInterface $kernel, EntityManagerInterface $em, MessengerInterface $vk, LoggerInterface $logger): JsonResponse
     {
         $user = $this->getUser();
         $this->user = $user;
@@ -113,6 +114,10 @@ class ApiUsersController extends AbstractApiController
                         'reset' => 0,
                     ])['link'];
                     */
+                }
+
+                if (is_array($invite_chat_link)) {
+                    $logger->critical('Что там???', $invite_chat_link);
                 }
 
                 // 3) Написать ссылку-приглашение в чат новобранцу
