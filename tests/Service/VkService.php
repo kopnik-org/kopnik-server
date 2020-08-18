@@ -26,7 +26,8 @@ class VkService implements MessengerInterface
 
     public function getInviteLink($chat_id)
     {
-        return ['link' => '//test/invite/chat/link'];
+        //return ['link' => '//test/invite/chat/link'];
+        return '//test/invite/chat/link';
     }
 
     public function isMessagesFromGroupAllowed($userId)
