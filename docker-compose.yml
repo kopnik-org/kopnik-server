@@ -17,6 +17,8 @@ services:
         volumes:
             - ./:/app
             - composer:/root/.composer/cache
+        ports:
+            - "9081:9000"
         environment:
             APP_ENV: dev
             APP_DEBUG: 1
