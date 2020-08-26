@@ -52,7 +52,7 @@ class ForemanSubscriber implements EventSubscriberInterface
         $foreman = $user->getForeman();
 
         if ($foreman) {
-            $this->vk->sendMessage($foreman->getVkIdentifier(), sprintf('Пользователь %s исключил вас из старшины', (string) $user));
+            $this->vk->sendMessage($foreman->getVkIdentifier(), sprintf('%s вышел из десятки', (string) $user));
         }
     }
 
