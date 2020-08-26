@@ -44,7 +44,7 @@ class ForemanSubscriber implements EventSubscriberInterface
 
     public function sendNotifyToForemanDecline(User $user): void
     {
-        $this->vk->sendMessage($user->getVkIdentifier(), 'Ваша заявка на старшину отклонена');
+        $this->vk->sendMessage($user->getVkIdentifier(), 'Старшина отклонил вашу заявку');
     }
 
     public function sendNotifyToForemanReset(User $user): void
