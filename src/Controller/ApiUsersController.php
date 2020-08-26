@@ -182,7 +182,9 @@ class ApiUsersController extends AbstractApiController
                 return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             }
 
-            $user->setStatus(User::STATUS_PENDING);
+            if ( ! $user->isWitness()) {
+                $user->setStatus(User::STATUS_PENDING);
+            }
 
             $em->persist($user);
             $em->flush();
