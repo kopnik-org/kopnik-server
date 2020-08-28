@@ -96,31 +96,10 @@ class ApiUsersController extends AbstractApiController
                         [$user->getVkIdentifier(), $witness->getVkIdentifier()]
                     );
                     $user->setAssuranceChatId($chat_id);
-                    /*
-                    $chat_id = $vk->messages()->createChat($vkCallbackApiAccessToken, [
-                        'user_ids' => "{$user->getVkIdentifier()},{$witness->getVkIdentifier()}",
-                        'title' => "{$user} - Заверение пользователя в Копнике",
-                        'group_id' => $vkCommunityId,
-                        //'v' => '5.103'
-                    ]);
-                    */
 
                     // 2) Получить ссылку приглашения в чат
                     $invite_chat_link = $vk->getInviteLink($chat_id);
-                    /*
-                    $invite_chat_link = $vk->messages()->getInviteLink($vkCallbackApiAccessToken, [
-                        'peer_id' => 2000000000 + $chat_id,
-                        'group_id' => $vkCommunityId,
-                        'reset' => 0,
-                    ])['link'];
-                    */
                 }
-
-                /*
-                if (is_array($invite_chat_link) and isset($invite_chat_link['link'])) {
-                    $invite_chat_link = $invite_chat_link['link'];
-                }
-                */
 
                 // 3) Написать ссылку-приглашение в чат новобранцу
                 $message = $user->getStatus() == User::STATUS_NEW ?
@@ -129,17 +108,6 @@ class ApiUsersController extends AbstractApiController
 
                 $result = $vk->sendMessage($user->getVkIdentifier(), $message);
 
-                /*
-                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
-                    'user_id' => $user->getVkIdentifier(),
-                    // 'domain' => 'some_user_name',
-                    'message' => $user->getStatus() == User::STATUS_NEW ?
-                        "Добро пожаловать в kopnik-org! Для заверения, пожалуйста, перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта." :
-                        "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.",
-                    'random_id' => random_int(100, 999999999),
-                ]);
-                */
-
                 // 4) Написать ссылку-приглашение в чат заверителю
                 $message = $user->getStatus() == User::STATUS_NEW ?
                     "Зарегистрировался новый пользователь {$user} ссылка на чат $invite_chat_link" :
@@ -147,33 +115,8 @@ class ApiUsersController extends AbstractApiController
 
                 $result = $vk->sendMessage($witness->getVkIdentifier(), $message);
 
-                /*
-                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
-                    'user_id' => $witness->getVkIdentifier(),
-                    // 'domain' => 'some_user_name',
-                    'message' => $user->getStatus() == User::STATUS_NEW ?
-                        "Зарегистрировался новый пользователь {$user} ссылка на чат $invite_chat_link" :
-                        "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link",
-                    'random_id' => random_int(100, 999999999),
-                ]);
-                */
-
                 // 5) Сохранить ссылку-приглашение в профиле юзера
                 $user->setAssuranceChatInviteLink($invite_chat_link);
-
-                /*
-                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
-                    'user_id' => $user->getVkIdentifier(),
-                    'message' => "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.",
-                    'random_id' => random_int(100, 999999999),
-                ]);
-
-                $result = $vk->messages()->send($vkCallbackApiAccessToken, [
-                    'user_id' => $user->getWitness()->getVkIdentifier(),
-                    'message' => "Повторная заявка на заверение нового пользователя {$user} ссылка на чат $invite_chat_link",
-                    'random_id' => random_int(100, 999999999),
-                ]);
-                */
             } catch (VKApiFloodException $e) {
                 return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
             } catch (VKApiException $e) {
@@ -327,18 +270,6 @@ class ApiUsersController extends AbstractApiController
             }
 
             return $this->jsonResponse($response);
-
-            /*
-            $result = $vk->messages()->send($vkCallbackApiAccessToken, [
-                'user_id' => $this->user->getVkIdentifier(),
-                // 'domain' => 'some_user_name',
-                'message' => "Проверка приёма сообщений от сообщества Kopnik.org в VK",
-                'random_id' => random_int(100, 999999999),
-            ]);
-
-            $response = true;
-            */
-            //$response['is_messages_from_group_allowed'] = true;
         } catch (VKApiFloodException $e) {
             return $this->jsonError(1000000 + $e->getErrorCode(), $e->getMessage());
         } catch (VKApiException $e) {
