@@ -29,10 +29,10 @@ class DefaultController extends AbstractController
             return new Response(file_get_contents($templatePath));
         }
 
-        $ur = $em->getRepository(User::class);
+//        $ur = $em->getRepository(User::class);
 
         return $this->render('default/index.html.twig', [
-            'users' => $ur->findNear($this->getUser()),
+//            'users' => $ur->findNear($this->getUser()),
         ]);
     }
 
