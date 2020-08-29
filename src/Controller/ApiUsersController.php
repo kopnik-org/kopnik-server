@@ -397,7 +397,7 @@ class ApiUsersController extends AbstractApiController
         $locale = $input['locale'] ?? null;
 
         // @todo сделать список поддерживаемых локалей.
-        $locales = ['en', 'ru'];
+        $locales = ['en', 'ru', 'sk'];
 
         if (!in_array($locale, $locales)) {
             return $this->jsonError(self::ERROR_NOT_VALID, 'Не поддерживаемая локаль');
