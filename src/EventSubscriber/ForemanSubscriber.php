@@ -33,18 +33,18 @@ class ForemanSubscriber implements EventSubscriberInterface
     {
         if ($user->getForemanRequest()) {
             // @todo обработка исключений от вк
-            $this->vk->sendMessage($user->getForemanRequest()->getVkIdentifier(), 'У вас новая заявка в старшины от ' . (string) $user);
+            $this->vk->sendMessage($user->getForemanRequest()->getVkIdentifier(),  sprintf('%s подал заявку на вступление в десятку', (string) $user));
         }
     }
 
     public function sendNotifyToForemanConfirm(User $user): void
     {
-        $this->vk->sendMessage($user->getVkIdentifier(), 'Ваша заявка на старшину принята, ваш старшина ' . (string) $user->getForeman());
+        $this->vk->sendMessage($user->getVkIdentifier(), 'Старшина одобрил твою заявку');
     }
 
     public function sendNotifyToForemanDecline(User $user): void
     {
-        $this->vk->sendMessage($user->getVkIdentifier(), 'Старшина отклонил вашу заявку');
+        $this->vk->sendMessage($user->getVkIdentifier(), 'Старшина отклонил твою заявку');
     }
 
     public function sendNotifyToForemanReset(User $user): void
@@ -61,7 +61,7 @@ class ForemanSubscriber implements EventSubscriberInterface
         $foreman = $user->getForeman();
 
         if ($foreman) {
-            $this->vk->sendMessage($user->getVkIdentifier(), sprintf('Старшина %s исключил вас из подчинённых', (string) $user->getForeman()));
+            $this->vk->sendMessage($user->getVkIdentifier(), sprintf('Старшина %s исключил тебя из подчинённых', (string) $user->getForeman()));
         }
     }
 }
