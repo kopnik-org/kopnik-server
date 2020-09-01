@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+    nginx:
+#        environment:
+#            WEB_PORT: 82
+#        ports:
+#            - "81:80"

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+    php-fpm:
+        ports:
+            - 9000:9080
+        environment:
+            APP_DEBUG: 0
+            APP_ENV: prod
+    php-cli:
+        environment:
+            APP_DEBUG: 0
+            APP_ENV: prod

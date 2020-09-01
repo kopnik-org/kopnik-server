@@ -1,77 +1,81 @@
-up: docker-up
-upb: docker-build docker-up
-down: docker-down
-build: docker-build
-restart: docker-down docker-up
-restart-build: docker-down docker-build docker-up
-init: docker-down-clear  docker-pull docker-build docker-up composer-install db-schema-drop kopnik-init
-kopnik-init: db-schema-drop migrations db-fixtures
-#kopnik-init: wait-db db-schema-drop migrations db-fixtures
-init-db: db-schema-drop migrations db-fixtures
-full-up: up composer-install init-db
+# Если существует .env.local, то он будет прочитан, иначе .env
+ifneq (",$(wildcard ./.env.local)")
+    include .env.local
+    DEFAULT_ENV_FILE = '.env.local'
+else
+    include .env
+    DEFAULT_ENV_FILE = '.env'
+endif
 
-# test
-test-up: test-docker-down test-docker-up test-composer-install
-test-down: test-docker-down
-test-init-db: test-db-schema-drop test-migrations
-test-full-up: test-up test-init-db
+env = ${APP_ENV}
 
-docker-up:
-	docker-compose up -d
+help:
+	@echo "[${env}]: ENV get from ${DEFAULT_ENV_FILE}"
 
-docker-down:
-	docker-compose down --remove-orphans
+restart: down up
 
-docker-down-clear:
-	docker-compose down -v --remove-orphans
+generate-env-files:
+	@if [ ! -f .env.local ]; then \
+  		echo "[${env}]: generate => .env.local"; \
+		cp .env .env.local; \
+	else \
+	  	echo "[${env}]: already exist => .env.local"; \
+	fi
+	@if [ ! -f .env.docker.${env}.local ]; then \
+  		echo "[${env}]: generate => .env.docker.${env}.local"; \
+		cp .env.docker .env.docker.${env}.local; \
+		sed -i "s/APP_ENV=~/APP_ENV=${env}/g" .env.docker.${env}.local; \
+	else \
+	  	echo "[${env}]: already exist => .env.docker.${env}.local "; \
+	fi
 
-docker-pull:
-	docker-compose pull
+build:
+	@echo "[${env}]: build containers..."
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+		build
+	@echo "[${env}]: containers builded!"
 
-docker-build:
-	docker-compose build
+up:
+	@echo "[${env}]: start containers..."
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+		up -d --build
+	@echo "[${env}]: containers started!"
 
-clear:
-	docker run --rm -v ${PWD}:/app --workdir=/app alpine rm -f .ready
+down:
+	@echo "[${env}]: stopping containers..."
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+		down --remove-orphans
+	@echo "[${env}]: containers stopped!"
 
-cli:
-	docker-compose run php bin/console ${ARGS}
+bin-console:
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+		run --rm php-cli \
+		bin/console ${command} -e ${env}
+
+cache-clear:
+	@if [ -d var/cache/${env} ]; then \
+		echo "[${env}]: Clearing var/cache/${env}..."; \
+		rm -rf var/cache/${env}; \
+	fi
+
+cache-warmup:
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+		run --rm php-cli \
+		bin/console cache:warmup -e ${env}
+	# @todo пересмотреть работу с правами
+	@if [ `whoami` != 'root' ]; then \
+		echo "You must be root to fix cache folder permissions"; \
+	else \
+		chmod -R 777 var/cache/${env}; \
+	fi
+	@chmod -R 777 var/cache/${env}
 
 composer-install:
-	docker-compose run php composer install # --no-dev @todo для прода
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+		run --rm php-cli \
+		composer install
 
-db-schema-drop:
-	docker-compose run php bin/console doctrine:schema:drop --force --full-database
-
-#wait-db:
-	#until docker-compose run -T db pg_isready --timeout=0 --dbname=kopnik ; do sleep 1 ; done
-
-migrations:
-	docker-compose run php php bin/console doctrine:migrations:migrate --no-interaction
-
-db-fixtures:
-	docker-compose run php php bin/console hautelook:fixtures:load -q
-
-ready:
-	docker run --rm -v ${PWD}:/app --workdir=/app alpine touch .ready
-
-test-docker-up:
-	docker-compose -f docker-compose-test.yml up -d --build
-
-test-docker-down:
-	docker-compose -f docker-compose-test.yml down
-
-test-composer-install:
-	docker-compose -f docker-compose-test.yml run php-test composer install
-
-test-db-schema-drop:
-	docker-compose -f docker-compose-test.yml run php-test bin/console doctrine:schema:drop --force --full-database
-
-test-db-schema-update:
-	docker-compose -f docker-compose-test.yml run php-test php bin/console doctrine:schema:update --force
-
-test-migrations:
-	docker-compose -f docker-compose-test.yml run php-test php bin/console doctrine:migrations:migrate --no-interaction
-
-test-db-fixtures:
-	docker-compose -f docker-compose-test.yml run php-test php bin/console hautelook:fixtures:load -q
+composer-update:
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+		run --rm php-cli \
+		composer update

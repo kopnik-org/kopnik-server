@@ -1,53 +1,66 @@
-version: '3.7'
+version: '3.8'
+
 services:
+    db:
+        build: ./.docker/postgres
+        #restart: unless-stopped # always
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
+        volumes:
+            - db:/var/lib/postgresql/data
+#        networks:
+#            - backend
     nginx:
         build:
-            context: ./.docker/development
-            dockerfile: nginx.docker
+            context: ./.docker/nginx
+#            args:
+#                APP_ENV: '1234'
+        working_dir: /app
         volumes:
             - ./:/app
+            #- ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
         depends_on:
-            - php
+            - php-fpm
+        environment:
+            VIRTUAL_HOST: kopnik2
+            NGINX_HOST: kopnik2
+            #- APP_ENV: '${APP_ENV}'
+            #- FASTCGI_HOST: php-fpm # @todo
         ports:
-            - "${WEB_PORT}:80"
-    php:
-        build:
-            context: ./.docker/development
-            dockerfile: php-fpm.docker
+            - '${WEB_PORT}:80'
+#        networks:
+#            - web
+    php-cli:
+        build: ./.docker/php-cli
+        working_dir: /app
         volumes:
             - ./:/app
-            - composer:/root/.composer/cache
-        ports:
-            - "9081:9000"
+            - ./.docker/php-cli/global.ini:/usr/local/etc/php/conf.d/global.ini
         environment:
-            APP_ENV: dev
-            APP_DEBUG: 1
-            DATABASE_URL: 'pgsql://kopnik:1234@db:5432/kopnik'
-#        depends_on:
-#            - db
-
-#    php-cli:
-#        build:
-#            context: ./.docker/development
-#            dockerfile: php-cli.docker
-#        volumes:
-#            - ./:/app
-#            - composer:/root/.composer/cache
-#        environment:
-#            APP_ENV: dev
-#            APP_DEBUG: 1
-#            DATABASE_URL: 'pgsql://kopnik:1234@db:5432/kopnik'
-    db:
-        build:
-            context: ./.docker/development
-            dockerfile: postgres.docker
-        restart: unless-stopped # always
-        environment:
-            POSTGRES_USER: kopnik
-            POSTGRES_PASSWORD: 1234
-            POSTGRES_DB: kopnik
+            APP_ENV: ${APP_ENV}
+            DATABASE_URL: 'pgsql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?serverVersion=12&charset=utf8'
+#        networks:
+#            - backend
+    php-fpm:
+        build: ./.docker/php-fpm
+        working_dir: /app
         volumes:
-            - kopnik-db:/var/lib/postgresql/data
+            - ./:/app
+            - ./.docker/php-fpm/global.ini:/usr/local/etc/php/conf.d/global.ini
+        environment:
+            DATABASE_URL: 'pgsql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?serverVersion=12&charset=utf8'
+#        networks:
+#            - backend
+#            - web
+
+#networks:
+#    web:
+#        external: true
+#    backend:
+#        external: false
+
 volumes:
     composer:
-    kopnik-db:
+    db:

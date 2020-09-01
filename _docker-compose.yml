@@ -1,0 +1,53 @@
+version: '3.7'
+services:
+    nginx:
+        build:
+            context: ./.docker/development
+            dockerfile: nginx.docker
+        volumes:
+            - ./:/app
+        depends_on:
+            - php
+        ports:
+            - "${WEB_PORT}:80"
+    php:
+        build:
+            context: ./.docker/development
+            dockerfile: php-fpm.docker
+        volumes:
+            - ./:/app
+            - composer:/root/.composer/cache
+        ports:
+            - "9081:9000"
+        environment:
+            APP_ENV: dev
+            APP_DEBUG: 1
+            DATABASE_URL: 'pgsql://kopnik:1234@db:5432/kopnik'
+#        depends_on:
+#            - db
+
+#    php-cli:
+#        build:
+#            context: ./.docker/development
+#            dockerfile: php-cli.docker
+#        volumes:
+#            - ./:/app
+#            - composer:/root/.composer/cache
+#        environment:
+#            APP_ENV: dev
+#            APP_DEBUG: 1
+#            DATABASE_URL: 'pgsql://kopnik:1234@db:5432/kopnik'
+    db:
+        build:
+            context: ./.docker/development
+            dockerfile: postgres.docker
+        restart: unless-stopped # always
+        environment:
+            POSTGRES_USER: kopnik
+            POSTGRES_PASSWORD: 1234
+            POSTGRES_DB: kopnik
+        volumes:
+            - kopnik-db:/var/lib/postgresql/data
+volumes:
+    composer:
+    kopnik-db:

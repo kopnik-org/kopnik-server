@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+    php-fpm:
+        environment:
+            APP_ENV: test
+            APP_DEBUG: 1
+    php-cli:
+        environment:
+            APP_ENV: test
+            APP_DEBUG: 1

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+    adminer:
+        image: adminer
+        ports:
+            - 8088:8080
+#        networks:
+#            - backend
+    php-fpm:
+        build: ./.docker/php-fpm_dev
+        working_dir: /app
+        volumes:
+            - ./:/app
+            - ./.docker/php-fpm_dev/global.ini:/usr/local/etc/php/conf.d/global.ini
+        environment:
+            APP_DEBUG: 1
+            APP_ENV: dev
