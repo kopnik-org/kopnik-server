@@ -4,10 +4,10 @@ RUN apt-get update && apt-get install -y \
     apt-utils \
     gnupg \
     lsb-release \
-#    g++ \
+#        g++ \
     wget \
-#    ssh \
-#    unzip \
+#        ssh \
+#        unzip \
     libbz2-dev \
     libgmp-dev \
     libicu-dev \
@@ -16,6 +16,14 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     zip
 
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+    && echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |tee  /etc/apt/sources.list.d/pgdg.list
+
+RUN apt-get update
+
+RUN apt-get install -y \
+    git
+
 #RUN apt-get install -y \
 #    libcurl4-gnutls-dev \
 #    libfreetype6-dev \
@@ -23,14 +31,13 @@ RUN apt-get update && apt-get install -y \
 #    libjpeg62-turbo-dev \
 #    libpcre++-dev \
 #    libpng-dev \
-#    libzip-dev \
 #    libxpm-dev \
 #    libxml2-dev \
 #    zlib1g-dev
 
 # Base PHP Extensions
 RUN docker-php-ext-install -j$(nproc) bcmath \
-#    && docker-php-ext-install -j$(nproc) bz2 \
+    && docker-php-ext-install -j$(nproc) bz2 \
 #    && docker-php-ext-install -j$(nproc) exif \
     && docker-php-ext-install -j$(nproc) gmp \
     && docker-php-ext-install -j$(nproc) intl \
@@ -51,9 +58,6 @@ RUN pecl install apcu && docker-php-ext-enable apcu
 #    && docker-php-ext-install -j$(nproc) pdo_mysql
 
 ### PostgreSQL
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-    && echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |tee  /etc/apt/sources.list.d/pgdg.list
-
 RUN apt-get install -y postgresql-client \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install -j$(nproc) pgsql \

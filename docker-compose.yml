@@ -38,6 +38,7 @@ services:
         volumes:
             - ./:/app
             - ./.docker/php-cli/global.ini:/usr/local/etc/php/conf.d/global.ini
+            - ./var/composer:/root/.composer/cache
         environment:
             APP_ENV: ${APP_ENV}
             DATABASE_URL: 'pgsql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?serverVersion=12&charset=utf8'
@@ -62,5 +63,4 @@ services:
 #        external: false
 
 volumes:
-    composer:
     db:

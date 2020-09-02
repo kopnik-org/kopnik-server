@@ -13,6 +13,7 @@ help:
 	@echo "[${env}]: ENV get from ${DEFAULT_ENV_FILE}"
 
 restart: down up
+restart-build: down build up
 
 generate-env-files:
 	@if [ ! -f .env.local ]; then \
@@ -38,7 +39,7 @@ build:
 up:
 	@echo "[${env}]: start containers..."
 	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
-		up -d --build
+		up -d
 	@echo "[${env}]: containers started!"
 
 down:
@@ -50,7 +51,7 @@ down:
 bin-console:
 	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
 		run --rm php-cli \
-		bin/console ${command} -e ${env}
+		bin/console -e ${env} ${c}
 
 cache-clear:
 	@if [ -d var/cache/${env} ]; then \
@@ -71,11 +72,23 @@ cache-warmup:
 	@chmod -R 777 var/cache/${env}
 
 composer-install:
-	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
-		run --rm php-cli \
-		composer install
+	@if [ ${env} = 'prod' ]; then \
+		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+			run --rm php-cli \
+			composer install --no-dev; \
+	else \
+		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+			run --rm php-cli \
+			composer install; \
+	fi
 
 composer-update:
-	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
-		run --rm php-cli \
-		composer update
+	@if [ ${env} = 'prod' ]; then \
+		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+			run --rm php-cli \
+			composer update --no-dev; \
+	else \
+		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+			run --rm php-cli \
+			composer update; \
+	fi
