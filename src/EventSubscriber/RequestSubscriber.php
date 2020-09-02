@@ -8,8 +8,6 @@ use App\Entity\User;
 use Cravler\MaxMindGeoIpBundle\Service\GeoIpService;
 use Doctrine\ORM\EntityManagerInterface;
 use GeoIp2\Exception\AddressNotFoundException;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,25 +19,17 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class RequestSubscriber implements EventSubscriberInterface
 {
-//    use ContainerAwareTrait;
-
     protected RouterInterface $router;
     protected TokenStorageInterface $token_storage;
     protected EntityManagerInterface $em;
-
     protected GeoIpService $geoIpService;
 
-    /**
-     * RequestSubscriber constructor.
-     */
     public function __construct(
         RouterInterface $router,
         TokenStorageInterface $token_storage,
-//        ContainerInterface $container,
         GeoIpService $geoIpService,
         EntityManagerInterface $em
     ) {
-//        $this->container     = $container;
         $this->em            = $em;
         $this->geoIpService  = $geoIpService;
         $this->router        = $router;

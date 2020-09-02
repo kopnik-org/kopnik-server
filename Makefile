@@ -63,12 +63,6 @@ cache-warmup:
 	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
 		run --rm php-cli \
 		bin/console cache:warmup -e ${env}
-	# @todo пересмотреть работу с правами
-	@if [ `whoami` != 'root' ]; then \
-		echo "You must be root to fix cache folder permissions"; \
-	else \
-		chmod -R 777 var/cache/${env}; \
-	fi
 	@chmod -R 777 var/cache/${env}
 
 composer-install:
@@ -96,5 +90,6 @@ composer-update:
 test-full-up:
 	@make env=test -s restart-build
 	@make env=test -s composer-install
+	@make env=test -s cache-warmup
 	@make env=test -s bin-console c="doctrine:schema:drop --force --full-database"
 	@make env=test -s bin-console c="doctrine:migrations:migrate --no-interaction"
