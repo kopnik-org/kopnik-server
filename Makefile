@@ -63,7 +63,7 @@ cache-warmup:
 	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
 		run --rm php-cli \
 		bin/console cache:warmup -e ${env}
-	@chmod -R 777 var/cache/${env}
+	#@chmod -R 777 var/cache/${env}
 
 composer-install:
 	@if [ ${env} = 'prod' ]; then \
