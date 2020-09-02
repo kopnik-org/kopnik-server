@@ -8,9 +8,11 @@ else
 endif
 
 env = ${APP_ENV}
+pwd = $(shell eval pwd -P)
 
 help:
 	@echo "[${env}]: ENV get from ${DEFAULT_ENV_FILE}"
+	@echo ${pwd}
 
 restart: down up
 restart-build: down build up
@@ -32,24 +34,24 @@ generate-env-files:
 
 build:
 	@echo "[${env}]: build containers..."
-	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${pwd}_${env}" \
 		build
 	@echo "[${env}]: containers builded!"
 
 up:
 	@echo "[${env}]: start containers..."
-	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${pwd}_${env}" \
 		up -d
 	@echo "[${env}]: containers started!"
 
 down:
 	@echo "[${env}]: stopping containers..."
-	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${pwd}_${env}" \
 		down --remove-orphans
 	@echo "[${env}]: containers stopped!"
 
 bin-console:
-	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${pwd}_${env}" \
 		run --rm php-cli \
 		bin/console -e ${env} ${c}
 
@@ -60,29 +62,29 @@ cache-clear:
 	fi
 
 cache-warmup:
-	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${pwd}_${env}" \
 		run --rm php-cli \
 		bin/console cache:warmup -e ${env}
 	#@chmod -R 777 var/cache/${env}
 
 composer-install:
 	@if [ ${env} = 'prod' ]; then \
-		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${pwd}_${env}" \
 			run --rm php-cli \
 			composer install --no-dev; \
 	else \
-		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${pwd}_${env}" \
 			run --rm php-cli \
 			composer install; \
 	fi
 
 composer-update:
 	@if [ ${env} = 'prod' ]; then \
-		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${pwd}_${env}" \
 			run --rm php-cli \
 			composer update --no-dev; \
 	else \
-		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${PWD}_${env}" \
+		docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${pwd}_${env}" \
 			run --rm php-cli \
 			composer update; \
 	fi
