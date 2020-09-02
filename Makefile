@@ -92,3 +92,9 @@ composer-update:
 			run --rm php-cli \
 			composer update; \
 	fi
+
+test-full-up:
+	@make env=test -s restart-build
+	@make env=test -s composer-install
+	@make env=test -s bin-console c="doctrine:schema:drop --force --full-database"
+	@make env=test -s bin-console c="doctrine:migrations:migrate --no-interaction"
