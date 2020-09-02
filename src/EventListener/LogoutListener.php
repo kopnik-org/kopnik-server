@@ -8,10 +8,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 
-class LogoutListener extends LogoutEvent
+class LogoutListener
 {
-    public function getResponse(): ?Response
+    public function onLogoutSuccess(LogoutEvent $event)
     {
-        return new JsonResponse(['response' => 'OK']);
+        $event->setResponse(new JsonResponse(['response' => 'OK']));
     }
 }
