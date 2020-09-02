@@ -34,4 +34,15 @@ class VkService implements MessengerInterface
     {
         return ['is_allowed' => true];
     }
+
+    public function getUser($userIds)
+    {
+        return [
+            [
+                'photo_100' => 'https://vk.com/images/camera_200.png?ava=1',
+                'photo_200' => 'https://vk.com/images/camera_200.png?ava=1',
+                'photo_400' => 'https://vk.com/images/camera_200.png?ava=1',
+            ]
+        ];
+    }
 }

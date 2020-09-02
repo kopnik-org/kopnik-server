@@ -140,7 +140,7 @@ class VkService implements MessengerInterface
     {
         return $this->vk->users()->get($this->vkCallbackApiAccessToken, [
             'user_ids'  => $userIds,
-            'fields' => 'photo_id,photo_200,sex,bdate',
+            'fields' => 'photo_id,photo_200,photo_100,photo_400,sex,bdate',
         ]);
     }
 }
