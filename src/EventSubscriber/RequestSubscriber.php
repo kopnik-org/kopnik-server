@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use App\Entity\User;
+use Cravler\MaxMindGeoIpBundle\Service\GeoIpService;
 use Doctrine\ORM\EntityManagerInterface;
 use GeoIp2\Exception\AddressNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -20,16 +21,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class RequestSubscriber implements EventSubscriberInterface
 {
-    use ContainerAwareTrait;
+//    use ContainerAwareTrait;
 
-    /** @var RouterInterface */
-    protected $router;
+    protected RouterInterface $router;
+    protected TokenStorageInterface $token_storage;
+    protected EntityManagerInterface $em;
 
-    /** @var TokenStorageInterface */
-    protected $token_storage;
-
-    /** @var EntityManagerInterface */
-    protected $em;
+    protected GeoIpService $geoIpService;
 
     /**
      * RequestSubscriber constructor.
@@ -37,11 +35,13 @@ class RequestSubscriber implements EventSubscriberInterface
     public function __construct(
         RouterInterface $router,
         TokenStorageInterface $token_storage,
-        ContainerInterface $container,
+//        ContainerInterface $container,
+        GeoIpService $geoIpService,
         EntityManagerInterface $em
     ) {
-        $this->container     = $container;
+//        $this->container     = $container;
         $this->em            = $em;
+        $this->geoIpService  = $geoIpService;
         $this->router        = $router;
         $this->token_storage = $token_storage;
     }
@@ -74,7 +74,7 @@ class RequestSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $geoIpService = $this->container->get('cravler_max_mind_geo_ip.service.geo_ip_service');
+        $geoIpService = $this->geoIpService;
 
         if (empty($user->getLatitude()) or empty($user->getLongitude())) {
             try {

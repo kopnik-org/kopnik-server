@@ -20,7 +20,7 @@ security:
 #                check_path: /test/login
             logout:
                 path: security_logout
-                success_handler: App\Security\LogoutSuccessHandler
+#                success_handler: App\Security\LogoutSuccessHandler
             guard:
                 authenticators:
                     - App\Security\UserAuthenticator
