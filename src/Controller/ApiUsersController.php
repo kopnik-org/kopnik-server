@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use VK\Exceptions\Api\VKApiFloodException;
 use VK\Exceptions\VKApiException;
 use VK\Exceptions\VKClientException;
+use VK\TransportClient\TransportRequestException;
 
 /**
  * @Route("/api/users")
@@ -28,8 +29,12 @@ class ApiUsersController extends AbstractApiController
      *
      * @Route("/updateProfile", methods={"POST"}, name="api_users_update_profile")
      */
-    public function usersProfile(Request $request, KernelInterface $kernel, EntityManagerInterface $em, MessengerInterface $vk, LoggerInterface $logger): JsonResponse
-    {
+    public function updateProfile(
+        Request $request,
+        KernelInterface $kernel,
+        EntityManagerInterface $em,
+        MessengerInterface $vk
+    ): JsonResponse {
         $user = $this->getUser();
         $this->user = $user;
 
@@ -80,7 +85,6 @@ class ApiUsersController extends AbstractApiController
 
         if ($form->isValid()) {
             try {
-                //$vk = new VKApiClient(); // @todo remove
                 /** @var User $user */
                 $user = $this->getUser();
 
@@ -127,6 +131,21 @@ class ApiUsersController extends AbstractApiController
 
             if ( ! $user->isWitness()) {
                 $user->setStatus(User::STATUS_PENDING);
+            }
+
+            try {
+                $result = $vk->getUser($user->getVkIdentifier());
+                $item = $result[0];
+                $user
+                    ->setPhoto($item['photo_400'] ?? null)
+                    ->setSmallPhoto($item['photo_100'] ?? null)
+                ;
+            } catch (VKClientException $e) {
+                // dummy
+            } catch (TransportRequestException $e) {
+                // dummy
+            } catch (VKApiException $e) {
+                // dummy
             }
 
             $em->persist($user);
