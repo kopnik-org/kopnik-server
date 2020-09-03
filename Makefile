@@ -12,10 +12,16 @@ pwd = $(shell eval pwd -P)
 
 help:
 	@echo "[${env}]: ENV get from ${DEFAULT_ENV_FILE}"
-	@echo ${pwd}
 
 restart: down up
 restart-build: down build up
+
+deploy:
+	@git pull
+	@make -s restart-build
+	@make -s composer-install
+	@make -s cache-warmup
+	@make -s bin-console c="doctrine:migrations:migrate --no-interaction"
 
 generate-env-files:
 	@if [ ! -f .env.local ]; then \
