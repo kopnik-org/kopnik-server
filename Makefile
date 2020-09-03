@@ -21,6 +21,7 @@ generate-env-files:
 	@if [ ! -f .env.local ]; then \
   		echo "[${env}]: generate => .env.local"; \
 		cp .env .env.local; \
+		sed -i "s/APP_ENV=prod/APP_ENV=${env}/g" .env.local; \
 	else \
 	  	echo "[${env}]: already exist => .env.local"; \
 	fi

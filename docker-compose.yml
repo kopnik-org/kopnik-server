@@ -12,24 +12,6 @@ services:
             - db:/var/lib/postgresql/data
 #        networks:
 #            - backend
-    nginx:
-        build:
-            context: ./.docker/nginx
-#            args:
-#                APP_ENV: '1234'
-        working_dir: /app
-        volumes:
-            - ./:/app
-            #- ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-        depends_on:
-            - php-fpm
-        environment: # @todo
-            VIRTUAL_HOST: kopnik2
-            NGINX_HOST: kopnik2
-        ports:
-            - '${WEB_PORT}:80'
-#        networks:
-#            - web
     php-cli:
         build: ./.docker/php-cli
         working_dir: /app
