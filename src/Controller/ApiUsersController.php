@@ -25,6 +25,20 @@ use VK\TransportClient\TransportRequestException;
 class ApiUsersController extends AbstractApiController
 {
     /**
+     * Расширенный метод запроса данных для уменьшения кол-ва запросов по хттп
+     *
+     * @Route("/getEx", methods={"GET"})
+     */
+    public function getEx(): JsonResponse
+    {
+        return $this->jsonResponse([
+            'ids' => $this->forward('App\Controller\ApiUsersController::usersGet')->getContent(),
+            'subordinates' => $this->forward('App\Controller\ApiUsersForemanController::getSubordinates')->getContent(),
+            'foremanRequests' => $this->forward('App\Controller\ApiUsersForemanController::getForemanRequests')->getContent(),
+        ]);
+    }
+
+    /**
      * Обновить своего (текущего) пользователя. Меняет статус пользователя на ОЖИДАЕТ ЗАВЕРЕНИЯ.
      *
      * @Route("/updateProfile", methods={"POST"}, name="api_users_update_profile")
