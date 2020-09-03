@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Event\UserEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -236,7 +237,13 @@ class ApiUsersForemanController extends AbstractApiController
 
         $this->user = $this->getUser();
 
-        $user = $em->getRepository(User::class)->find($request->query->get('id'));
+        try {
+            if ($request->query->has('id') and is_numeric($request->query->get('id'))) {
+                $user = $em->getRepository(User::class)->find($request->query->get('id'));
+            }
+        } catch (ORMException $e) {
+            // dummy
+        }
 
         if (empty($user)) {
             $user = $this->getUser();

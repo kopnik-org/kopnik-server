@@ -23,6 +23,13 @@ deploy:
 	@make -s cache-warmup
 	@make -s bin-console c="doctrine:migrations:migrate --no-interaction"
 
+test-full-up:
+	@make env=test -s restart-build
+	@make env=test -s composer-install
+	@make env=test -s cache-warmup
+	@make env=test -s bin-console c="doctrine:schema:drop --force --full-database"
+	@make env=test -s bin-console c="doctrine:migrations:migrate --no-interaction"
+
 generate-env-files:
 	@if [ ! -f .env.local ]; then \
   		echo "[${env}]: generate => .env.local"; \
@@ -95,10 +102,3 @@ composer-update:
 			run --rm php-cli \
 			composer update; \
 	fi
-
-test-full-up:
-	@make env=test -s restart-build
-	@make env=test -s composer-install
-	@make env=test -s cache-warmup
-	@make env=test -s bin-console c="doctrine:schema:drop --force --full-database"
-	@make env=test -s bin-console c="doctrine:migrations:migrate --no-interaction"
