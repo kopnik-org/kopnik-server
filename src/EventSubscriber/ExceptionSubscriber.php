@@ -20,17 +20,19 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     public function exception(ExceptionEvent $event): void
     {
+        $event->allowCustomResponseCode();
+
         $e = $event->getThrowable();
 
         $data = [
-            'code'     => $e->getCode(),
-            'message'  => $e->getMessage(),
-            'file'     => $e->getFile(),
-            'line'     => $e->getLine(),
-            'trace'    => $e->getTrace(),
-            'previous' => $e->getPrevious(),
+            'error_code'  => 500,
+            'error_msg'   => $e->getMessage(),
+            'error_file'  => $e->getFile(),
+            'error_line'  => $e->getLine(),
+            'error_trace' => $e->getTrace(),
+//            'previous' => $e->getPrevious(),
         ];
 
-        $event->setResponse(new JsonResponse(['error' => $data]));
+        $event->setResponse(new JsonResponse(['error' => $data], 200));
     }
 }
