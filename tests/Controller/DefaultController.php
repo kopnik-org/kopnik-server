@@ -250,7 +250,13 @@ class DefaultController extends AbstractApiController
     {
         $input = json_decode($request->getContent(), true);
 
-        $pass1 = $input['number'] + 10;
+//        $pass1 = $input['number'] + 10;
+        $pass1 = 10 / $input['number'];
+
+//        if (!is_int($input['number'])) {
+//            throw new \Exception('number must be integer');
+//        }
+
         $pass2 = strlen($input['string']);
 
         foreach ($input['array'] as $key => $val) {
