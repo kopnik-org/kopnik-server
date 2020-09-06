@@ -26,7 +26,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         $e = $event->getThrowable();
 
         $data = [
-            'error_code'  => 500,
+            'error_code'  => 1500,
             'error_msg'   => $e->getMessage(),
             'error_file'  => $e->getFile(),
             'error_line'  => $e->getLine(),
