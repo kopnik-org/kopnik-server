@@ -50,7 +50,7 @@ class WitnessPromoteCommand extends Command
         if (empty($userOauth)) {
             $this->io->error('Пользователь с VK ID: '.(int) $vk_id.' не зарегистрирован в системе');
 
-            return;
+            return 0;
         }
 
         /** @var User $user */

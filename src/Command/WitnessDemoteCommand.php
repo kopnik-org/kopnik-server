@@ -50,7 +50,7 @@ class WitnessDemoteCommand extends Command
         if (empty($userOauth)) {
             $this->io->error('Пользователь с VK ID: '.(int) $vk_id.' не зарегистрирован в системе');
 
-            return;
+            return 0;
         }
 
         /** @var User $user */
@@ -62,7 +62,7 @@ class WitnessDemoteCommand extends Command
 
             $this->io->success($user->getFirstName().' '.$user->getLastName().' - лишен статуса заверитель');
 
-            return;
+            return 0;
         }
 
         $this->io->note($user->getFirstName().' '.$user->getLastName().' - не является заверителем');
