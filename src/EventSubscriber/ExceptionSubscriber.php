@@ -7,6 +7,7 @@ namespace App\EventSubscriber;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class ExceptionSubscriber implements EventSubscriberInterface
@@ -30,8 +31,12 @@ class ExceptionSubscriber implements EventSubscriberInterface
             'error_file'  => $e->getFile(),
             'error_line'  => $e->getLine(),
             'error_trace' => $e->getTrace(),
-//            'previous' => $e->getPrevious(),
+            //'previous' => $e->getPrevious(),
         ];
+
+        if ($e instanceof HttpExceptionInterface) {
+            $data['error_code'] = $e->getStatusCode();
+        }
 
         $event->setResponse(new JsonResponse(['error' => $data], 200));
     }
