@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use VK\Exceptions\Api\VKApiFloodException;
@@ -240,5 +241,26 @@ class DefaultController extends AbstractApiController
         }
 
         return $this->jsonResponse($result);
+    }
+
+    /**
+     * @Route("/api/bodyError")
+     */
+    public function bodyError(Request $request): Response
+    {
+        $input = json_decode($request->getContent(), true);
+
+        $pass1 = $input['number'] + 10;
+        $pass2 = strlen($input['string']);
+
+        foreach ($input['array'] as $key => $val) {
+            $pass3 = $val;
+        }
+
+        foreach ($input['object'] as $key => $val) {
+            $pass4 = $val;
+        }
+
+        return new JsonResponse($input);
     }
 }
