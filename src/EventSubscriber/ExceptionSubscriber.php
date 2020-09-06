@@ -35,7 +35,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         ];
 
         if ($e instanceof HttpExceptionInterface) {
-            $data['error_code'] = $e->getStatusCode();
+            $data['error_code'] = 1000 + $e->getStatusCode();
         }
 
         $event->setResponse(new JsonResponse(['error' => $data], 200));
