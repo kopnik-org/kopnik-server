@@ -1,3 +1,10 @@
 #!/bin/bash
 
-make -is bin-console c="$1 $2 $3 $4 $5 $6 $7 $8 $9"
+# Example use: env=test bin/docker_console
+
+if [ -z "$env" ]
+then
+      make -is bin-console c="$1 $2 $3 $4 $5 $6 $7 $8 $9"
+else
+      make env=$env -is bin-console c="$1 $2 $3 $4 $5 $6 $7 $8 $9"
+fi
