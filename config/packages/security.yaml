@@ -30,7 +30,7 @@ security:
                 failure_path:   /
                 login_path:     /login/
                 use_forward:    false
-                remember_me:    true
+#                remember_me:    true
                 oauth_user_provider:
                     service: app.oauth_aware.user_provider.service
 
@@ -41,15 +41,16 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
-            remember_me:
-                always_remember_me: true
-                httponly: false
-                secure: true
-                secret: "%env(APP_SECRET)%"
-                name: REMEMBER_ME
-                lifetime: 604800 # 1 week
-                path: /
-                domain: ~
+#            remember_me:
+#                always_remember_me: true
+#                remember_me_parameter: _remember_me
+#                httponly: false
+#                secure: true
+#                secret: "%env(APP_SECRET)%"
+#                name: REMEMBER_ME
+#                lifetime: 604800 # 1 week
+#                path: /
+#                domain: ~
 
     session_fixation_strategy: none
 
