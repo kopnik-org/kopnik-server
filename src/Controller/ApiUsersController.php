@@ -31,11 +31,12 @@ class ApiUsersController extends AbstractApiController
      */
     public function getEx(): JsonResponse
     {
-        return $this->jsonResponse([
-            'ids' => json_decode($this->forward('App\Controller\ApiUsersController::usersGet')->getContent(),true),
-            'subordinates' => json_decode($this->forward('App\Controller\ApiUsersForemanController::getSubordinates')->getContent(),true),
-            'foremanRequests' => json_decode($this->forward('App\Controller\ApiUsersForemanController::getForemanRequests')->getContent(),true),
-        ]);
+        $response = json_decode($this->forward('App\Controller\ApiUsersController::usersGet')->getContent(),true)['response'][0];
+
+        $response['subordinates'] = json_decode($this->forward('App\Controller\ApiUsersForemanController::getSubordinates')->getContent(),true)['response'];
+        $response['foremanRequests'] = json_decode($this->forward('App\Controller\ApiUsersForemanController::getForemanRequests')->getContent(),true)['response'];
+
+        return $this->jsonResponse($response);
     }
 
     /**
