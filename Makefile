@@ -69,6 +69,11 @@ bin-console:
 		run --rm php-cli \
 		bin/console -e ${env} ${c}
 
+bin-bash:
+	@docker-compose --file=./docker-compose.yml --file=./docker-compose.${env}.yml --env-file=./.env.docker.${env}.local -p "${pwd}_${env}" \
+		run --rm php-cli \
+		/bin/bash ${c}
+
 cache-clear:
 	@if [ -d var/cache/${env} ]; then \
 		echo "[${env}]: Clearing var/cache/${env}..."; \
