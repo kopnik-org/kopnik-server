@@ -35,7 +35,7 @@ class ApiUsersController extends AbstractApiController
         $this->user = $user;
 
         if (empty($this->getUser())) {
-            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
+            return $this->jsonError(1000 + self::ERROR_UNAUTHORIZED, 'No authentication');
         }
 
         $response = json_decode($this->forward('App\Controller\ApiUsersController::usersGet')->getContent(),true)['response'][0];
