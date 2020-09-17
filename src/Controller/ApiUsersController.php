@@ -31,6 +31,13 @@ class ApiUsersController extends AbstractApiController
      */
     public function getEx(): JsonResponse
     {
+        $user = $this->getUser();
+        $this->user = $user;
+
+        if (empty($this->getUser())) {
+            return $this->jsonError(self::ERROR_UNAUTHORIZED, 'No authentication');
+        }
+
         $response = json_decode($this->forward('App\Controller\ApiUsersController::usersGet')->getContent(),true)['response'][0];
 
         $response['subordinates'] = json_decode($this->forward('App\Controller\ApiUsersForemanController::getSubordinates')->getContent(),true)['response'];
