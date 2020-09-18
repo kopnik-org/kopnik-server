@@ -213,7 +213,8 @@ class ApiUsersController extends AbstractApiController
         }
 
         if (!$this->user->isWitness()) {
-            return $this->jsonError(403, 'ACCESS_DENIED: Получить заявки могут только заверители');
+            return $this->jsonResponse([]);
+            //return $this->jsonError(403, 'ACCESS_DENIED: Получить заявки могут только заверители');
         }
 
         $users = $em->getRepository(User::class)->findBy([
