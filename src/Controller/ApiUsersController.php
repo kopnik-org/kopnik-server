@@ -42,6 +42,7 @@ class ApiUsersController extends AbstractApiController
 
         $response['subordinates'] = json_decode($this->forward('App\Controller\ApiUsersForemanController::getSubordinates')->getContent(),true)['response'];
         $response['foremanRequests'] = json_decode($this->forward('App\Controller\ApiUsersForemanController::getForemanRequests')->getContent(),true)['response'];
+        $response['witnessRequests'] = json_decode($this->forward('App\Controller\ApiUsersController::usersPending')->getContent(),true)['response'];
 
         return $this->jsonResponse($response);
     }
