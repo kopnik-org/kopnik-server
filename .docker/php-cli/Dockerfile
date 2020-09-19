@@ -1,4 +1,4 @@
-FROM php:7.4.9-cli
+FROM php:7.4.10-cli
 
 RUN apt-get update && apt-get install -y \
     apt-utils \
