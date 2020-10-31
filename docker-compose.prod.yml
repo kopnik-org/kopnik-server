@@ -3,7 +3,7 @@ version: '3.8'
 services:
     php-fpm:
         ports:
-            - 9080:9000
+            - 127.0.0.1:9080:9000
         environment:
             APP_ENV: prod
             APP_DEBUG: 0
