@@ -48,7 +48,7 @@ class ForemanSubscriber implements EventSubscriberInterface
             $foreman_chat_link = $foreman->getForemanChatInviteLink();
         } else {
             // 1) Создать групповой чат с заверителем и новобранцем
-            $chat_id = $this->vk->createChat("Чат десятки старшины - {$foreman}",
+            $chat_id = $this->vk->createChat("Десятка {$foreman}",
                 [$user->getVkIdentifier(), $foreman->getVkIdentifier()]
             );
 
@@ -64,7 +64,7 @@ class ForemanSubscriber implements EventSubscriberInterface
             $this->em->flush();
         }
 
-        $this->vk->sendMessage($user->getVkIdentifier(), "Старшина одобрил твою заявку. Перейти в чат десятки по ссылке $foreman_chat_link");
+        $this->vk->sendMessage($user->getVkIdentifier(), "Старшина одобрил твою заявку. Перейти в чат десятки $foreman_chat_link");
     }
 
     public function sendNotifyToForemanDecline(User $user): void
