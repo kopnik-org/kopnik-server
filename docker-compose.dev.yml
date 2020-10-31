@@ -5,6 +5,9 @@ services:
         image: adminer
         ports:
             - 8088:8080
+    db:
+        ports:
+            - 5532:5432
     nginx:
         build:
             context: ./.docker/nginx

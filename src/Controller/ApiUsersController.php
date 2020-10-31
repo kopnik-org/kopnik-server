@@ -140,7 +140,7 @@ class ApiUsersController extends AbstractApiController
                 // 3) Написать ссылку-приглашение в чат новобранцу
                 $message = $user->getStatus() == User::STATUS_NEW ?
                     "Добро пожаловать в kopnik-org! Для заверения, пожалуйста, перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта." :
-                    "Повторная заявка на заверение в kopnik-org! Перейдите в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.";
+                    "Повторная заявка на заверение в kopnik-org! Перейти в чат по ссылке $invite_chat_link и договоритеcь о заверении аккаунта.";
 
                 $result = $vk->sendMessage($user->getVkIdentifier(), $message);
 

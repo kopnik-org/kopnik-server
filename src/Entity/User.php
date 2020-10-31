@@ -76,6 +76,22 @@ class User implements UserInterface
     protected $assurance_chat_id;
 
     /**
+     * Чат десятки, если юзер когда-либо становился "Старшиной"
+     *
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=64, nullable=true)
+     */
+    protected $foreman_chat_invite_link;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $foreman_chat_id;
+
+    /**
      * @var int|null
      *
      * @ORM\Column(type="integer", nullable=false, options={"default":1})
@@ -1091,6 +1107,46 @@ class User implements UserInterface
     public function setAssuranceChatId(?int $assurance_chat_id): self
     {
         $this->assurance_chat_id = $assurance_chat_id;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getForemanChatInviteLink(): ?string
+    {
+        return $this->foreman_chat_invite_link;
+    }
+
+    /**
+     * @param string|null $foreman_chat_invite_link
+     *
+     * @return $this
+     */
+    public function setForemanChatInviteLink(?string $foreman_chat_invite_link): self
+    {
+        $this->foreman_chat_invite_link = $foreman_chat_invite_link;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getForemanChatId(): ?int
+    {
+        return $this->foreman_chat_id;
+    }
+
+    /**
+     * @param int|null $foreman_chat_id
+     *
+     * @return $this
+     */
+    public function setForemanChatId(?int $foreman_chat_id): self
+    {
+        $this->foreman_chat_id = $foreman_chat_id;
 
         return $this;
     }

@@ -103,6 +103,9 @@ RUN apt-get install -y postgresql-client \
 #RUN pecl install xdebug && docker-php-ext-enable xdebug
 #COPY ./php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
+RUN apt-get install -y \
+    bash-completion
+
 # Cleanups
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 

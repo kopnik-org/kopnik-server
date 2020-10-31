@@ -18,6 +18,9 @@ services:
         volumes:
             - ./:/app
             - ./.docker/php-cli/global.ini:/usr/local/etc/php/conf.d/global.ini
+            - ./.docker/php-cli/apcu.ini:/usr/local/etc/php/conf.d/apcu.ini
+            - ./.docker/php-cli/.bashrc:/root/.bashrc
+            - ./.docker/php-cli/symfony-console-autocomplete:/etc/bash_completion.d/symfony-console-autocomplete
             - ./var/composer:/root/.composer/cache
 #        depends_on:
 #            - db

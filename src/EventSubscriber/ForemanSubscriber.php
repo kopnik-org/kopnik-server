@@ -7,14 +7,17 @@ namespace App\EventSubscriber;
 use App\Contracts\MessengerInterface;
 use App\Entity\User;
 use App\Event\UserEvent;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ForemanSubscriber implements EventSubscriberInterface
 {
+    protected $em;
     protected $vk;
 
-    public function __construct(MessengerInterface $vk)
+    public function __construct(EntityManagerInterface $em, MessengerInterface $vk)
     {
+        $this->em = $em;
         $this->vk = $vk;
     }
 
@@ -39,7 +42,29 @@ class ForemanSubscriber implements EventSubscriberInterface
 
     public function sendNotifyToForemanConfirm(User $user): void
     {
-        $this->vk->sendMessage($user->getVkIdentifier(), 'Старшина одобрил твою заявку');
+        $foreman = $user->getForeman();
+
+        if ($foreman->getForemanChatInviteLink()) {
+            $foreman_chat_link = $foreman->getForemanChatInviteLink();
+        } else {
+            // 1) Создать групповой чат с заверителем и новобранцем
+            $chat_id = $this->vk->createChat("Чат десятки старшины - {$foreman}",
+                [$user->getVkIdentifier(), $foreman->getVkIdentifier()]
+            );
+
+            // 2) Получить ссылку приглашения в чат
+            $foreman_chat_link = $this->vk->getInviteLink($chat_id);
+
+            // 3) Сохранить чат десятки старшины
+            $foreman
+                ->setForemanChatId($chat_id)
+                ->setForemanChatInviteLink($foreman_chat_link)
+            ;
+
+            $this->em->flush();
+        }
+
+        $this->vk->sendMessage($user->getVkIdentifier(), "Старшина одобрил твою заявку. Перейти в чат десятки по ссылке $foreman_chat_link");
     }
 
     public function sendNotifyToForemanDecline(User $user): void

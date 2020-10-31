@@ -1,6 +1,9 @@
 version: '3.8'
 
 services:
+    db:
+        ports:
+            - 5632:5432
     nginx:
         build:
             context: ./.docker/nginx
