@@ -96,6 +96,14 @@ class VkService implements MessengerInterface
         ]);
     }
 
+    public function removeChatUser($chat_id, $user_id)
+    {
+        return $this->vk->messages()->removeChatUser($this->vkCallbackApiAccessToken, [
+            'chat_id'  => $chat_id,
+            'user_id'  => $user_id,
+        ]);
+    }
+
     /**
      * Не используется
      */

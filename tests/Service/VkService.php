@@ -24,6 +24,11 @@ class VkService implements MessengerInterface
         return rand(100, 200);
     }
 
+    public function removeChatUser($chat_id, $user_id)
+    {
+        return;
+    }
+
     public function getInviteLink($chat_id)
     {
         //return ['link' => '//test/invite/chat/link'];

@@ -77,6 +77,8 @@ class ForemanSubscriber implements EventSubscriberInterface
         $foreman = $user->getForeman();
 
         if ($foreman) {
+            $this->removeUserFromForemanChat($user);
+
             $this->vk->sendMessage($foreman->getVkIdentifier(), sprintf('%s вышел из десятки', (string) $user));
         }
     }
@@ -86,7 +88,14 @@ class ForemanSubscriber implements EventSubscriberInterface
         $foreman = $user->getForeman();
 
         if ($foreman) {
+            $this->removeUserFromForemanChat($user);
+
             $this->vk->sendMessage($user->getVkIdentifier(), sprintf('Старшина %s исключил тебя из подчинённых', (string) $user->getForeman()));
         }
+    }
+
+    protected function removeUserFromForemanChat(User $user)
+    {
+        $this->vk->removeChatUser($user->getForeman()->getForemanChatId(), $user->getVkIdentifier());
     }
 }

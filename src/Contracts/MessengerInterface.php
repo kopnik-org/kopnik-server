@@ -14,6 +14,8 @@ interface MessengerInterface
 
     public function createChat($title, array $users);
 
+    public function removeChatUser($chat_id, $user_id);
+
     public function getInviteLink($chat_id);
 
     public function isMessagesFromGroupAllowed($userId);
