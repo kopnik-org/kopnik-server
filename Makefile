@@ -30,6 +30,9 @@ test-full-up:
 	@make env=test -s bin-console c="doctrine:schema:drop --force --full-database"
 	@make env=test -s bin-console c="doctrine:migrations:migrate --no-interaction"
 
+test-down:
+	@make env=test -s down
+
 generate-env-files:
 	@if [ ! -f .env.local ]; then \
   		echo "[${env}]: generate => .env.local"; \
