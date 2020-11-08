@@ -67,6 +67,8 @@ class ForemanSubscriber implements EventSubscriberInterface
             ;
 
             $this->em->flush();
+
+            $this->vk->sendMessage($foreman->getVkIdentifier(), "Создан твой чат старшины десятки $foreman_chat_link");
         }
 
         $this->vk->sendMessage($user->getVkIdentifier(), "Старшина одобрил твою заявку. Перейти в чат десятки $foreman_chat_link");
