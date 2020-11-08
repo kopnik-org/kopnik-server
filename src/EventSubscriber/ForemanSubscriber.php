@@ -9,6 +9,11 @@ use App\Entity\User;
 use App\Event\UserEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use VK\Exceptions\Api\VKApiMessagesChatNotAdminException;
+use VK\Exceptions\Api\VKApiMessagesChatUserNotInChatException;
+use VK\Exceptions\Api\VKApiMessagesContactNotFoundException;
+use VK\Exceptions\VKApiException;
+use VK\Exceptions\VKClientException;
 
 class ForemanSubscriber implements EventSubscriberInterface
 {
@@ -96,6 +101,18 @@ class ForemanSubscriber implements EventSubscriberInterface
 
     protected function removeUserFromForemanChat(User $user)
     {
-        $this->vk->removeChatUser($user->getForeman()->getForemanChatId(), $user->getVkIdentifier());
+        try {
+            $this->vk->removeChatUser($user->getForeman()->getForemanChatId(), $user->getVkIdentifier());
+        } catch (VKApiMessagesChatUserNotInChatException $e) {
+            // User not found in chat
+        } catch (VKApiMessagesContactNotFoundException $e) {
+            // Contact not found
+        } catch (VKApiMessagesChatNotAdminException $e) {
+            // You are not admin of this chat
+        } catch (VKApiException $e) {
+            //
+        } catch (VKClientException $e) {
+            //
+        }
     }
 }
