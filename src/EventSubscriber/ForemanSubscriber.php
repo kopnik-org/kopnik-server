@@ -40,8 +40,10 @@ class ForemanSubscriber implements EventSubscriberInterface
     public function sendNotifyToForemanRequest(User $user): void
     {
         if ($user->getForemanRequest()) {
+            $this->sendNotifyToForemanReset($user); // Исключение из десятки, если уже состоит
+
             // @todo обработка исключений от вк
-            $this->vk->sendMessage($user->getForemanRequest()->getVkIdentifier(),  sprintf('%s подал заявку на вступление в десятку', (string) $user));
+            $this->vk->sendMessage($user->getForemanRequest()->getVkIdentifier(), sprintf('%s подал заявку на вступление в десятку', (string) $user));
         }
     }
 
