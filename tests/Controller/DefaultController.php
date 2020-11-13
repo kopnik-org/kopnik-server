@@ -88,6 +88,7 @@ class DefaultController extends AbstractApiController
             'smallPhoto'    => $input['smallPhoto'] ?? null,
             'foreman_id'    => $input['foreman_id'] ?? null,
             'foremanRequest_id' => $input['foremanRequest_id'] ?? null,
+            'tenChatInviteLink' => null,
         ];
 
         try {
@@ -145,7 +146,7 @@ class DefaultController extends AbstractApiController
         if ($data['foremanRequest_id']) {
             $foreman = $em->getRepository(User::class)->find((int) $data['foremanRequest_id']);
 
-            if ( ! $foreman) {
+            if (!$foreman) {
                 return $this->jsonError(self::ERROR_NOT_VALID, 'Указан не существующий foremanRequest_id');
             }
 

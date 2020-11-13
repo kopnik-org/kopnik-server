@@ -18,9 +18,8 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 class UserAuthenticator extends AbstractGuardAuthenticator
 {
-    private $em;
-
-    private $security;
+    private EntityManagerInterface $em;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {

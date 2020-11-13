@@ -59,6 +59,7 @@ class RankListener implements EventSubscriber
     {
         $descendantId = $user->getId();
 
+        // @todo вынести в репу
         $sql = "
             UPDATE users
             SET rank = uc.cnt

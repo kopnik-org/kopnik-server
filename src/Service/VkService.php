@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Contracts\MessengerInterface;
-use App\Entity\User;
 use App\Exception\VkException;
-use Symfony\Component\HttpKernel\KernelInterface;
 use VK\Client\VKApiClient;
 use VK\Exceptions\Api\VKApiFloodException;
 use VK\Exceptions\VKApiException;
@@ -20,7 +18,7 @@ class VkService implements MessengerInterface
 {
     protected $vkCallbackApiAccessToken;
     protected $vkCommunityId;
-    protected $vk;
+    protected VKApiClient $vk;
 
     public function __construct($vkCallbackApiAccessToken, $vkCommunityId)
     {
@@ -30,9 +28,6 @@ class VkService implements MessengerInterface
     }
 
     /**
-     * @param User   $user
-     * @param string $message
-     *
      * @return mixed|void
      *
      * @throws VKApiException

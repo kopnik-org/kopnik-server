@@ -28,150 +28,95 @@ class UserOauth
     use ColumnTrait\CreatedAt;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="string", length=100, nullable=true)
      * @Assert\Email()
      */
-    protected $email;
+    protected ?string $email;
 
     /**
-     * @var User
-     *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="oauths", cascade={"persist"})
      */
-    protected $user;
+    protected User $user;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100)
      */
-    protected $access_token;
+    protected string $access_token;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="string", length=100, nullable=true)
      */
-    protected $refresh_token;
+    protected ?string $refresh_token;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(type="bigint", nullable=false)
      */
-    protected $identifier;
+    protected int $identifier;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=20, nullable=false)
      */
-    protected $provider;
+    protected string $provider;
 
-    /**
-     * UserOauth constructor.
-     */
     public function __construct()
     {
         $this->created_at   = new \DateTime();
         $this->provider     = 'vkontakte';
     }
 
-    /**
-     * @return string|null
-     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param string|null $email
-     *
-     * @return $this
-     */
-    public function setEmail($email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getUser(): User
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return $this
-     */
-    public function setUser($user): self
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAccessToken(): string
     {
         return $this->access_token;
     }
 
-    /**
-     * @param string $access_token
-     *
-     * @return $this
-     */
-    public function setAccessToken($access_token): self
+    public function setAccessToken(string $access_token): self
     {
         $this->access_token = $access_token;
 
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getRefreshToken(): ?string
     {
         return $this->refresh_token;
     }
 
-    /**
-     * @param string|null $refresh_token
-     *
-     * @return $this
-     */
-    public function setRefreshToken($refresh_token): self
+    public function setRefreshToken(?string $refresh_token): self
     {
         $this->refresh_token = $refresh_token;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getIdentifier(): int
     {
         return (int) $this->identifier;
     }
 
-    /**
-     * @param int $identifier
-     *
-     * @return $this
-     */
     public function setIdentifier(int $identifier): self
     {
         $this->identifier = $identifier;
@@ -179,20 +124,12 @@ class UserOauth
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getProvider(): string
     {
         return $this->provider;
     }
 
-    /**
-     * @param string $provider
-     *
-     * @return $this
-     */
-    public function setProvider($provider): self
+    public function setProvider(string $provider): self
     {
         $this->provider = $provider;
 

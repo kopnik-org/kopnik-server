@@ -17,8 +17,8 @@ use VK\Exceptions\VKClientException;
 
 class ForemanSubscriber implements EventSubscriberInterface
 {
-    protected $em;
-    protected $vk;
+    protected EntityManagerInterface $em;
+    protected MessengerInterface $vk;
 
     public function __construct(EntityManagerInterface $em, MessengerInterface $vk)
     {
@@ -49,8 +49,12 @@ class ForemanSubscriber implements EventSubscriberInterface
     {
         $foreman = $user->getForeman();
 
-        if ($foreman->getForemanChatInviteLink()) {
-            $foreman_chat_link = $foreman->getForemanChatInviteLink();
+        if (!$foreman) {
+            return;
+        }
+
+        if ($foreman->getTenChatInviteLink()) {
+            $ten_chat_link = $foreman->getTenChatInviteLink();
         } else {
             // 1) Создать групповой чат с заверителем и новобранцем
             $chat_id = $this->vk->createChat("Десятка {$foreman}",
@@ -58,20 +62,20 @@ class ForemanSubscriber implements EventSubscriberInterface
             );
 
             // 2) Получить ссылку приглашения в чат
-            $foreman_chat_link = $this->vk->getInviteLink($chat_id);
+            $ten_chat_link = $this->vk->getInviteLink($chat_id);
 
             // 3) Сохранить чат десятки старшины
             $foreman
-                ->setForemanChatId($chat_id)
-                ->setForemanChatInviteLink($foreman_chat_link)
+                ->setTenChatId($chat_id)
+                ->setTenChatInviteLink($ten_chat_link)
             ;
 
             $this->em->flush();
 
-            $this->vk->sendMessage($foreman->getVkIdentifier(), "Создан твой чат старшины десятки $foreman_chat_link");
+            $this->vk->sendMessage($foreman->getVkIdentifier(), "Создан твой чат старшины десятки $ten_chat_link");
         }
 
-        $this->vk->sendMessage($user->getVkIdentifier(), "Старшина одобрил твою заявку. Перейти в чат десятки $foreman_chat_link");
+        $this->vk->sendMessage($user->getVkIdentifier(), "Старшина одобрил твою заявку. Перейти в чат десятки $ten_chat_link");
     }
 
     public function sendNotifyToForemanDecline(User $user): void
@@ -84,7 +88,7 @@ class ForemanSubscriber implements EventSubscriberInterface
         $foreman = $user->getForeman();
 
         if ($foreman) {
-            $this->removeUserFromForemanChat($user);
+            $this->removeUserFromTenChat($user);
 
             $this->vk->sendMessage($foreman->getVkIdentifier(), sprintf('%s вышел из десятки', (string) $user));
         }
@@ -95,16 +99,16 @@ class ForemanSubscriber implements EventSubscriberInterface
         $foreman = $user->getForeman();
 
         if ($foreman) {
-            $this->removeUserFromForemanChat($user);
+            $this->removeUserFromTenChat($user);
 
             $this->vk->sendMessage($user->getVkIdentifier(), sprintf('Старшина %s исключил тебя из подчинённых', (string) $user->getForeman()));
         }
     }
 
-    protected function removeUserFromForemanChat(User $user)
+    protected function removeUserFromTenChat(User $user)
     {
         try {
-            $this->vk->removeChatUser($user->getForeman()->getForemanChatId(), $user->getVkIdentifier());
+            $this->vk->removeChatUser($user->getForeman()->getTenChatId(), $user->getVkIdentifier());
         } catch (VKApiMessagesChatUserNotInChatException $e) {
             // User not found in chat
         } catch (VKApiMessagesContactNotFoundException $e) {

@@ -22,6 +22,8 @@ class AbstractApiController extends AbstractController
     protected $user;
 
     /**
+     * В App\Tests\Controller\SecurityController этот метод перегружается!
+     *
      * @todo вынести в сервис
      */
     protected function serializeUser(User $user, bool $forcePassport = false): array
@@ -29,8 +31,6 @@ class AbstractApiController extends AbstractController
         $location = new \stdClass();
         $location->lat = $user->getLatitude();
         $location->lng = $user->getLongitude();
-
-        $foremanRequestId = $user->getForemanRequest() ? $user->getForemanRequest()->getId() : null;
 
         return [
             'id' => $user->getId(),
@@ -50,7 +50,8 @@ class AbstractApiController extends AbstractController
             'smallPhoto' => $user->getPhoto(),
 
             'passport' => ($this->user->getId() === $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
-            'foremanRequest_id' => ($this->user->getId() === $user->getId()) ? $foremanRequestId : null,
+            'foremanRequest_id' => ($this->user->getId() === $user->getId() and $user->getForemanRequest()) ? $user->getForemanRequest()->getId() : null,
+            'tenChatInviteLink' => ($this->user->getId() === $user->getId()) ? $user->getTenChatInviteLink() : null, // там где я старшина
         ];
     }
 

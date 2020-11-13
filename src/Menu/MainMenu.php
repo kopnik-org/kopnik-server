@@ -4,25 +4,15 @@ declare(strict_types=1);
 
 namespace App\Menu;
 
-use App\Entity\User;
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\Security\Core\Security;
 
-class MainMenu // implements ContainerAwareInterface
+class MainMenu
 {
-    //use ContainerAwareTrait;
+    private FactoryInterface $factory;
+    private Security $security;
 
-    private $factory;
-    private $security;
-
-    /**
-     * MainMenu constructor.
-     *
-     * @param FactoryInterface $factory
-     * @param Security         $security
-     */
     public function __construct(FactoryInterface $factory, Security $security)
     {
         $this->factory  = $factory;
@@ -31,12 +21,8 @@ class MainMenu // implements ContainerAwareInterface
 
     /**
      * Главное меню
-     *
-     * @param array $options
-     *
-     * @return \Knp\Menu\ItemInterface
      */
-    public function top(array $options)
+    public function top(array $options): ItemInterface
     {
         $menu = $this->factory->createItem('root', [
             'childrenAttributes'    => [

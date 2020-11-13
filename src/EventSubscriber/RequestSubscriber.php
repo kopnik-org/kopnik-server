@@ -36,9 +36,6 @@ class RequestSubscriber implements EventSubscriberInterface
         $this->token_storage = $token_storage;
     }
 
-    /**
-     * @return array
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -49,9 +46,6 @@ class RequestSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param RequestEvent $event
-     */
     public function autoupdateGeoCoords(RequestEvent $event): void
     {
         if (null === $token = $this->token_storage->getToken()) {
@@ -84,9 +78,6 @@ class RequestSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @param RequestEvent $event
-     */
     public function validateUser(RequestEvent $event): void
     {
         if (null === $token = $this->token_storage->getToken()) {
@@ -120,9 +111,6 @@ class RequestSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @param RequestEvent $event
-     */
     public function onKernelRequest(RequestEvent $event): void
     {
         if (null === $token = $this->token_storage->getToken()) {
@@ -182,9 +170,6 @@ class RequestSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @param ResponseEvent $event
-     */
     public function onKernelResponse(ResponseEvent $event)
     {
         $origin = $event->getRequest()->headers->get('origin', '*');

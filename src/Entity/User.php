@@ -60,60 +60,46 @@ class User implements UserInterface
     /**
      * Ссылка-приглашение на чат с заверителем
      *
-     * @var string|null
-     *
      * @ORM\Column(type="string", length=64, nullable=true)
      *
      * @deprecated надо всмпонить почему депрекедет... потому что вроде как используется...
      */
-    protected $assurance_chat_invite_link;
+    protected ?string $assurance_chat_invite_link;
 
     /**
-     * @var int|null
-     *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $assurance_chat_id;
+    protected ?int $assurance_chat_id;
 
     /**
      * Чат десятки, если юзер когда-либо становился "Старшиной"
      *
-     * @var string|null
-     *
      * @ORM\Column(type="string", length=64, nullable=true)
      */
-    protected $foreman_chat_invite_link;
+    protected ?string $ten_chat_invite_link;
 
     /**
-     * @var int|null
-     *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $foreman_chat_id;
+    protected ?int $ten_chat_id;
 
     /**
-     * @var int|null
-     *
      * @ORM\Column(type="integer", nullable=false, options={"default":1})
      */
-    protected $rank;
+    protected ?int $rank;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="string", length=15, nullable=true)
      */
-    protected $locale;
+    protected ?string $locale;
 
     /**
      * Старшина
      *
-     * @var User|null
-     *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="subordinates_users", cascade={"persist"})
      * @Gedmo\TreeParent
      */
-    protected $foreman;
+    protected ?User $foreman;
 
     /**
      * Список подчинённых юзеров у старшины.
@@ -122,25 +108,21 @@ class User implements UserInterface
      *
      * @ORM\OneToMany(targetEntity="User", mappedBy="foreman", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
-    protected $subordinates_users;
+    protected Collection $subordinates_users;
 
     /**
      * Заявка на старшину
      *
-     * @var User|null
-     *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="foreman_requests", cascade={"persist"})
      */
-    protected $foreman_request;
+    protected ?User $foreman_request;
 
     /**
      * Дата подачи заявки на старшину
      *
-     * @var \DateTimeInterface|null
-     *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $foreman_request_date;
+    protected ?\DateTimeInterface $foreman_request_date;
 
     /**
      * Заявки других пользователей на выбор текущего пользователя своим старшиной.
@@ -149,7 +131,7 @@ class User implements UserInterface
      *
      * @ORM\OneToMany(targetEntity="User", mappedBy="foreman_request", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
-    protected $foreman_requests;
+    protected Collection $foreman_requests;
 
     /**
      * Cписок всеx заверенных юзеров.
@@ -158,171 +140,135 @@ class User implements UserInterface
      *
      * @ORM\OneToMany(targetEntity="User", mappedBy="witness", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
-    protected $approved_users;
+    protected Collection $approved_users;
 
     /**
      * @var UserOauth[]|Collection
      *
      * @ORM\OneToMany(targetEntity="UserOauth", mappedBy="user", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
-    protected $oauths;
+    protected Collection $oauths;
 
     /**
-     * @var \DateTime|null
-     *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $last_login_at;
+    protected ?\DateTime $last_login_at;
 
     /**
-     * @var \DateTime|null
-     *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $confirmed_at;
+    protected ?\DateTime $confirmed_at;
 
     /**
      * Роль
      *
-     * @var int
-     *
      * @ORM\Column(type="smallint", nullable=false, options={"default":5})
      */
-    protected $kopnik_role;
+    protected int $kopnik_role;
 
     /**
      * Имя
      *
-     * @var string
-     *
      * @ORM\Column(type="string", length=32)
      * @Assert\NotNull(message="This value is not valid.")
      */
-    protected $first_name;
+    protected string $first_name;
 
     /**
      * Отчество
      *
-     * @var string|null
-     *
      * @ORM\Column(type="string", length=32, nullable=true)
      * @Assert\NotNull(message="This value is not valid.")
      */
-    protected $last_name;
+    protected ?string $last_name;
 
     /**
      * Фамилия
      *
-     * @var string|null
-     *
      * @ORM\Column(type="string", length=32, nullable=true)
      * @Assert\NotNull(message="This value is not valid.")
      */
-    protected $patronymic;
+    protected ?string $patronymic;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    protected $photo;
+    protected ?string $photo;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    protected $small_photo;
+    protected ?string $small_photo;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="string", length=4, nullable=true)
      * @Assert\Length(min = 4, minMessage = "Code length must be at least {{ limit }} characters long", allowEmptyString=false)
      * @Assert\Length(max = 4, minMessage = "Code length must be at least {{ limit }} characters long", allowEmptyString=false)
      * @Assert\NotNull(message="This value is not valid.")
      */
-    protected $passport_code;
+    protected ?string $passport_code;
 
     /**
-     * @var float|null
-     *
      * @ORM\Column(type="decimal", precision=14, scale=11, nullable=true)
      */
-    protected $latitude;
+    protected ?float $latitude;
 
     /**
-     * @var float|null
-     *
      * @ORM\Column(type="decimal", precision=14, scale=11, nullable=true)
      */
-    protected $longitude;
+    protected ?float $longitude;
 
     /**
-     * @var int
-     *
      * @ORM\Column(type="smallint", nullable=false, options={"unsigned"=true, "default":0})
      */
-    private $status;
+    private int $status;
 
     /**
      * Является заверителем?
      *
-     * @var bool
-     *
      * @ORM\Column(type="boolean", options={"default":0})
      */
-    protected $is_witness;
+    protected bool $is_witness;
 
     /**
      * Разрешен приём сообщений от сообщества в VK
-     *
-     * @var bool
      *
      * @ORM\Column(type="boolean", options={"default":0})
      *
      * @deprecated
      */
-    protected $is_allow_messages_from_community;
+    protected bool $is_allow_messages_from_community;
 
     /**
      * Дата до которой установлена защита от флуда.
      *
      * @link https://vk.com/faq11583
      *
-     * @var \Datetime|null
-     *
      * ORM\Column(type="datetime", length=4, nullable=true)
      */
-    protected $flood_protect_datetime; // @todo
+    protected ?\Datetime $flood_protect_datetime; // @todo
 
     /**
-     * @var int|null
-     *
      * @ORM\Column(type="integer", length=4, nullable=true)
      * @Assert\Length(min = 4, minMessage = "Code length must be at least {{ limit }} characters long", allowEmptyString=false)
      * @Assert\Length(max = 4, minMessage = "Code length must be at least {{ limit }} characters long", allowEmptyString=false)
      * @Assert\NotNull(message="This value is not valid.")
      */
-    protected $birth_year;
+    protected ?int $birth_year;
 
     /**
      * Заверитель
      *
-     * @var User|null
-     *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="approved_users", cascade={"persist"})
      */
-    protected $witness;
+    protected ?User $witness;
 
-    /**
-     * User constructor.
-     */
     public function __construct()
     {
         $this->approved_users     = new ArrayCollection();
         $this->subordinates_users = new ArrayCollection();
         $this->foreman_requests   = new ArrayCollection();
+        $this->first_name         = '';
         $this->created_at         = new \DateTime();
         $this->is_witness         = false;
         $this->is_allow_messages_from_community = false;
@@ -332,9 +278,6 @@ class User implements UserInterface
         $this->status             = self::STATUS_NEW;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return (string) $this->getFirstName().' '. (string) $this->getLastName();
@@ -345,11 +288,6 @@ class User implements UserInterface
         $this->closures[] = $closure;
     }
 
-    /**
-     * @param string $string
-     *
-     * @return string|null
-     */
     static public function canonicalize(string $string): ?string
     {
         if (null === $string) {
@@ -364,11 +302,6 @@ class User implements UserInterface
         return $result;
     }
 
-    /**
-     * @param string $provider
-     *
-     * @return UserOauth|null
-     */
     public function getOauthByProvider(string $provider): ?UserOauth
     {
         foreach ($this->oauths as $oauth) {
@@ -380,17 +313,12 @@ class User implements UserInterface
         throw new \Exception("Провайдер $provider не найден");
     }
 
-    /**
-     * @return int
-     */
     public function getVkIdentifier(): int
     {
         return (int) $this->getOauthByProvider('vkontakte')->getIdentifier();
     }
 
     /**
-     * @return string|null
-     *
      * @deprecated
      */
     public function getAssuranceChatInviteLink(): ?string
@@ -399,10 +327,6 @@ class User implements UserInterface
     }
 
     /**
-     * @param string|null $assurance_chat_invite_link
-     *
-     * @return $this
-     *
      * @deprecated
      */
     public function setAssuranceChatInviteLink(?string $assurance_chat_invite_link): self
@@ -412,19 +336,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return User|null
-     */
     public function getForeman(): ?User
     {
         return $this->foreman;
     }
 
-    /**
-     * @param User|null $foreman
-     *
-     * @return $this
-     */
     public function setForeman(?User $foreman): self
     {
         $this->foreman = $foreman;
@@ -447,8 +363,6 @@ class User implements UserInterface
 
     /**
      * @param User[]|Collection $subordinates_users
-     *
-     * @return $this
      */
     public function setSubordinatesUsers($subordinates_users): self
     {
@@ -457,19 +371,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return User|null
-     */
     public function getWitness(): ?User
     {
         return $this->witness;
     }
 
-    /**
-     * @param User|null $witness
-     *
-     * @return $this
-     */
     public function setWitness(?User $witness): self
     {
         $this->witness = $witness;
@@ -487,8 +393,6 @@ class User implements UserInterface
 
     /**
      * @param User[]|Collection $approved_users
-     *
-     * @return $this
      */
     public function setApprovedUsers($approved_users): self
     {
@@ -507,8 +411,6 @@ class User implements UserInterface
 
     /**
      * @param UserOauth[]|Collection $oauths
-     *
-     * @return $this
      */
     public function setOauths($oauths): self
     {
@@ -517,40 +419,24 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getConfirmedAt(): ?\DateTime
     {
         return $this->confirmed_at;
     }
 
-    /**
-     * @param \DateTime $confirmed_at
-     *
-     * @return $this
-     */
-    public function setConfirmedAt($confirmed_at): self
+    public function setConfirmedAt(?\DateTime $confirmed_at = null): self
     {
         $this->confirmed_at = $confirmed_at;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPatronymic(): ?string
     {
         return $this->patronymic;
     }
 
-    /**
-     * @param string $patronymic
-     *
-     * @return $this
-     */
-    public function setPatronymic($patronymic): self
+    public function setPatronymic(?string $patronymic = null): self
     {
         $this->patronymic = $patronymic;
 
@@ -558,8 +444,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return bool
-     *
      * @deprecated
      */
     public function getIsAllowMessagesFromCommunity(): bool
@@ -568,8 +452,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return bool
-     *
      * @deprecated
      */
     public function isAllowMessagesFromCommunity(): bool
@@ -578,10 +460,6 @@ class User implements UserInterface
     }
 
     /**
-     * @param bool $is_allow_messages_from_community
-     *
-     * @return $this
-     *
      * @deprecated
      */
     public function setIsAllowMessagesFromCommunity(bool $is_allow_messages_from_community): self
@@ -591,19 +469,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getBirthYear(): ?int
     {
         return $this->birth_year;
     }
 
-    /**
-     * @param int $birth_year
-     *
-     * @return $this
-     */
     public function setBirthYear($birth_year): self
     {
         $this->birth_year = $birth_year;
@@ -611,19 +481,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPassportCode(): ?string
     {
         return $this->passport_code;
     }
 
-    /**
-     * @param string|null $passport_code
-     *
-     * @return $this
-     */
     public function setPassportCode(?string $passport_code): self
     {
         $this->passport_code = $passport_code;
@@ -631,19 +493,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFirstName(): string
     {
         return $this->first_name;
     }
 
-    /**
-     * @param string $first_name
-     *
-     * @return $this
-     */
     public function setFirstName(string $first_name): self
     {
         $this->first_name = $first_name;
@@ -651,19 +505,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getLastName(): ?string
     {
         return $this->last_name;
     }
 
-    /**
-     * @param string|null $last_name
-     *
-     * @return $this
-     */
     public function setLastName(?string $last_name): self
     {
         $this->last_name = $last_name;
@@ -698,6 +544,7 @@ class User implements UserInterface
      * Returns the password used to authenticate the user.
      * This should be the encoded password. On authentication, a plain-text
      * password will be salted, encoded, and then compared to this value.
+     *
      * @return string The password
      */
     public function getPassword()
@@ -708,6 +555,7 @@ class User implements UserInterface
     /**
      * Returns the salt that was originally used to encode the password.
      * This can return null if the password was not encoded using a salt.
+     *
      * @return string|null The salt
      */
     public function getSalt()
@@ -717,6 +565,7 @@ class User implements UserInterface
 
     /**
      * Returns the username used to authenticate the user.
+     *
      * @return string The username
      */
     public function getUsername()
@@ -734,39 +583,23 @@ class User implements UserInterface
         // TODO: Implement eraseCredentials() method.
     }
 
-    /**
-     * @return \DateTime|null
-     */
     public function getLastLoginAt(): ?\DateTime
     {
         return $this->last_login_at;
     }
 
-    /**
-     * @param \DateTime|null $last_login_at
-     *
-     * @return $this
-     */
-    public function setLastLoginAt($last_login_at): self
+    public function setLastLoginAt(?\DateTime $last_login_at = null): self
     {
         $this->last_login_at = $last_login_at;
 
         return $this;
     }
 
-    /**
-     * @return float|null
-     */
     public function getLatitude(): ?float
     {
         return $this->latitude ? (float) $this->latitude : null;
     }
 
-    /**
-     * @param float|null $latitude
-     *
-     * @return $this
-     */
     public function setLatitude(?float $latitude): self
     {
         $this->latitude = $latitude;
@@ -774,19 +607,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return float|null
-     */
     public function getLongitude(): ?float
     {
         return $this->longitude ? (float) $this->longitude : null;
     }
 
-    /**
-     * @param float|null $longitude
-     *
-     * @return $this
-     */
     public function setLongitude(?float $longitude): self
     {
         $this->longitude = $longitude;
@@ -794,27 +619,16 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getIsWitness(): bool
     {
         return $this->is_witness;
     }
 
-    /**
-     * @return bool
-     */
     public function isWitness(): bool
     {
         return $this->is_witness;
     }
 
-    /**
-     * @param bool $is_witness
-     *
-     * @return $this
-     */
     public function setIsWitness(bool $is_witness): self
     {
         $this->is_witness = $is_witness;
@@ -822,25 +636,16 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     static public function getStatusFormChoices(): array
     {
         return array_flip(self::$status_values);
     }
 
-    /**
-     * @return array
-     */
     static public function getStatusValues(): array
     {
         return self::$status_values;
     }
 
-    /**
-     * @return bool
-     */
     static public function isStatusExist($status): bool
     {
         if (isset(self::$status_values[$status])) {
@@ -850,9 +655,6 @@ class User implements UserInterface
         return false;
     }
 
-    /**
-     * @return string
-     */
     public function getStatusAsText(): string
     {
         if (isset(self::$status_values[$this->status])) {
@@ -862,19 +664,11 @@ class User implements UserInterface
         return 'N/A';
     }
 
-    /**
-     * @return int
-     */
     public function getStatus(): int
     {
         return $this->status;
     }
 
-    /**
-     * @param int $status
-     *
-     * @return $this
-     */
     public function setStatus($status): self
     {
         $this->status = $status;
@@ -882,19 +676,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPhoto(): ?string
     {
         return $this->photo;
     }
 
-    /**
-     * @param string|null $photo
-     *
-     * @return $this
-     */
     public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
@@ -902,19 +688,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getSmallPhoto(): ?string
     {
         return $this->small_photo;
     }
 
-    /**
-     * @param string|null $small_photo
-     *
-     * @return $this
-     */
     public function setSmallPhoto(?string $small_photo): self
     {
         $this->small_photo = $small_photo;
@@ -922,19 +700,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getLocale(): ?string
     {
         return $this->locale;
     }
 
-    /**
-     * @param string|null $locale
-     *
-     * @return $this
-     */
     public function setLocale(?string $locale): self
     {
         $this->locale = $locale;
@@ -942,19 +712,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @param string $role
-     *
-     * @return bool
-     */
     public function hasKopnikRole(string $role): bool
     {
         return self::$roles_values[$this->kopnik_role] == $role ? true : false;
     }
 
-    /**
-     * @return int
-     */
     public function getKopnikRole(): int
     {
         return $this->kopnik_role;
@@ -968,9 +730,6 @@ class User implements UserInterface
         return $this->kopnik_role;
     }
 
-    /**
-     * @return string|null
-     */
     public function getKopnikRoleAsText(): ?string
     {
         if ( ! isset(self::$roles_values[$this->kopnik_role])) {
@@ -980,11 +739,6 @@ class User implements UserInterface
         return self::$roles_values[$this->kopnik_role];
     }
 
-    /**
-     * @param int $role
-     *
-     * @return $this
-     */
     public function setKopnikRole(int $role): self
     {
         if ( ! isset(self::$roles_values[$role])) {
@@ -1004,19 +758,11 @@ class User implements UserInterface
         return $this->setKopnikRole($role);
     }
 
-    /**
-     * @return int|null
-     */
     public function getRank(): ?int
     {
         return $this->rank;
     }
 
-    /**
-     * @param int|null $rank
-     *
-     * @return $this
-     */
     public function setRank(?int $rank): self
     {
         $this->rank = $rank;
@@ -1024,19 +770,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return User|null
-     */
     public function getForemanRequest(): ?User
     {
         return $this->foreman_request;
     }
 
-    /**
-     * @param User|null $foreman_request
-     *
-     * @return $this
-     */
     public function setForemanRequest(?User $foreman_request): self
     {
         $this->foreman_request = $foreman_request;
@@ -1051,19 +789,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getForemanRequestDate(): ?\DateTimeInterface
     {
         return $this->foreman_request_date;
     }
 
-    /**
-     * @param \DateTimeInterface|null $foreman_request_date
-     *
-     * @return $this
-     */
     public function setForemanRequestDate(?\DateTimeInterface $foreman_request_date): self
     {
         $this->foreman_request_date = $foreman_request_date;
@@ -1091,19 +821,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getAssuranceChatId(): ?int
     {
         return $this->assurance_chat_id;
     }
 
-    /**
-     * @param int|null $assurance_chat_id
-     *
-     * @return $this
-     */
     public function setAssuranceChatId(?int $assurance_chat_id): self
     {
         $this->assurance_chat_id = $assurance_chat_id;
@@ -1111,42 +833,26 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getForemanChatInviteLink(): ?string
+    public function getTenChatInviteLink(): ?string
     {
-        return $this->foreman_chat_invite_link;
+        return $this->ten_chat_invite_link;
     }
 
-    /**
-     * @param string|null $foreman_chat_invite_link
-     *
-     * @return $this
-     */
-    public function setForemanChatInviteLink(?string $foreman_chat_invite_link): self
+    public function setTenChatInviteLink(?string $ten_chat_invite_link): self
     {
-        $this->foreman_chat_invite_link = $foreman_chat_invite_link;
+        $this->ten_chat_invite_link = $ten_chat_invite_link;
 
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getForemanChatId(): ?int
+    public function getTenChatId(): ?int
     {
-        return $this->foreman_chat_id;
+        return $this->ten_chat_id;
     }
 
-    /**
-     * @param int|null $foreman_chat_id
-     *
-     * @return $this
-     */
-    public function setForemanChatId(?int $foreman_chat_id): self
+    public function setTenChatId(?int $ten_chat_id): self
     {
-        $this->foreman_chat_id = $foreman_chat_id;
+        $this->ten_chat_id = $ten_chat_id;
 
         return $this;
     }

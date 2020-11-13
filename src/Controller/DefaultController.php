@@ -88,7 +88,7 @@ class DefaultController extends AbstractController
             }
         }
 
-        if ($action == 'confirm') {
+        if ($action === 'confirm') {
             if ($user->getStatus() == User::STATUS_PENDING) {
                 $user
                     ->setStatus(User::STATUS_CONFIRMED)
@@ -121,7 +121,7 @@ class DefaultController extends AbstractController
             }
 
             return $this->redirectToRoute('admin');
-        } elseif ($action == 'decline') {
+        } elseif ($action === 'decline') {
             $user
                 ->setStatus(User::STATUS_DECLINE)
                 ->setConfirmedAt(new \DateTime())

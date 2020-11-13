@@ -24,7 +24,7 @@ class UserEvent extends Event
     // Старшина отказался от подчинённого
     const SUBORDINATE_RESET = 'app.user_subordinate_reset';
 
-    protected $user;
+    protected User $user;
 
     public function __construct(User $user)
     {

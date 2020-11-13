@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class OAuthProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
-    protected $em;
+    protected EntityManagerInterface $em;
 
     public function __construct(EntityManagerInterface $em)
     {
@@ -26,9 +26,8 @@ class OAuthProvider implements UserProviderInterface, OAuthAwareUserProviderInte
     /**
      * Loads the user by a given UserResponseInterface object.
      *
-     * @param UserResponseInterface $response
-     *
      * @return UserInterface
+     *
      * @throws UsernameNotFoundException if the user is not found
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
@@ -47,7 +46,7 @@ class OAuthProvider implements UserProviderInterface, OAuthAwareUserProviderInte
 
                 $source = $response->getResourceOwner();
 
-                if ($source->getName() == 'vkontakte') {
+                if ($source->getName() === 'vkontakte') {
                     $user
                         ->setFirstName($response->getFirstName())
                         ->setLastName($response->getLastName())
@@ -56,7 +55,7 @@ class OAuthProvider implements UserProviderInterface, OAuthAwareUserProviderInte
                     ;
                 }
 
-                if ($source->getName() == 'github') {
+                if ($source->getName() === 'github') {
                     $user->setFirstName($response->getData()['name']);
                 }
             }
@@ -96,12 +95,10 @@ class OAuthProvider implements UserProviderInterface, OAuthAwareUserProviderInte
      * This method must throw UsernameNotFoundException if the user is not
      * found.
      *
-     * @param string $username The username
-     *
      * @return UserInterface
      * @throws UsernameNotFoundException if the user is not found
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername(string $username)
     {
         // TODO: Implement loadUserByUsername() method.
     }
@@ -125,11 +122,9 @@ class OAuthProvider implements UserProviderInterface, OAuthAwareUserProviderInte
     /**
      * Whether this provider supports the given user class.
      *
-     * @param string $class
-     *
      * @return bool
      */
-    public function supportsClass($class)
+    public function supportsClass(string $class)
     {
         // TODO: Implement supportsClass() method.
 

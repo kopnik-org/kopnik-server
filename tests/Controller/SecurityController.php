@@ -32,7 +32,6 @@ class SecurityController extends AbstractApiController
         UserAuthenticator $authenticator,
         EventDispatcherInterface $dispatcher
     ): JsonResponse {
-        /** @var User $user */
         $user = $em->find(User::class, $id);
 
         if ($user === null) {
@@ -67,8 +66,6 @@ class SecurityController extends AbstractApiController
         $location->lat = $user->getLatitude();
         $location->lng = $user->getLongitude();
 
-        $foremanRequestId = $user->getForemanRequest() ? $user->getForemanRequest()->getId() : null;
-
         return [
             'id' => $user->getId(),
             'firstName' => $user->getFirstName(),
@@ -83,10 +80,12 @@ class SecurityController extends AbstractApiController
             'role' => $user->getKopnikRole(),
             'isWitness' => $user->isWitness(),
             'status' => $user->getStatus(),
-            'passport' => $user->getPassportCode(),
             'photo' => $user->getPhoto(),
             'smallPhoto' => $user->getPhoto(),
-            'foremanRequest_id' => $foremanRequestId,
+
+            'passport' => $user->getPassportCode(),
+            'foremanRequest_id' => $user->getForemanRequest() ? $user->getForemanRequest()->getId() : null,
+            'tenChatInviteLink' => $user->getTenChatInviteLink(), // там где я старшина
         ];
     }
 }
