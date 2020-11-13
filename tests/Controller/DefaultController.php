@@ -89,6 +89,7 @@ class DefaultController extends AbstractApiController
             'foreman_id'    => $input['foreman_id'] ?? null,
             'foremanRequest_id' => $input['foremanRequest_id'] ?? null,
             'tenChatInviteLink' => null,
+            'witnessChatInviteLink' => null,
         ];
 
         try {

@@ -86,6 +86,7 @@ class SecurityController extends AbstractApiController
             'passport' => $user->getPassportCode(),
             'foremanRequest_id' => $user->getForemanRequest() ? $user->getForemanRequest()->getId() : null,
             'tenChatInviteLink' => $user->getTenChatInviteLink(), // там где я старшина
+            'witnessChatInviteLink' => $user->getAssuranceChatInviteLink(),
         ];
     }
 }

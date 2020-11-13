@@ -52,6 +52,7 @@ class AbstractApiController extends AbstractController
             'passport' => ($this->user->getId() === $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
             'foremanRequest_id' => ($this->user->getId() === $user->getId() and $user->getForemanRequest()) ? $user->getForemanRequest()->getId() : null,
             'tenChatInviteLink' => ($this->user->getId() === $user->getId()) ? $user->getTenChatInviteLink() : null, // там где я старшина
+            'witnessChatInviteLink' => ($this->user->getId() === $user->getId()) ? $user->getAssuranceChatInviteLink() : null,
         ];
     }
 
