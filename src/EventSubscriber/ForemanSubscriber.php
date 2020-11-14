@@ -29,18 +29,31 @@ class ForemanSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            UserEvent::FOREMAN_REQUEST   => 'sendNotifyToForemanRequest',
-            UserEvent::FOREMAN_CONFIRM   => 'sendNotifyToForemanConfirm',
-            UserEvent::FOREMAN_DECLINE   => 'sendNotifyToForemanDecline',
-            UserEvent::FOREMAN_RESET     => 'sendNotifyToForemanReset',
-            UserEvent::SUBORDINATE_RESET => 'sendNotifyToSubordinateReset',
+            UserEvent::FOREMAN_REQUEST => [
+                ['sendNotifyToForemanRequest', 0],
+            ],
+            UserEvent::FOREMAN_CONFIRM => [
+                ['sendNotifyToForemanConfirm', 0],
+                ['removeUserFromTenChat', 0],
+            ],
+            UserEvent::FOREMAN_DECLINE => [
+                ['sendNotifyToForemanDecline', 0],
+            ],
+            UserEvent::FOREMAN_RESET => [
+                ['sendNotifyToForemanReset', 0],
+                ['removeUserFromTenChat', 0],
+            ],
+            UserEvent::SUBORDINATE_RESET => [
+                ['sendNotifyToSubordinateReset', 0],
+                ['removeUserFromTenChat', 0],
+            ],
         ];
     }
 
     public function sendNotifyToForemanRequest(User $user): void
     {
         if ($user->getForemanRequest()) {
-            $this->sendNotifyToForemanReset($user); // Исключение из десятки, если уже состоит
+            //$this->sendNotifyToForemanReset($user); // Исключение из десятки, если уже состоит @todo ???
 
             // @todo обработка исключений от вк
             $this->vk->sendMessage($user->getForemanRequest()->getVkIdentifier(), sprintf('%s подал заявку на вступление в десятку', (string) $user));
@@ -90,8 +103,6 @@ class ForemanSubscriber implements EventSubscriberInterface
         $foreman = $user->getForeman();
 
         if ($foreman) {
-            $this->removeUserFromTenChat($user);
-
             $this->vk->sendMessage($foreman->getVkIdentifier(), sprintf('%s вышел из десятки', (string) $user));
         }
     }
@@ -101,14 +112,19 @@ class ForemanSubscriber implements EventSubscriberInterface
         $foreman = $user->getForeman();
 
         if ($foreman) {
-            $this->removeUserFromTenChat($user);
-
-            $this->vk->sendMessage($user->getVkIdentifier(), sprintf('Старшина %s исключил тебя из подчинённых', (string) $user->getForeman()));
+            $this->vk->sendMessage($user->getVkIdentifier(), sprintf('Старшина %s исключил тебя из подчинённых', (string) $foreman));
         }
     }
 
-    protected function removeUserFromTenChat(User $user)
+    /**
+     * Удалить из чата десятки своего старшины.
+     */
+    protected function removeUserFromTenChat(User $user): void
     {
+        if (!$user->getForeman()) {
+            return;
+        }
+
         try {
             $this->vk->removeChatUser($user->getForeman()->getTenChatId(), $user->getVkIdentifier());
         } catch (VKApiMessagesChatUserNotInChatException $e) {
