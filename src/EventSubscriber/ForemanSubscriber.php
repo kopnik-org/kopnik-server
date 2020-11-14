@@ -131,6 +131,8 @@ class ForemanSubscriber implements EventSubscriberInterface
 
         try {
             $this->vk->removeChatUser($user->getForeman()->getTenChatId(), $user->getVkIdentifier());
+
+            $this->logger->info('Удалён из чата юзер: '.(string) $user);
         } catch (VKApiMessagesChatUserNotInChatException $e) {
             // User not found in chat
             $this->logger->warning($e->getMessage(), [$e->getCode()]);
