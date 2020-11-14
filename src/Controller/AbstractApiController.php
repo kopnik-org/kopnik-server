@@ -32,6 +32,16 @@ class AbstractApiController extends AbstractController
         $location->lat = $user->getLatitude();
         $location->lng = $user->getLongitude();
 
+        $isAllowTenChatInviteLink = false;
+
+        if ($this->user->getId() === $user->getId()
+            or (
+                $this->user->getForeman() and $this->user->getForeman()->getId() === $user->getId()
+            )
+        ) {
+            $isAllowTenChatInviteLink = true;
+        }
+
         return [
             'id' => $user->getId(),
             'firstName' => $user->getFirstName(),
@@ -51,7 +61,7 @@ class AbstractApiController extends AbstractController
 
             'passport' => ($this->user->getId() === $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
             'foremanRequest_id' => ($this->user->getId() === $user->getId() and $user->getForemanRequest()) ? $user->getForemanRequest()->getId() : null,
-            'tenChatInviteLink' => ($this->user->getId() === $user->getId()) ? $user->getTenChatInviteLink() : null, // там где я старшина
+            'tenChatInviteLink' => $isAllowTenChatInviteLink ? $user->getTenChatInviteLink() : null, // там где я старшина
             'witnessChatInviteLink' => ($this->user->getId() === $user->getId()) ? $user->getAssuranceChatInviteLink() : null,
         ];
     }
