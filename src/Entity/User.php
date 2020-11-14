@@ -96,7 +96,7 @@ class User implements UserInterface
     /**
      * Старшина
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="subordinates_users", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="subordinates_users", cascade={"persist"}, fetch="EAGER")
      * @Gedmo\TreeParent
      */
     protected ?User $foreman;
