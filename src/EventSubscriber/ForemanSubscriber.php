@@ -132,22 +132,22 @@ class ForemanSubscriber implements EventSubscriberInterface
         try {
             $this->vk->removeChatUser($user->getForeman()->getTenChatId(), $user->getVkIdentifier());
 
-            $this->logger->info('Удалён из чата юзер: '.(string) $user);
+            $this->logger->debug('Удалён из чата юзер: '.(string) $user);
         } catch (VKApiMessagesChatUserNotInChatException $e) {
             // User not found in chat
-            $this->logger->warning($e->getMessage(), [$e->getCode()]);
+            $this->logger->error($e->getMessage(), [$e->getCode()]);
         } catch (VKApiMessagesContactNotFoundException $e) {
             // Contact not found
-            $this->logger->warning($e->getMessage(), [$e->getCode()]);
+            $this->logger->error($e->getMessage(), [$e->getCode()]);
         } catch (VKApiMessagesChatNotAdminException $e) {
             // You are not admin of this chat
-            $this->logger->warning($e->getMessage(), [$e->getCode()]);
+            $this->logger->error($e->getMessage(), [$e->getCode()]);
         } catch (VKApiException $e) {
             //
-            $this->logger->warning($e->getMessage(), [$e->getCode()]);
+            $this->logger->error($e->getMessage(), [$e->getCode()]);
         } catch (VKClientException $e) {
             //
-            $this->logger->warning($e->getMessage(), [$e->getCode()]);
+            $this->logger->error($e->getMessage(), [$e->getCode()]);
         }
     }
 }
