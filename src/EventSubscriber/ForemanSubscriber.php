@@ -121,7 +121,7 @@ class ForemanSubscriber implements EventSubscriberInterface
     /**
      * Удалить из чата десятки своего старшины.
      */
-    protected function removeUserFromTenChat(User $user): void
+    public function removeUserFromTenChat(User $user): void
     {
         if (!$user->getForeman()) {
             return;
