@@ -32,9 +32,11 @@ class ForemanSubscriber implements EventSubscriberInterface
             UserEvent::FOREMAN_REQUEST => [
                 ['sendNotifyToForemanRequest', 0],
             ],
-            UserEvent::FOREMAN_CONFIRM => [
-                ['sendNotifyToForemanConfirm', 0],
+            UserEvent::FOREMAN_CONFIRM_BEFORE_CHANGE => [
                 ['removeUserFromTenChat', 0],
+            ],
+            UserEvent::FOREMAN_CONFIRM_AFTER_CHANGE => [
+                ['sendNotifyToForemanConfirm', 0],
             ],
             UserEvent::FOREMAN_DECLINE => [
                 ['sendNotifyToForemanDecline', 0],

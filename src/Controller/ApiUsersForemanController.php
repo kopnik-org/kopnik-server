@@ -117,11 +117,13 @@ class ApiUsersForemanController extends AbstractApiController
             }
 
             if ($challenger->getForemanRequest() == $user) {
+                $dispatcher->dispatch($challenger, UserEvent::FOREMAN_CONFIRM_BEFORE_CHANGE);
+
                 $challenger->setForeman($user);
 
                 $em->flush();
 
-                $dispatcher->dispatch($challenger, UserEvent::FOREMAN_CONFIRM);
+                $dispatcher->dispatch($challenger, UserEvent::FOREMAN_CONFIRM_AFTER_CHANGE);
             } else {
                 return $this->jsonError(1000 + 511, 'Неверная заявка на выбор старшины');
             }

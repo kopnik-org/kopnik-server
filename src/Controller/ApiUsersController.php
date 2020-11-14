@@ -92,7 +92,7 @@ class ApiUsersController extends AbstractApiController
             'update'        => ''
         ];
 
-        if ($kernel->getEnvironment() == 'test') {
+        if ($kernel->getEnvironment() === 'test') {
             $filename = $kernel->getCacheDir().'/_request_'.date('Y-m-d_H-i-s').'.log';
 
             file_put_contents($filename, print_r($request->getContent(), true) . "\n\n", FILE_APPEND);

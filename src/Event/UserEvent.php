@@ -12,8 +12,11 @@ class UserEvent extends Event
     // Запрос на выбор другого пользователя старшиной.
     const FOREMAN_REQUEST = 'app.user_foreman_request';
 
-    // Одобрить заявку другого пользователя на выбор текущего пользователя старшиной.
-    const FOREMAN_CONFIRM = 'app.user_foreman_confirm';
+    // Одобрить заявку другого пользователя на выбор текущего пользователя старшиной. До того как была смена старшины.
+    const FOREMAN_CONFIRM_BEFORE_CHANGE = 'app.user_foreman_confirm_before_change';
+
+    // Одобрить заявку другого пользователя на выбор текущего пользователя старшиной. После того как произошло назначение старшины.
+    const FOREMAN_CONFIRM_AFTER_CHANGE = 'app.user_foreman_confirm_after_change';
 
     // Отклонить заявку другого пользователя на выбор текущего пользователя старшиной.
     const FOREMAN_DECLINE = 'app.user_foreman_decline';
