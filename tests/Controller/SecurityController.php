@@ -59,12 +59,22 @@ class SecurityController extends AbstractApiController
 
     /**
      * @todo вынести в сервис
-     */
+     *
     protected function serializeUser(User $user, bool $forcePassport = false): array
     {
         $location = new \stdClass();
         $location->lat = $user->getLatitude();
         $location->lng = $user->getLongitude();
+
+        $isAllowTenChatInviteLink = false;
+
+        if ($this->user->getId() === $user->getId()
+            or (
+                $this->user->getForeman() and $this->user->getForeman()->getId() === $user->getId()
+            )
+        ) {
+            $isAllowTenChatInviteLink = true;
+        }
 
         return [
             'id' => $user->getId(),
@@ -83,10 +93,16 @@ class SecurityController extends AbstractApiController
             'photo' => $user->getPhoto(),
             'smallPhoto' => $user->getPhoto(),
 
-            'passport' => $user->getPassportCode(),
-            'foremanRequest_id' => $user->getForemanRequest() ? $user->getForemanRequest()->getId() : null,
-            'tenChatInviteLink' => $user->getTenChatInviteLink(), // там где я старшина
-            'witnessChatInviteLink' => $user->getAssuranceChatInviteLink(),
+//            'passport' => $user->getPassportCode(),
+//            'foremanRequest_id' => $user->getForemanRequest() ? $user->getForemanRequest()->getId() : null,
+//            'tenChatInviteLink' => $user->getTenChatInviteLink(), // там где я старшина
+//            'witnessChatInviteLink' => $user->getAssuranceChatInviteLink(),
+
+            'passport' => ($this->user->getId() === $user->getId() or $forcePassport) ? $user->getPassportCode() : null,
+            'foremanRequest_id' => ($this->user->getId() === $user->getId() and $user->getForemanRequest()) ? $user->getForemanRequest()->getId() : null,
+            'tenChatInviteLink' => $isAllowTenChatInviteLink ? $user->getTenChatInviteLink() : null, // там где я старшина
+            'witnessChatInviteLink' => ($this->user->getId() === $user->getId()) ? $user->getAssuranceChatInviteLink() : null,
         ];
     }
+     */
 }
