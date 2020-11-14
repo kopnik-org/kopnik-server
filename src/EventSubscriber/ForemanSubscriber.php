@@ -8,6 +8,7 @@ use App\Contracts\MessengerInterface;
 use App\Entity\User;
 use App\Event\UserEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use VK\Exceptions\Api\VKApiMessagesChatNotAdminException;
 use VK\Exceptions\Api\VKApiMessagesChatUserNotInChatException;
@@ -19,10 +20,12 @@ class ForemanSubscriber implements EventSubscriberInterface
 {
     protected EntityManagerInterface $em;
     protected MessengerInterface $vk;
+    protected LoggerInterface $logger;
 
-    public function __construct(EntityManagerInterface $em, MessengerInterface $vk)
+    public function __construct(EntityManagerInterface $em, MessengerInterface $vk, LoggerInterface $logger)
     {
         $this->em = $em;
+        $this->logger = $logger;
         $this->vk = $vk;
     }
 
@@ -130,14 +133,19 @@ class ForemanSubscriber implements EventSubscriberInterface
             $this->vk->removeChatUser($user->getForeman()->getTenChatId(), $user->getVkIdentifier());
         } catch (VKApiMessagesChatUserNotInChatException $e) {
             // User not found in chat
+            $this->logger->warning($e->getMessage(), [$e->getCode()]);
         } catch (VKApiMessagesContactNotFoundException $e) {
             // Contact not found
+            $this->logger->warning($e->getMessage(), [$e->getCode()]);
         } catch (VKApiMessagesChatNotAdminException $e) {
             // You are not admin of this chat
+            $this->logger->warning($e->getMessage(), [$e->getCode()]);
         } catch (VKApiException $e) {
             //
+            $this->logger->warning($e->getMessage(), [$e->getCode()]);
         } catch (VKClientException $e) {
             //
+            $this->logger->warning($e->getMessage(), [$e->getCode()]);
         }
     }
 }
