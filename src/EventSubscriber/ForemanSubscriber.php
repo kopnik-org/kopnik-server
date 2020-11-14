@@ -128,7 +128,7 @@ class ForemanSubscriber implements EventSubscriberInterface
     public function removeUserFromTenChat(User $user): void
     {
         if (!$user->getForeman()) {
-            $this->logger->error('Удалён НЕ удалён из чата потому что у него нету старшины: ', [(string) $user]);
+            $this->logger->error('НЕ удалён из чата потому что у него нету старшины: ', [(string) $user]);
 
             return;
         }
