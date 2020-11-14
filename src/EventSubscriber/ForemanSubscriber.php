@@ -31,9 +31,10 @@ class ForemanSubscriber implements EventSubscriberInterface
         return [
             UserEvent::FOREMAN_REQUEST => [
                 ['sendNotifyToForemanRequest', 0],
+                ['removeUserFromTenChat', 0],
             ],
             UserEvent::FOREMAN_CONFIRM_BEFORE_CHANGE => [
-                ['removeUserFromTenChat', 0],
+                ['removeUserFromTenChat', 0], // @todo похоже не нужно
             ],
             UserEvent::FOREMAN_CONFIRM_AFTER_CHANGE => [
                 ['sendNotifyToForemanConfirm', 0],
@@ -55,8 +56,6 @@ class ForemanSubscriber implements EventSubscriberInterface
     public function sendNotifyToForemanRequest(User $user): void
     {
         if ($user->getForemanRequest()) {
-            //$this->sendNotifyToForemanReset($user); // Исключение из десятки, если уже состоит @todo ???
-
             // @todo обработка исключений от вк
             $this->vk->sendMessage($user->getForemanRequest()->getVkIdentifier(), sprintf('%s подал заявку на вступление в десятку', (string) $user));
         }
