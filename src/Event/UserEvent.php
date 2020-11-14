@@ -9,6 +9,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class UserEvent extends Event
 {
+    // Запрос на выбор другого пользователя старшиной. До того, как будет назначен новый запрос старшине, потому что будет удалена связь с существуещим страшиной, если таковой есть.
+    const FOREMAN_REQUEST_BEFORE = 'app.user_foreman_request_before';
+
     // Запрос на выбор другого пользователя старшиной.
     const FOREMAN_REQUEST = 'app.user_foreman_request';
 

@@ -32,9 +32,11 @@ class ForemanSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            UserEvent::FOREMAN_REQUEST_BEFORE => [
+                ['removeUserFromTenChat', 0],
+            ],
             UserEvent::FOREMAN_REQUEST => [
                 ['sendNotifyToForemanRequest', 0],
-                ['removeUserFromTenChat', 0],
             ],
             UserEvent::FOREMAN_CONFIRM_BEFORE_CHANGE => [
                 ['removeUserFromTenChat', 0], // @todo похоже не нужно
